@@ -1,12 +1,13 @@
 ﻿import request from '/@/utils/request';
 enum Api {
-  AddOrderDetail = '/api/orderDetail/add',
-  DeleteOrderDetail = '/api/orderDetail/delete',
-  UpdateOrderDetail = '/api/orderDetail/update',
-  PageOrderDetail = '/api/orderDetail/page',
-  GetOrderOrderIdDropdown = '/api/orderDetail/OrderOrderIdDropdown',
-  GetDeviceDeviceIdDropdown = '/api/orderDetail/DeviceDeviceIdDropdown',
-  GetSysUserOperatorUsersDropdown = '/api/orderDetail/SysUserOperatorUsersDropdown',
+	AddOrderDetail = '/api/orderDetail/add',
+	DeleteOrderDetail = '/api/orderDetail/delete',
+	UpdateOrderDetail = '/api/orderDetail/update',
+	PageOrderDetail = '/api/orderDetail/page',
+	listOrderDetailByDeviceId = '/api/orderDetail/listOrderDetailByDeviceId',
+	GetOrderOrderIdDropdown = '/api/orderDetail/OrderOrderIdDropdown',
+	GetDeviceDeviceIdDropdown = '/api/orderDetail/DeviceDeviceIdDropdown',
+	GetSysUserOperatorUsersDropdown = '/api/orderDetail/SysUserOperatorUsersDropdown',
 }
 
 // 增加订单排产
@@ -18,42 +19,50 @@ export const addOrderDetail = (params?: any) =>
 	});
 
 // 删除订单排产
-export const deleteOrderDetail = (params?: any) => 
+export const deleteOrderDetail = (params?: any) =>
 	request({
-			url: Api.DeleteOrderDetail,
-			method: 'post',
-			data: params,
-		});
+		url: Api.DeleteOrderDetail,
+		method: 'post',
+		data: params,
+	});
 
 // 编辑订单排产
-export const updateOrderDetail = (params?: any) => 
+export const updateOrderDetail = (params?: any) =>
 	request({
-			url: Api.UpdateOrderDetail,
-			method: 'post',
-			data: params,
-		});
+		url: Api.UpdateOrderDetail,
+		method: 'post',
+		data: params,
+	});
 
 // 分页查询订单排产
-export const pageOrderDetail = (params?: any) => 
+export const pageOrderDetail = (params?: any) =>
 	request({
-			url: Api.PageOrderDetail,
-			method: 'post',
-			data: params,
-		});
+		url: Api.PageOrderDetail,
+		method: 'post',
+		data: params,
+	});
+
+// 查询设备所有排产
+export const listOrderDetailByDeviceId = (params?: any) =>
+	request({
+		url: Api.listOrderDetailByDeviceId,
+		method: 'post',
+		data: params,
+	});
 
 export const getOrderOrderIdDropdown = () =>
-		request({
+	request({
 		url: Api.GetOrderOrderIdDropdown,
 		method: 'get'
-		});
+	});
 export const getDeviceDeviceIdDropdown = () =>
-		request({
+	request({
 		url: Api.GetDeviceDeviceIdDropdown,
 		method: 'get'
-		});
+	});
 export const getSysUserOperatorUsersDropdown = () =>
-		request({
+	request({
 		url: Api.GetSysUserOperatorUsersDropdown,
 		method: 'get'
-		});
+	});
 

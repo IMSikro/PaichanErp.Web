@@ -28,6 +28,12 @@ export interface SysTenant {
      */
     id?: number;
     /**
+     * 有效期
+     * @type {Date}
+     * @memberof SysTenant
+     */
+    expiration?: Date | null;
+    /**
      * 创建时间
      * @type {Date}
      * @memberof SysTenant

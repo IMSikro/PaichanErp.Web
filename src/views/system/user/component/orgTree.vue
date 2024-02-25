@@ -4,18 +4,11 @@
 			<div style="margin-right: 10px"><el-switch v-model="state.horizontal"></el-switch> 横向/纵向</div>
 		</div>
 		<div style="height: 500px">
-			<vue3-tree-org
-				:data="state.orgData"
+			<vue3-tree-org :data="state.orgData"
 				:props="{ id: 'id', pid: 'pid', label: 'name', expand: 'expand', children: 'children' }"
-				:label-style="state.style"
-				:default-expand-level="100"
-				:horizontal="state.horizontal"
-				:collapsable="state.collapsable"
-				:only-one-node="state.onlyOneNode"
-				:clone-node-drag="state.cloneNodeDrag"
-				:node-draggable="state.nodeDraggable"
-				style="background-color: var(--el-bg-color)"
-			>
+				:label-style="state.style" :default-expand-level="100" :horizontal="state.horizontal"
+				:collapsable="state.collapsable" :only-one-node="state.onlyOneNode" :clone-node-drag="state.cloneNodeDrag"
+				:node-draggable="state.nodeDraggable" style="background-color: var(--el-bg-color)">
 				<template v-slot="{ node }">
 					<div class="tree-org-node__text node-label">
 						<div class="node-title">{{ node.label }}</div>
@@ -67,7 +60,7 @@ onMounted(async () => {
 
 // 递归遍历
 const InitOrg = (orgData: any, id: any) => {
-	if(orgData && orgData.length > 0) {
+	if (orgData && orgData.length > 0) {
 		orgData.forEach(function (u: any) {
 			if (u.id == id) {
 				u.style = currentNodeStyle;
@@ -84,11 +77,13 @@ const InitOrg = (orgData: any, id: any) => {
 .tree-org-node__text {
 	// text-align: left;
 	font-size: 14px;
+
 	.node-title {
 		padding-bottom: 8px;
 		margin-bottom: 8px;
 		border-bottom: 1px solid currentColor;
 	}
+
 	.node-id {
 		font-size: 10px;
 	}

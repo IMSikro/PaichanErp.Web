@@ -20,6 +20,7 @@ import { AddTenantInput } from '../models';
 import { AdminResultInt32 } from '../models';
 import { AdminResultListInt64 } from '../models';
 import { AdminResultListSysUser } from '../models';
+import { AdminResultSysTenant } from '../models';
 import { AdminResultSqlSugarPagedListTenantOutput } from '../models';
 import { AdminResultString } from '../models';
 import { DeleteTenantInput } from '../models';
@@ -50,7 +51,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -74,9 +75,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -98,7 +99,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -122,9 +123,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -146,7 +147,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -170,9 +171,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -194,7 +195,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -218,9 +219,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -242,7 +243,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -268,7 +269,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -290,7 +291,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -314,9 +315,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -338,7 +339,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -362,9 +363,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -386,7 +387,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -410,9 +411,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -434,7 +435,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -458,9 +459,9 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -482,7 +483,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -506,9 +507,57 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
             }
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 获取租户信息
+         * @param {TenantIdInput} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSysTenantGetTenantByIdPost: async (body?: TenantIdInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/sysTenant/tenantById`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions: AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            if (configuration && configuration.accessToken) {
+                const accessToken = typeof configuration.accessToken === 'function'
+                    ? await configuration.accessToken()
+                    : await configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -522,7 +571,7 @@ export const SysTenantApiAxiosParamCreator = function (configuration?: Configura
  * SysTenantApi - functional programming interface
  * @export
  */
-export const SysTenantApiFp = function(configuration?: Configuration) {
+export const SysTenantApiFp = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -534,7 +583,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantAddPost(body?: AddTenantInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantAddPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -548,7 +597,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantCreateDbPost(body?: TenantInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantCreateDbPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -562,7 +611,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantDeletePost(body?: DeleteTenantInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantDeletePost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -576,7 +625,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantGrantMenuPost(body?: RoleMenuInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantGrantMenuPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -590,7 +639,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantOwnMenuListGet(userId?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AdminResultListInt64>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantOwnMenuListGet(userId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -604,7 +653,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantPagePost(body?: PageTenantInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AdminResultSqlSugarPagedListTenantOutput>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantPagePost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -618,7 +667,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantResetPwdPost(body?: TenantUserInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AdminResultString>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantResetPwdPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -632,7 +681,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantSetStatusPost(body?: TenantInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AdminResultInt32>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantSetStatusPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -646,7 +695,7 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantUpdatePost(body?: UpdateTenantInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantUpdatePost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -660,7 +709,21 @@ export const SysTenantApiFp = function(configuration?: Configuration) {
         async apiSysTenantUserListPost(body?: TenantIdInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AdminResultListSysUser>>> {
             const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantUserListPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary 获取租户下的用户列表
+         * @param {TenantIdInput} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSysTenantGetTenantByIdPost(body?: TenantIdInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AdminResultSysTenant>>> {
+            const localVarAxiosArgs = await SysTenantApiAxiosParamCreator(configuration).apiSysTenantGetTenantByIdPost(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs: AxiosRequestConfig = { ...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url };
                 return axios.request(axiosRequestArgs);
             };
         },
@@ -773,6 +836,16 @@ export const SysTenantApiFactory = function (configuration?: Configuration, base
         async apiSysTenantUserListPost(body?: TenantIdInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultListSysUser>> {
             return SysTenantApiFp(configuration).apiSysTenantUserListPost(body, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary 获取租户信息
+         * @param {TenantIdInput} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiSysTenantGetTenantByIdPost(body?: TenantIdInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultSysTenant>> {
+            return SysTenantApiFp(configuration).apiSysTenantGetTenantByIdPost(body, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -791,7 +864,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantAddPost(body?: AddTenantInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+    public async apiSysTenantAddPost(body?: AddTenantInput, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
         return SysTenantApiFp(this.configuration).apiSysTenantAddPost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -802,7 +875,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantCreateDbPost(body?: TenantInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+    public async apiSysTenantCreateDbPost(body?: TenantInput, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
         return SysTenantApiFp(this.configuration).apiSysTenantCreateDbPost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -813,7 +886,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantDeletePost(body?: DeleteTenantInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+    public async apiSysTenantDeletePost(body?: DeleteTenantInput, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
         return SysTenantApiFp(this.configuration).apiSysTenantDeletePost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -824,7 +897,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantGrantMenuPost(body?: RoleMenuInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+    public async apiSysTenantGrantMenuPost(body?: RoleMenuInput, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
         return SysTenantApiFp(this.configuration).apiSysTenantGrantMenuPost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -835,7 +908,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantOwnMenuListGet(userId?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<AdminResultListInt64>> {
+    public async apiSysTenantOwnMenuListGet(userId?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultListInt64>> {
         return SysTenantApiFp(this.configuration).apiSysTenantOwnMenuListGet(userId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -846,7 +919,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantPagePost(body?: PageTenantInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<AdminResultSqlSugarPagedListTenantOutput>> {
+    public async apiSysTenantPagePost(body?: PageTenantInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultSqlSugarPagedListTenantOutput>> {
         return SysTenantApiFp(this.configuration).apiSysTenantPagePost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -857,7 +930,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantResetPwdPost(body?: TenantUserInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<AdminResultString>> {
+    public async apiSysTenantResetPwdPost(body?: TenantUserInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultString>> {
         return SysTenantApiFp(this.configuration).apiSysTenantResetPwdPost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -868,7 +941,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantSetStatusPost(body?: TenantInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<AdminResultInt32>> {
+    public async apiSysTenantSetStatusPost(body?: TenantInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultInt32>> {
         return SysTenantApiFp(this.configuration).apiSysTenantSetStatusPost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -879,7 +952,7 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantUpdatePost(body?: UpdateTenantInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+    public async apiSysTenantUpdatePost(body?: UpdateTenantInput, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
         return SysTenantApiFp(this.configuration).apiSysTenantUpdatePost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -890,7 +963,18 @@ export class SysTenantApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SysTenantApi
      */
-    public async apiSysTenantUserListPost(body?: TenantIdInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<AdminResultListSysUser>> {
+    public async apiSysTenantUserListPost(body?: TenantIdInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultListSysUser>> {
         return SysTenantApiFp(this.configuration).apiSysTenantUserListPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @summary 获取租户下的用户列表
+     * @param {TenantIdInput} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SysTenantApi
+     */
+    public async apiSysTenantGetTenantByIdPost(body?: TenantIdInput, options?: AxiosRequestConfig): Promise<AxiosResponse<AdminResultSysTenant>> {
+        return SysTenantApiFp(this.configuration).apiSysTenantGetTenantByIdPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 }

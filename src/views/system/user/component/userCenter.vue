@@ -130,7 +130,35 @@
 							</el-form>
 						</el-tab-pane>
 						<el-tab-pane label="绑定微信">
-							<OrgTree ref="orgTreeRef" />
+							<el-text>您已成功绑定微信!</el-text>
+						</el-tab-pane>
+						<!-- v-if="state.ruleFormBase.accountType == 888" -->
+						<el-tab-pane label="充值中心">
+							<el-text v-if="state.tenantExpirationStatus == 1">
+								您的账户有效期为
+								{{ state.ruleFormTenant.expiration }}
+								,无需充值!
+							</el-text>
+							<div v-if="state.tenantExpirationStatus == 1">
+								<el-text>
+									您的账户有效期为
+									{{ state.ruleFormTenant.expiration }}
+									,无需充值!
+								</el-text>
+								<br />
+								<br />
+								<el-button type="primary" @click="openWechatPayList">仍要充值</el-button>
+							</div>
+							<div v-if="state.tenantExpirationStatus == 0">
+								<el-text>
+									您的账户有效期为
+									{{ state.ruleFormTenant.expiration }}
+									,剩余时间已不足30天!
+								</el-text>
+								<br />
+								<br />
+								<el-button type="primary" @click="openWechatPayList">点击充值</el-button>
+							</div>
 						</el-tab-pane>
 					</el-tabs>
 				</el-card>
@@ -170,18 +198,20 @@
 <script lang="ts" setup name="sysUserCenter">
 import { onMounted, watch, reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { ElForm, ElMessageBox, genFileId } from 'element-plus';
+import { ElForm, ElMessageBox, genFileId, stepProps } from 'element-plus';
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { useUserInfo } from '/@/stores/userInfo';
 import { base64ToFile } from '/@/utils/base64Conver';
 import OrgTree from '/@/views/system/user/component/orgTree.vue';
 import CropperDialog from '/@/components/cropper/index.vue';
 import VueGridLayout from 'vue-grid-layout';
+import { useRouter } from 'vue-router';
 
 import { clearAccessTokens, getAPI } from '/@/utils/axios-utils';
-import { SysFileApi, SysUserApi } from '/@/api-services/api';
-import { ChangePwdInput, SysUser } from '/@/api-services/models';
+import { SysFileApi, SysUserApi, SysTenantApi } from '/@/api-services/api';
+import { ChangePwdInput, SysUser, SysTenant } from '/@/api-services/models';
 
+const router = useRouter();
 const stores = useUserInfo();
 const { userInfos } = storeToRefs(stores);
 const uploadSignRef = ref<UploadInstance>();
@@ -195,6 +225,7 @@ const state = reactive({
 	avatarLoading: false,
 	signDialogVisible: false,
 	ruleFormBase: {} as SysUser,
+	ruleFormTenant: {} as SysTenant,
 	ruleFormPassword: {} as ChangePwdInput,
 	signOptions: {
 		penColor: '#000000',
@@ -206,13 +237,39 @@ const state = reactive({
 	signFileList: [] as any,
 	passwordNew2: '',
 	cropperTitle: '',
+	tenantExpirationStatus: 0,
 });
 
 onMounted(async () => {
 	state.loading = true;
 	var res = await getAPI(SysUserApi).apiSysUserBaseInfoGet();
 	state.ruleFormBase = res.data.result ?? { account: '' };
+	if (state.ruleFormBase.tenantId && state.ruleFormBase.tenantId > 0) {
+		var tenant = await getAPI(SysTenantApi).apiSysTenantGetTenantByIdPost({ tenantId: state.ruleFormBase.tenantId ?? 0 });
+		state.ruleFormTenant = tenant.data.result ?? { id: state.ruleFormBase.tenantId };
+
+		var nowDate = new Date();
+		var expiration = state.ruleFormTenant.expiration ?? '';
+		if (expiration && expiration != '') {
+			var expDate = new Date(expiration);
+			nowDate.setFullYear(nowDate.getFullYear() + 5);
+			if (nowDate < expDate) {
+				state.tenantExpirationStatus = 0;
+			}
+			else {
+				state.tenantExpirationStatus = 1;
+			}
+			nowDate = new Date();
+			nowDate.setDate(nowDate.getDate() + 30);
+			if (nowDate > expDate) {
+				state.tenantExpirationStatus = 2;
+			}
+		}
+
+	}
 	state.loading = false;
+	console.log(state.tenantExpirationStatus);
+
 });
 
 watch(state.signOptions, () => {
@@ -224,6 +281,14 @@ watch(state.signOptions, () => {
 const uploadCropperImg = async (e: any) => {
 	var res = await getAPI(SysFileApi).apiSysFileUploadAvatarPostForm(e.img);
 	userInfos.value.avatar = res.data.result?.filePath + '/' + res.data.result?.name;
+};
+
+// 打开微信支付列表
+const openWechatPayList = () => {
+	router.push({
+		path: "/dashboard/syswechatpay",
+		query: { isAutoPay: "true" },
+	});
 };
 
 // 打开电子签名页面
@@ -386,4 +451,5 @@ defineExpose({ handleChangeSignFile });
 	text-align: center;
 	vertical-align: middle;
 	border: solid 1px var(--el-border-color);
-}</style>
+}
+</style>

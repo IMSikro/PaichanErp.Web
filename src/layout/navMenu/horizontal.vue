@@ -123,17 +123,19 @@ onBeforeRouteUpdate((to) => {
 	flex: 1;
 	overflow: hidden;
 	margin-right: 30px;
+
 	:deep(.el-scrollbar__bar.is-vertical) {
 		display: none;
 	}
+
 	:deep(a) {
 		width: 100%;
 	}
+
 	.el-menu.el-menu--horizontal {
 		display: flex;
 		height: 100%;
 		width: 100%;
 		box-sizing: border-box;
 	}
-}
-</style>
+}</style>
