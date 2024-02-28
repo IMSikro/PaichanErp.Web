@@ -4,6 +4,7 @@ enum Api {
 	DeleteOrderDetail = '/api/orderDetail/delete',
 	UpdateOrderDetail = '/api/orderDetail/update',
 	PageOrderDetail = '/api/orderDetail/page',
+	GetOrderDetail = '/api/orderDetail/detail',
 	listOrderDetailByDeviceId = '/api/orderDetail/listOrderDetailByDeviceId',
 	GetOrderOrderIdDropdown = '/api/orderDetail/OrderOrderIdDropdown',
 	GetDeviceDeviceIdDropdown = '/api/orderDetail/DeviceDeviceIdDropdown',
@@ -49,6 +50,15 @@ export const listOrderDetailByDeviceId = (params?: any) =>
 		method: 'post',
 		data: params,
 	});
+
+// 分页查询订单排产
+export const getOrderDetail = (params?: any) =>
+	request({
+		url: Api.GetOrderDetail,
+		method: 'get',
+		data: params,
+	});
+
 
 export const getOrderOrderIdDropdown = () =>
 	request({

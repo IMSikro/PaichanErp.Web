@@ -47,6 +47,9 @@
             </el-card>
         </el-space>
     </el-scrollbar>
+
+    <addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initDeviceList" />
+    <editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="initDeviceList" />
 </template>
 
 
@@ -63,29 +66,21 @@ var props = defineProps({
     dt: {}
 });
 
-interface ListItem {
-    imgUrl: string
-    name: string
-}
-
-const lists = ref<ListItem[]>([])
-
 const loading = ref(true)
 const scrollbarRef = ref();
+const addPaichanDialogRef = ref();
+const editPaichanDialogRef = ref();
 const handleScroll = (e: any) => {
     const wheelDelta = e.wheelDelta || -e.deltaY * 40
     scrollbarRef.value.setScrollLeft(scrollbarRef.value.wrapRef.scrollLeft - wheelDelta)
 }
 
-const handleSetPaichanInfo = (itemId, e: any) => {
-    console.log(itemId);
-    console.log(e);
-
+const handleSetPaichanInfo = async (deviceId, e: any) => {
+    await addPaichanDialogRef.value.openDialog({ deviceId, deviceType: deviceType.value.id });
 }
 
-const openEditOrderDetail = (orderDetailId, e: any) => {
-    console.log(orderDetailId);
-    console.log(e);
+const openEditOrderDetail = async (orderDetailId, e: any) => {
+    await editPaichanDialogRef.value.openDialog({ orderDetailId, deviceType: deviceType.value.id });
 
 }
 
@@ -205,8 +200,6 @@ onMounted(async () => {
     loading.value = false;
 })
 
-//将属性或者函数暴露给父组件
-defineExpose({ initDeviceList });
 </script>
 
 <style scoped>

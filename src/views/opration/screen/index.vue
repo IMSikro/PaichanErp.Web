@@ -1,7 +1,7 @@
 <template>
     <div class="oprationScreen-container">
         <div style="width: 100%;  text-align: center; font-size: 3rem; background-color: cornflowerblue; color: aliceblue;">
-            <h1>{{ state.orgData.name }} - 排产看板</h1>
+            <h1>{{ state.orgData.name }} - 排产控制台</h1>
         </div>
         <el-collapse v-model="activeNames" @change="handleChange">
             <el-collapse-item v-for="dt in state.deviceTypes" :key="dt.id" :name="dt.id">
