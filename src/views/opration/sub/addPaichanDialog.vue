@@ -11,7 +11,38 @@
 				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备外键" @change="switchDevice()">
 					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
 				</el-select>
-				<div class="dischargeOrderList">未排产订单列表：</div>
+				<div class="dischargeOrderList">
+					未排产订单列表：
+					<el-tooltip effect="dark" content="点击加入排产" placement="top">
+						<el-icon><Warning /></el-icon>
+					</el-tooltip>
+				</div>
+				<div v-for="(items, index) in dischargeOrderList" :key="index">
+					产品名称：{{ items.produceName }} 订单编号：{{ items.orderCode }} 下单日期：{{ items.orderDate }} 交货日期：{{ items.deliveryDate }}
+
+					批次总量：{{ items.quantity }} 订单余量：{{ items.orderSurplusQuantity }} 计量单位：{{ items.pUnit }} rgb：{{ items.colorRgb }}
+					<!-- {
+						"id": 31705350596165,
+						"orderCode": "or2024010001",
+						"orderDate": "2024-01-20 00:00:00",
+						"deliveryDate": "2024-01-31 00:00:00",
+						"startDate": "2024-01-25 00:00:00",
+						"endDate": "2024-01-27 00:00:00",
+						"produceId": 31640920050757,
+						"produceIdProduceName": "PM00001TN",
+						"produceName": "PM00001TN",
+						"colorRgb": "207,75,34",
+						"batchNumber": "S2024010001",
+						"quantity": 15,
+						"orderSurplusQuantity": 11,
+						"pUnit": "吨",
+						"customer": "南谯",
+						"remark": "测试",
+						"createUserName": "超级管理员",
+						"updateUserName": null,
+						"orderDetails": null
+					} -->
+				</div>
 			</div>
 		</el-dialog>
 	</div>
@@ -74,7 +105,6 @@ const getdischargeOrderList = async () => {
 	};
 	let list = await listNotPaichanOrderByDeviceId(params);
 	dischargeOrderList.value = list.data.result ?? [];
-	console.log('123:', dischargeOrderList.value);
 };
 
 const orderOrderIdDropdownList = ref<any>([]);
