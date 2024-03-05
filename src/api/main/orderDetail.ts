@@ -9,6 +9,7 @@ enum Api {
 	GetOrderOrderIdDropdown = '/api/orderDetail/OrderOrderIdDropdown',
 	GetDeviceDeviceIdDropdown = '/api/orderDetail/DeviceDeviceIdDropdown',
 	GetSysUserOperatorUsersDropdown = '/api/orderDetail/SysUserOperatorUsersDropdown',
+	listNotPaichanOrderByDeviceId = '/api/order/listNotPaichanOrderByDeviceId',
 }
 
 // 增加订单排产
@@ -51,6 +52,14 @@ export const listOrderDetailByDeviceId = (params?: any) =>
 		data: params,
 	});
 
+// 获取未排产订单
+export const listNotPaichanOrderByDeviceId = (params?: any) =>
+	request({
+		url: Api.listNotPaichanOrderByDeviceId,
+		method: 'post',
+		data: params,
+	});
+
 // 分页查询订单排产
 export const getOrderDetail = (params?: any) =>
 	request({
@@ -59,20 +68,18 @@ export const getOrderDetail = (params?: any) =>
 		data: params,
 	});
 
-
 export const getOrderOrderIdDropdown = () =>
 	request({
 		url: Api.GetOrderOrderIdDropdown,
-		method: 'get'
+		method: 'get',
 	});
 export const getDeviceDeviceIdDropdown = () =>
 	request({
 		url: Api.GetDeviceDeviceIdDropdown,
-		method: 'get'
+		method: 'get',
 	});
 export const getSysUserOperatorUsersDropdown = () =>
 	request({
 		url: Api.GetSysUserOperatorUsersDropdown,
-		method: 'get'
+		method: 'get',
 	});
-

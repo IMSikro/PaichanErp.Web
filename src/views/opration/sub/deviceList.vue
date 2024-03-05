@@ -74,12 +74,12 @@ const handleScroll = (e: any) => {
     const wheelDelta = e.wheelDelta || -e.deltaY * 40
     scrollbarRef.value.setScrollLeft(scrollbarRef.value.wrapRef.scrollLeft - wheelDelta)
 }
-
-const handleSetPaichanInfo = async (deviceId, e: any) => {
+// 添加未排产订单弹窗事件
+const handleSetPaichanInfo = async (deviceId: any, e: any) => {
     await addPaichanDialogRef.value.openDialog({ deviceId, deviceType: deviceType.value.id });
 }
 
-const openEditOrderDetail = async (orderDetailId, e: any) => {
+const openEditOrderDetail = async (orderDetailId: any, e: any) => {
     await editPaichanDialogRef.value.openDialog({ orderDetailId, deviceType: deviceType.value.id });
 
 }
@@ -90,7 +90,7 @@ let deviceType = ref<any>({});
 let orderDetails = ref<any>({});
 let orderDetailCounts = ref<any>({});
 let orderDetailSums = ref<any>({});
-const initDeviceList = async (dtId) => {
+const initDeviceList = async (dtId: any) => {
     var res = await pageDevice({ deviceTypeId: dtId });
     deviceList.value = res.data.result?.items ?? [];
     await initOrderDetailList();
@@ -98,13 +98,13 @@ const initDeviceList = async (dtId) => {
 
 const initOrderDetailList = async () => {
     // console.log(deviceList.value);
-    const deviceIds = deviceList.value.map(v => v.id);
+    const deviceIds = deviceList.value.map((v: { id: any; }) => v.id);
     // console.log(deviceIds);
     for (const deviceId of deviceIds) {
         var orderDetailRes = await listOrderDetailByDeviceId({ deviceId });
         orderDetails.value[deviceId] = orderDetailRes.data.result ?? [];
         orderDetailCounts.value[deviceId] = orderDetailRes.data.result?.length ?? 0;
-        orderDetailSums.value[deviceId] = getSumNumber(orderDetailRes.data.result?.map(v => v.qty) ?? []);
+        orderDetailSums.value[deviceId] = getSumNumber(orderDetailRes.data.result?.map((v: { qty: any; }) => v.qty) ?? []);
     }
 }
 
