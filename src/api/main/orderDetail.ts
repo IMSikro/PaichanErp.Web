@@ -10,6 +10,7 @@ enum Api {
 	GetDeviceDeviceIdDropdown = '/api/orderDetail/DeviceDeviceIdDropdown',
 	GetSysUserOperatorUsersDropdown = '/api/orderDetail/SysUserOperatorUsersDropdown',
 	listNotPaichanOrderByDeviceId = '/api/order/listNotPaichanOrderByDeviceId',
+	
 }
 
 // 增加订单排产
