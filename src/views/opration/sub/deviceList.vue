@@ -1,15 +1,17 @@
 <template>
 	<el-scrollbar style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
 		<el-space>
-			<el-card v-for="item in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
+			<el-card v-for="(item, index) in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
 				<div>
 					<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
 					<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
 				</div>
-				<el-table class="tables" :data="orderDetails[item.id]" v-loading="loading" style="width: 100%" tooltip-effect="light" row-key="id" border="" size="small">
+				<el-table :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" style="width: 100%" tooltip-effect="light" row-key="id" border="" size="small">
 					<el-table-column prop="orderId" label="颜色" width="100" show-overflow-tooltip="">
 						<template #default="scope">
-							<div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }">&nbsp;</div>
+							<div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent">
+								<span style="opacity: 0">{{ scope.row.id }}</span>
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column prop="produceIdProduceName" label="产品编号" width="100" show-overflow-tooltip="" />
@@ -49,7 +51,7 @@
 import { nextTick, onMounted, reactive, ref } from 'vue';
 import { auth } from '/@/utils/authFunction';
 import { pageDevice } from '/@/api/main/device';
-import { listOrderDetailByDeviceId } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, setOrderDetailSort } from '/@/api/main/orderDetail';
 import editPaichanDialog from '/@/views/opration/sub/editPaichanDialog.vue';
 import addPaichanDialog from '/@/views/opration/sub/addPaichanDialog.vue';
 // 表格拖拽
@@ -109,34 +111,57 @@ const getSumNumber = (arr: number[]) => {
 	return sum;
 };
 
-const initSortable = () => {
-	// 获取el-table DOM
-	const el = document.querySelector('.tables .el-table__body-wrapper  table tbody');
-	Sortable.create(el, {
-		animation: 150,
-		ghostClass: 'blue-background-class',
-		handle: '.rank', // 如果需要点击某个图标拖拽的话需要吧那个图标的class写在这里
-		// 写完以上部分就已经可以实现基本的拖拽功能了，以下是拓展
-		//始拖拽事件
-		onEnd: function (/**Event*/ evt: { newIndex: any; oldIndex: any; item: any; to: any; from: any; clone: any; pullMode: any }) {
-			let newIndex = evt.newIndex; // 排序后的索引位置
-			let oldIndex = evt.oldIndex; // 排序前的索引位置
-			var itemEl = evt.item; // 拖拽 HTMLElement
-			evt.to; // 目标表
-			evt.from; // 上一个列表
-			evt.oldIndex; // 元素在旧父级中的旧索引
-			evt.newIndex; // 元素在新父级中的新索引
-			evt.clone; // 克隆元件
-			evt.pullMode; // 当项目在另一个可排序表中时：`“clone”`如果克隆，`true`如果移动
-			console.log(oldIndex, newIndex);
-		},
-		//点击选中元素事件
-		onChoose: function (/**Event*/ evt: { oldIndex: any }) {
-			evt.oldIndex;
-		},
-		//取消选中事件
-		onUnchoose: function (/**Event*/ evt: any) {},
+const rowDrop = () => {
+	const deviceIds = deviceList.value.map((v: { id: any }) => v.id);
+	// console.log('orderDetails', orderDetails.value[deviceIds]);
+	if (!deviceIds.length) {
+		return;
+	}
+	deviceIds.forEach((item, i) => {
+		const el = document.querySelector(`.tables${item} .el-table__body-wrapper  table tbody`);
+		Sortable.create(el, {
+			animation: 150,
+			ghostClass: 'blue-background-class',
+			handle: '.rank', // 如果需要点击某个图标拖拽的话需要吧那个图标的class写在这里
+			// 写完以上部分就已经可以实现基本的拖拽功能了，以下是拓展
+			//始拖拽事件
+			onEnd: function (/**Event*/ evt: { newIndex: any; oldIndex: any; item: any; to: any; from: any; clone: any; pullMode: any }) {
+				let newIndex = evt.newIndex; // 排序后的索引位置
+				let oldIndex = evt.oldIndex; // 排序前的索引位置
+				var itemEl = evt.item; // 拖拽 HTMLElement
+				evt.to; // 目标表
+				evt.from; // 上一个列表
+				evt.oldIndex; // 元素在旧父级中的旧索引
+				evt.newIndex; // 元素在新父级中的新索引
+				evt.clone; // 克隆元件
+				evt.pullMode; // 当项目在另一个可排序表中时：`“clone”`如果克隆，`true`如果移动
+				let classValue = '';
+				const divElement = itemEl.querySelector('tr td div > div > span');
+				if (divElement) {
+					classValue = divElement.innerHTML;
+				}
+				console.log(classValue, newIndex);
+
+				setSort(classValue, newIndex);
+			},
+			//点击选中元素事件
+			onChoose: function (/**Event*/ evt: { oldIndex: any }) {
+				evt.oldIndex;
+			},
+			//取消选中事件
+			onUnchoose: function (/**Event*/ evt: any) {},
+		});
 	});
+};
+
+const setSort = async (id: any, sort: any) => {
+	const params = [
+		{
+			id: id,
+			sort: sort,
+		},
+	];
+	await setOrderDetailSort(params);
 };
 
 onMounted(async () => {
@@ -144,7 +169,7 @@ onMounted(async () => {
 	deviceType.value = props.dt;
 	const dtid = deviceType.value.id;
 	await initDeviceList(dtid);
-	initSortable();
+	rowDrop();
 	// console.log(deviceType.value.id);
 
 	// lists.value = [

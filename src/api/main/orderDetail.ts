@@ -10,7 +10,7 @@ enum Api {
 	GetDeviceDeviceIdDropdown = '/api/orderDetail/DeviceDeviceIdDropdown',
 	GetSysUserOperatorUsersDropdown = '/api/orderDetail/SysUserOperatorUsersDropdown',
 	listNotPaichanOrderByDeviceId = '/api/order/listNotPaichanOrderByDeviceId',
-	
+	setOrderDetailSort = '/api/orderDetail/setOrderDetailSort',
 }
 
 // 增加订单排产
@@ -57,6 +57,14 @@ export const listOrderDetailByDeviceId = (params?: any) =>
 export const listNotPaichanOrderByDeviceId = (params?: any) =>
 	request({
 		url: Api.listNotPaichanOrderByDeviceId,
+		method: 'post',
+		data: params,
+	});
+
+// 排产排序
+export const setOrderDetailSort = (params?: any) =>
+	request({
+		url: Api.setOrderDetailSort,
 		method: 'post',
 		data: params,
 	});
