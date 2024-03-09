@@ -7,6 +7,11 @@
 					<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
 				</div>
 				<el-table :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" style="width: 100%" tooltip-effect="light" row-key="id" border="" size="small">
+					<el-table-column prop="" label="" width="30" show-overflow-tooltip="">
+						<template #default="scope">
+							<el-icon class="rank" size="14" style="display: inline; vertical-align: middle; color: #095474"><ele-Rank /></el-icon>
+						</template>
+					</el-table-column>
 					<el-table-column prop="orderId" label="颜色" width="100" show-overflow-tooltip="">
 						<template #default="scope">
 							<div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent">
@@ -24,8 +29,7 @@
 					<el-table-column label="操作" width="70" align="center" fixed="right" show-overflow-tooltip="" v-if="auth('orderDetail:edit')">
 						<template #default="scope">
 							<el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrderDetail(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button>
-							<el-icon size="14" style="display: inline; vertical-align: middle; color: #095474; cursor: pointer" @click="deleteOne(scope.row.id, $event)"><ele-DeleteFilled /></el-icon>
-							<el-icon class="rank" size="14" style="display: inline; vertical-align: middle; color: #095474"><ele-Rank /></el-icon>
+							<!-- <el-icon size="14" style="display: inline; vertical-align: middle; color: #095474; cursor: pointer" @click="deleteOne(scope.row.id, $event)"><ele-DeleteFilled /></el-icon> -->
 						</template>
 					</el-table-column>
 				</el-table>
@@ -191,7 +195,7 @@ const deleteOne = async (id: any, e: any) => {
 };
 
 // 设置排序
-const setSort = async (newData: { id: any; sort: number; }[]) => {
+const setSort = async (newData: { id: any; sort: number }[]) => {
 	const params = newData;
 	await setOrderDetailSort(params);
 };
