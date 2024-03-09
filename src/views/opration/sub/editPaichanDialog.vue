@@ -94,7 +94,9 @@ const ruleFormRef = ref();
 const ruleForm = ref<any>({});
 //自行添加其他规则
 const rules = ref<FormRules>({
-	orderDetailCode: [{ required: true, message: '请输入班次序号！', trigger: 'blur' }],
+	deviceId: [{ required: true, message: '请选择设备！', trigger: 'change' }],
+	operatorUsers: [{ required: true, message: '请选择操作人员！', trigger: 'change' }],
+	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur' }],
 });
 
 //父级传递来的函数，用于回调
@@ -110,7 +112,7 @@ const openDialog = async (data: any) => {
 	// ruleForm.value = JSON.parse(JSON.stringify(orderDetailId.value));
 
 	let rowModel = JSON.parse(JSON.stringify(orderDetailId.value));
-	const operatorUsers = rowModel.operatorUsers.split(',').map((x) => Number(x));
+	const operatorUsers = rowModel.operatorUsers.split(',').map((x: any) => Number(x));
 	rowModel.operatorUsers = operatorUsers;
 	console.log(rowModel);
 	ruleForm.value = rowModel;

@@ -120,7 +120,7 @@ const rowDrop = () => {
 	if (!deviceIds.length) {
 		return;
 	}
-	deviceIds.forEach((item, i) => {
+	deviceIds.forEach((item: string | number, i: any) => {
 		const el = document.querySelector(`.tables${item} .el-table__body-wrapper  table tbody`);
 		Sortable.create(el, {
 			animation: 150,
