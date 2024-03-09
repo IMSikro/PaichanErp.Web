@@ -1,6 +1,6 @@
 <template>
 	<el-scrollbar style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
-		<el-space>
+		<el-space alignment="flex-start">
 			<el-card v-for="(item, index) in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
 				<div>
 					<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
