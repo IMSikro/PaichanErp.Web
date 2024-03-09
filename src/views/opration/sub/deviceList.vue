@@ -23,7 +23,8 @@
 					</el-table-column>
 					<el-table-column label="操作" width="70" align="center" fixed="right" show-overflow-tooltip="" v-if="auth('orderDetail:edit')">
 						<template #default="scope">
-							<el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrderDetail(scope.row.id, $event)" v-auth="'orderDetail:edit'"></el-button>
+							<el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrderDetail(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button>
+							<el-icon size="14" style="display: inline; vertical-align: middle; color: #095474; cursor: pointer" @click="deleteOne(scope.row.id, $event)"><ele-DeleteFilled /></el-icon>
 							<el-icon class="rank" size="14" style="display: inline; vertical-align: middle; color: #095474"><ele-Rank /></el-icon>
 						</template>
 					</el-table-column>
@@ -43,15 +44,16 @@
 		</el-space>
 	</el-scrollbar>
 
-	<addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initDeviceList" />
-	<editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="initDeviceList" />
+	<addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initOrderDetailList" />
+	<editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="loadData" />
 </template>
 
 <script lang="ts" setup="" name="deviceList">
 import { nextTick, onMounted, reactive, ref } from 'vue';
+import { ElMessageBox, ElMessage } from 'element-plus';
 import { auth } from '/@/utils/authFunction';
 import { pageDevice } from '/@/api/main/device';
-import { listOrderDetailByDeviceId, setOrderDetailSort } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail } from '/@/api/main/orderDetail';
 import editPaichanDialog from '/@/views/opration/sub/editPaichanDialog.vue';
 import addPaichanDialog from '/@/views/opration/sub/addPaichanDialog.vue';
 // 表格拖拽
@@ -111,6 +113,7 @@ const getSumNumber = (arr: number[]) => {
 	return sum;
 };
 
+// 拖拽排序
 const rowDrop = () => {
 	const deviceIds = deviceList.value.map((v: { id: any }) => v.id);
 	// console.log('orderDetails', orderDetails.value[deviceIds]);
@@ -135,14 +138,29 @@ const rowDrop = () => {
 				evt.newIndex; // 元素在新父级中的新索引
 				evt.clone; // 克隆元件
 				evt.pullMode; // 当项目在另一个可排序表中时：`“clone”`如果克隆，`true`如果移动
-				let classValue = '';
-				const divElement = itemEl.querySelector('tr td div > div > span');
-				if (divElement) {
-					classValue = divElement.innerHTML;
-				}
-				console.log(classValue, newIndex);
+				// 下面将拖拽后的顺序进行修改
+				console.log(orderDetails.value[item]);
 
-				setSort(classValue, newIndex);
+				const currRow = orderDetails.value[item].splice(evt.oldIndex, 1)[0];
+				orderDetails.value[item].splice(evt.newIndex, 0, currRow);
+				const newData: {
+					id: any;
+					sort: number;
+				}[] = [];
+				orderDetails.value[item].forEach((item: { id: any }, index: number) => {
+					newData[index] = {
+						id: item.id,
+						sort: index + 1,
+					};
+				});
+				console.log(newData);
+				setSort(newData);
+
+				// let classValue = '';
+				// const divElement = itemEl.querySelector('tr td div > div > span');
+				// if (divElement) {
+				// 	classValue = divElement.innerHTML;
+				// }
 			},
 			//点击选中元素事件
 			onChoose: function (/**Event*/ evt: { oldIndex: any }) {
@@ -154,22 +172,39 @@ const rowDrop = () => {
 	});
 };
 
-const setSort = async (id: any, sort: any) => {
-	const params = [
-		{
-			id: id,
-			sort: sort,
-		},
-	];
-	await setOrderDetailSort(params);
+// 删除排产
+const deleteOne = async (id: any, e: any) => {
+	ElMessageBox.confirm(`确定要删除吗?`, '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning',
+	})
+		.then(async () => {
+			const params = {
+				id: id,
+			};
+			await deleteOrderDetail(params);
+			loadData();
+			ElMessage.success('删除成功');
+		})
+		.catch(() => {});
 };
 
-onMounted(async () => {
+// 设置排序
+const setSort = async (newData: { id: any; sort: number; }[]) => {
+	const params = newData;
+	await setOrderDetailSort(params);
+};
+const loadData = async () => {
 	loading.value = false;
 	deviceType.value = props.dt;
 	const dtid = deviceType.value.id;
 	await initDeviceList(dtid);
 	rowDrop();
+};
+
+onMounted(async () => {
+	loadData();
 	// console.log(deviceType.value.id);
 
 	// lists.value = [

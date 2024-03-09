@@ -1,6 +1,6 @@
 <template>
 	<div class="add-paichan-container">
-		<el-dialog v-model="isShowDialog" :width="850" draggable="">
+		<el-dialog v-model="isShowDialog" :width="850" draggable="" @close='closeDialog'>
 			<template #header>
 				<div style="color: #fff">
 					<!--<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit /> </el-icon>-->
@@ -180,7 +180,7 @@ const openDialog = async (data: any) => {
 // 关闭弹窗
 const closeDialog = () => {
 	emit('reloadDeviceList', { deviceTypeId: deviceTypeId.value });
-	isShowDialog.value = false;
+	// isShowDialog.value = false;
 };
 
 // 取消
