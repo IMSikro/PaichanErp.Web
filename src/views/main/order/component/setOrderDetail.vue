@@ -16,75 +16,48 @@
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="订单批号" prop="orderId">
-							<el-select clearable filterable v-model="ruleForm.orderId" placeholder="请选择订单批号"
-								:disabled="true">
-								<el-option v-for="(item, index) in orderOrderIdDropdownList" :key="index"
-									:value="item.value" :label="item.label" :disable="true" />
-
+							<el-select clearable filterable v-model="ruleForm.orderId" placeholder="请选择订单批号" :disabled="true">
+								<el-option v-for="(item, index) in orderOrderIdDropdownList" :key="index" :value="item.value" :label="item.label" :disable="true" />
 							</el-select>
-
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="班次序号" prop="orderDetailCode">
-							<el-input v-model="ruleForm.orderDetailCode" placeholder="请输入班次序号" maxlength="255"
-								show-word-limit clearable :disable="true" :disabled="true" />
-
+							<el-input v-model="ruleForm.orderDetailCode" placeholder="请输入班次序号" maxlength="255" show-word-limit clearable :disable="true" :disabled="true" />
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="设备" prop="deviceId">
 							<el-select clearable filterable v-model="ruleForm.deviceId" placeholder="请选择设备">
-								<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index"
-									:value="item.value" :label="item.label" />
-
+								<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :value="item.value" :label="item.label" />
 							</el-select>
-
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="操作人员" prop="operatorUsers">
-							<el-select filterable v-model="ruleForm.operatorUsers" placeholder="请选择操作人员" multiple
-								@change="console_Log">
-								<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index"
-									:value="item.value" :label="item.label" />
-
+							<el-select filterable v-model="ruleForm.operatorUsers" placeholder="请选择操作人员" multiple @change="console_Log">
+								<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
 							</el-select>
-
-						</el-form-item>
-
-					</el-col><el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						</el-form-item> </el-col
+					><el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="班次产量" prop="qty">
-							<el-input v-model="ruleForm.qty" placeholder="请输入班次产量" maxlength="53" show-word-limit
-								clearable />
-
+							<el-input v-model="ruleForm.qty" placeholder="请输入班次产量" maxlength="53" show-word-limit clearable />
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="计量单位" prop="pUnit">
-							<el-input v-model="ruleForm.pUnit" placeholder="请输入计量单位" maxlength="255" show-word-limit
-								clearable :disabled="true" />
-
+							<el-input v-model="ruleForm.pUnit" placeholder="请输入计量单位" maxlength="255" show-word-limit clearable :disabled="true" />
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="排序" prop="sort">
 							<el-input-number v-model="ruleForm.sort" placeholder="请输入排序" clearable />
-
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="备注" prop="remark">
-							<el-input v-model="ruleForm.remark" placeholder="请输入备注" maxlength="255" show-word-limit
-								clearable />
-
+							<el-input v-model="ruleForm.remark" placeholder="请输入备注" maxlength="255" show-word-limit clearable />
 						</el-form-item>
-
 					</el-col>
 				</el-row>
 			</el-form>
@@ -104,38 +77,38 @@
 }
 </style>
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
-import { ElMessage } from "element-plus";
-import type { FormRules } from "element-plus";
-import { getProduce } from "/@/api/main/order";
+import { ElMessage } from 'element-plus';
+import type { FormRules } from 'element-plus';
+import { getProduce } from '/@/api/main/order';
 import { pageOrderDetail } from '/@/api/main/orderDetail';
-import { addOrderDetail, updateOrderDetail } from "/@/api/main/orderDetail";
+import { addOrderDetail, updateOrderDetail } from '/@/api/main/orderDetail';
 import { getOrderOrderIdDropdown } from '/@/api/main/orderDetail';
 import { getDeviceDeviceIdDropdown } from '/@/api/main/orderDetail';
 import { getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
-import { log } from "console";
+import { log } from 'console';
 
 //父级传递来的参数
 var props = defineProps({
 	title: {
 		type: String,
-		default: "",
+		default: '',
 	},
 });
 //父级传递来的函数，用于回调
-const emit = defineEmits(["reloadTable"]);
+const emit = defineEmits(['reloadTable']);
 const ruleFormRef = ref();
 const isShowDialog = ref(false);
 const ruleForm = ref<any>({});
 //自行添加其他规则
 const rules = ref<FormRules>({
-	orderDetailCode: [{ required: true, message: '请输入班次序号！', trigger: 'blur', },],
-	deviceId: [{ required: true, message: '请选择设备！', trigger: 'blur', },],
-	orderId: [{ required: true, message: '请选择订单！', trigger: 'blur', },],
-	operatorUsers: [{ required: true, message: '请选择操作人员！', trigger: 'blur', },],
-	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur', },],
-	pUnit: [{ required: true, message: '请输入计量单位！', trigger: 'blur', },],
+	orderDetailCode: [{ required: true, message: '请输入班次序号！', trigger: 'blur' }],
+	deviceId: [{ required: true, message: '请选择设备！', trigger: 'blur' }],
+	orderId: [{ required: true, message: '请选择订单！', trigger: 'blur' }],
+	operatorUsers: [{ required: true, message: '请选择操作人员！', trigger: 'blur' }],
+	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur' }],
+	pUnit: [{ required: true, message: '请输入计量单位！', trigger: 'blur' }],
 });
 
 // 打开弹窗
@@ -145,8 +118,8 @@ const openDialog = async (row: any) => {
 		let orderModel = await getProduce({ id: rowModel.orderId });
 		const order = orderModel.data.result ?? {};
 
-		let detailListModel = await pageOrderDetail(Object.assign({ orderId: rowModel.orderId }))
-		const detailList = detailListModel.data.result
+		let detailListModel = await pageOrderDetail(Object.assign({ orderId: rowModel.orderId }));
+		const detailList = detailListModel.data.result;
 		console.log(order, detailList);
 
 		let sn = detailList.total > 0 ? Number(detailList.items.findLast((d) => d.id > 0).orderDetailCode.split('-')[1]) + 1 : 1;
@@ -158,8 +131,7 @@ const openDialog = async (row: any) => {
 		qty = rowModel.quantity - qty;
 		console.log(qty);
 		ruleForm.value = { orderId: rowModel.orderId, orderDetailCode: `${rowModel.orderDetailCode}-${sn}`, qty, pUnit: rowModel.pUnit, sort: sn };
-	}
-	else {
+	} else {
 		const operatorUsers = rowModel.operatorUsers.split(',').map((x) => Number(x));
 		rowModel.operatorUsers = operatorUsers;
 		console.log(rowModel);
@@ -170,12 +142,11 @@ const openDialog = async (row: any) => {
 
 const console_Log = () => {
 	console.log(ruleForm.value.operatorUsers);
-
-}
+};
 
 // 关闭弹窗
 const closeDialog = () => {
-	emit("reloadTable");
+	emit('reloadTable');
 	isShowDialog.value = false;
 };
 
@@ -192,7 +163,7 @@ const submit = async () => {
 			const operatorUsers = values.operatorUsers.join(',');
 			console.log(operatorUsers);
 			values.operatorUsers = operatorUsers;
-			if (ruleForm.value.id == undefined || ruleForm.value.id == null || ruleForm.value.id == "" || ruleForm.value.id == 0) {
+			if (ruleForm.value.id == undefined || ruleForm.value.id == null || ruleForm.value.id == '' || ruleForm.value.id == 0) {
 				await addOrderDetail(values);
 			} else {
 				await updateOrderDetail(values);
@@ -201,7 +172,7 @@ const submit = async () => {
 		} else {
 			ElMessage({
 				message: `表单有${Object.keys(fields).length}处验证失败，请修改后再提交`,
-				type: "error",
+				type: 'error',
 			});
 		}
 	});
@@ -228,21 +199,14 @@ const getSysUserOperatorUsersDropdownList = async () => {
 };
 getSysUserOperatorUsersDropdownList();
 
-
-
-
-
-
-
-
 // 页面加载时
-onMounted(async () => {
-});
+onMounted(async () => {});
 
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
 </script>
-
-
-
-
+<style scoped>
+::v-deep .el-space {
+	align-items: start !important;
+}
+</style>
