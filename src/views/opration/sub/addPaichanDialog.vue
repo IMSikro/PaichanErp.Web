@@ -1,6 +1,6 @@
 <template>
 	<div class="add-paichan-container">
-		<el-dialog v-model="isShowDialog" :width="850" draggable="" @close='closeDialog'>
+		<el-dialog v-model="isShowDialog" :width="850" draggable="" @close="closeDialog">
 			<template #header>
 				<div style="color: #fff">
 					<!--<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit /> </el-icon>-->
@@ -97,7 +97,6 @@ const formPaiChan = ref<any>({
 	remark: '',
 });
 const produceName = ref<any>();
-
 //修改排产产量
 const changeClassOutput = (row: any, e: any) => {
 	if (formPaiChan.value.classOutput > row.orderSurplusQuantity) {
@@ -113,9 +112,9 @@ const changeClassOutput = (row: any, e: any) => {
 const calcSN = async (row: any) => {
 	let detailListModel = await pageOrderDetail(Object.assign({ orderId: row.id }));
 	const detailList = detailListModel.data.result;
-	console.log(detailList);
-	let sn = detailList.total > 0 ? Number(detailList.items.findLast((d: { id: number; }) => d.id > 0).orderDetailCode.split('-')[1]) + 1 : 1;
-	console.log('sn', sn);
+	// console.log(detailList);
+	let sn = detailList.total > 0 ? Number(detailList.items.findLast((d: { id: number }) => d.id > 0).orderDetailCode.split('-')[1]) + 1 : 1;
+	// console.log('sn', sn);
 	orderDetailCode.value = row.batchNumber + '-' + sn;
 };
 
@@ -151,7 +150,7 @@ const addPaiChan = async (row: any, e: any) => {
 		deviceId: deviceId.value,
 		operatorUsers: operatorUsersNew,
 	};
-	console.log(params);
+	// console.log(params);
 	let res = await addOrderDetail(params);
 	if (res.data.code == 200) {
 		nextTick(async () => {
@@ -172,7 +171,6 @@ const openDialog = async (data: any) => {
 	deviceId.value = data.deviceId;
 	deviceTypeId.value = data.deviceType;
 	isShowDialog.value = true;
-
 	await getDeviceDeviceIdDropdownList();
 	await getdischargeOrderList();
 };
@@ -201,6 +199,7 @@ const submit = async () => {
 // 页面加载时
 onMounted(async () => {
 	loading.value = false;
+	await nextTick(); // 确保DOM已经渲染完毕
 });
 
 // 获取未排产订列表
@@ -210,6 +209,7 @@ const getdischargeOrderList = async () => {
 	};
 	let list = await listNotPaichanOrderByDeviceId(params);
 	dischargeOrderList.value = list.data.result ?? [];
+	formPaiChan.value.classOutput = list.data.result[0].orderSurplusQuantity;
 };
 
 const orderOrderIdDropdownList = ref<any>([]);

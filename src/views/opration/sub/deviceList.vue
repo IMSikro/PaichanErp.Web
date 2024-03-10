@@ -143,7 +143,7 @@ const rowDrop = () => {
 				evt.clone; // 克隆元件
 				evt.pullMode; // 当项目在另一个可排序表中时：`“clone”`如果克隆，`true`如果移动
 				// 下面将拖拽后的顺序进行修改
-				console.log(orderDetails.value[item]);
+				// console.log(orderDetails.value[item]);
 
 				const currRow = orderDetails.value[item].splice(evt.oldIndex, 1)[0];
 				orderDetails.value[item].splice(evt.newIndex, 0, currRow);
@@ -157,7 +157,7 @@ const rowDrop = () => {
 						sort: index + 1,
 					};
 				});
-				console.log(newData);
+				// console.log(newData);
 				setSort(newData);
 
 				// let classValue = '';
