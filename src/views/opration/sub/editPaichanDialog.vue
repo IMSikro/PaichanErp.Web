@@ -69,7 +69,7 @@
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="isShowDialogDone = true" type="success" plain>完 工</el-button>
+					<el-button @click="doneOne" type="success" plain>完 工</el-button>
 					<el-button @click="deleteOne" type="danger" plain>删 除</el-button>
 					<el-divider direction="vertical" />
 					<el-button @click="cancel">取 消</el-button>
@@ -94,17 +94,17 @@
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="日期" prop="endDate">
-									<el-date-picker placeholder="请选择完工日期" value-format="YYYY/MM/DD" type="date" v-model="ruleForm2.endDate" />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16" class="mb20">
 								<el-form-item label="设备异常时间" prop="deviceErrorTime">
 									<el-select v-model="deviceErrorTime" placeholder="请选择设备异常时间">
 										<el-option v-for="item in errorTimeList" :key="item.value" :label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
+							<!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20" style="opacity: 1;">
+								<el-form-item label="日期" prop="endDate">
+									<el-date-picker placeholder="请选择完工日期" value-format="YYYY/MM/DD" type="date" v-model="ruleForm2.endDate" />
+								</el-form-item>
+							</el-col> -->
 						</el-row>
 					</el-form>
 				</div>
@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import type { FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { addOrderDetail, updateOrderDetail, deleteOrderDetail } from '/@/api/main/orderDetail';
@@ -296,13 +296,27 @@ const submit = async () => {
 		}
 	});
 };
+// 完工弹框
+const doneOne = () => {
+	isShowDialogDone.value = true;
+	ruleForm2.value.qty = orderDetailId.value.qty;
+};
 // 完工 接口
 const submitDone = async () => {
 	ruleForm2Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
 			ruleForm2.value.id = orderDetailId.value.id;
 			ruleForm2.value.deviceErrorTime = deviceErrorTime.value;
+			// 完工日期
+			// 使用 ref 存储当前日期对象
+			const currentDate = ref(new Date());
+			const year = currentDate.value.getFullYear();
+			const month = currentDate.value.getMonth() + 1;
+			const day = currentDate.value.getDate();
+			ruleForm2.value.endDate = `${year}-${month}-${day}`;
 			let values = ruleForm2.value;
+			console.log('values',values);
+
 			await updateOrderDetail(values);
 			closeDialog();
 		} else {
