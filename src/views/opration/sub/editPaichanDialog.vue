@@ -8,9 +8,54 @@
 				</div>
 			</template>
 			<div>
-				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备">
-					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :value="item.value" :label="item.label" />
+				<div>
+					<div>
+						当前排产信息：
+						<div style="width: 100px; color: white; text-align: center; display: inline; padding: 5px" :style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})` }">
+							{{ orderDetailModel.produceName }}
+						</div>
+					</div>
+				</div>
+				选择目标设备：
+				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
 				</el-select>
+				<div>
+					<div>当前设备排产：</div>
+					<el-table max-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
+						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
+							<template #default="scope">
+								<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">
+									<span style="opacity: 0">{{ scope.row.id }}</span>
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""
+							><template #default="scope">
+								<div @click="openEditOrderDetail(scope.row, $event)">
+									{{ scope.row.produceIdProduceName }}
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip="">
+							<template #default="scope">
+								{{ formatDate(scope.row.deliveryDate) }}
+							</template>
+						</el-table-column>
+						<!-- <el-table-column prop="operatorUsersRealName" label="操作人员" width="100" show-overflow-tooltip="" /> -->
+						<el-table-column prop="qty" label="班次产量" show-overflow-tooltip="">
+							<template #default="scope">
+								<span>{{ scope.row.qty ?? 0 }}</span>
+							</template>
+						</el-table-column>
+						<!-- <el-table-column label="操作" width="70" align="center" fixed="right" show-overflow-tooltip="" v-if="auth('orderDetail:edit')"> -->
+						<!-- <template #default="scope"> -->
+						<!-- <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrderDetail(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button> -->
+						<!-- <el-icon size="14" style="display: inline; vertical-align: middle; color: #095474; cursor: pointer" @click="deleteOne(scope.row.id, $event)"><ele-DeleteFilled /></el-icon> -->
+						<!-- </template> -->
+						<!-- </el-table-column> -->
+					</el-table>
+				</div>
 				<!-- <div class="formArea" style="margin: 1% 0">
 					<el-form :model="ruleForm" ref="ruleFormRef" label-width="auto" :rules="rules">
 						<el-row :gutter="35">
@@ -172,9 +217,9 @@
 import { ref, onMounted, computed } from 'vue';
 import type { FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { addOrderDetail, updateOrderDetail, doneAndNext } from '/@/api/main/orderDetail';
 import { listDevice } from '/@/api/main/device';
 import { auth } from '/@/utils/authFunction';
+import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, doneAndNext } from '/@/api/main/orderDetail';
 import { getOrderOrderIdDropdown, getDeviceDeviceIdDropdown, getOrderDetail, getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 
 const isShowDialog = ref(false);
@@ -184,7 +229,7 @@ const deviceTypeId = ref<number>();
 const orderDetailId = ref<number>();
 const deviceErrorTime = ref<any>();
 const ruleFormRef = ref();
-const deviceId = ref();
+const deviceId = ref<any>();
 const ruleForm = ref<any>({});
 const ruleForm2Ref = ref();
 const ruleForm2 = ref<any>({});
@@ -226,7 +271,7 @@ const emit = defineEmits(['reloadDeviceList']);
 
 // 打开弹窗
 const openDialog = async (data: any) => {
-	console.log('data', data);
+	// console.log('data', data);
 
 	orderDetailId.value = data.orderDetailId;
 	deviceTypeId.value = data.deviceType;
@@ -236,11 +281,12 @@ const openDialog = async (data: any) => {
 	let rowModel = JSON.parse(JSON.stringify(orderDetailId.value));
 	const operatorUsers = rowModel.operatorUsers.split(',').map((x: any) => Number(x));
 	rowModel.operatorUsers = operatorUsers;
-	console.log(rowModel);
+	// console.log(rowModel);
 	ruleForm.value = rowModel;
 	deviceId.value = rowModel.deviceId;
 	await getDeviceDeviceIdDropdownList();
 	await getOrderDetailModel();
+	await getlistOrderDetailByDeviceId();
 };
 
 // 关闭弹窗
@@ -258,20 +304,29 @@ const cancel = () => {
 
 // 提交
 const submit = async () => {
-	ruleFormRef.value.validate(async (isValid: boolean, fields?: any) => {
-		if (isValid) {
-			let values = ruleForm.value;
-			const operatorUsers = values.operatorUsers.join(',');
-			values.operatorUsers = operatorUsers;
-			await updateOrderDetail(values);
-			closeDialog();
-		} else {
-			ElMessage({
-				message: `表单有${Object.keys(fields).length}处验证失败，请修改后再提交`,
-				type: 'error',
-			});
-		}
-	});
+	const params = {
+		id: orderDetailId.value.id,
+		deviceId: deviceId.value,
+	};
+
+	await updateOrderDetail(params);
+	ElMessage.success('操作成功');
+	closeDialog();
+	// 原代码
+	// ruleFormRef.value.validate(async (isValid: boolean, fields?: any) => {
+	// 	if (isValid) {
+	// 		let values = ruleForm.value;
+	// 		const operatorUsers = values.operatorUsers.join(',');
+	// 		values.operatorUsers = operatorUsers;
+	// 		await updateOrderDetail(values);
+	// 		closeDialog();
+	// 	} else {
+	// 		ElMessage({
+	// 			message: `表单有${Object.keys(fields).length}处验证失败，请修改后再提交`,
+	// 			type: 'error',
+	// 		});
+	// 	}
+	// });
 };
 // 完工弹框
 const doneOne = () => {
@@ -338,15 +393,28 @@ const submitDone3 = async () => {
 		}
 	});
 };
+// 修改排产时 - 切换设备
+const switchDevice = async () => {
+	await getlistOrderDetailByDeviceId();
+};
+// 查看设备下的排产信息
+const dischargeList = ref<any>([]);
+const getlistOrderDetailByDeviceId = async () => {
+	let list = await listOrderDetailByDeviceId({ deviceId: deviceId.value });
+	dischargeList.value = list.data.result ?? [];
+	// console.log('list', list.data.result);
+};
 
 // 页面加载时
 onMounted(async () => {});
 
+// 查看排产详情信息
 const orderDetailModel = ref<any>({});
 const getOrderDetailModel = async () => {
-	let list = await getOrderDetail({ id: orderDetailId.value });
+	console.log('orderDetailId', orderDetailId.value.id);
+
+	let list = await getOrderDetail({ id: orderDetailId.value.id });
 	orderDetailModel.value = list.data.result ?? {};
-	console.log(orderDetailModel.value);
 };
 
 const orderOrderIdDropdownList = ref<any>([]);
@@ -378,6 +446,15 @@ const getSysUserOperatorUsersDropdownList = async () => {
 getSysUserOperatorUsersDropdownList();
 const console_Log = () => {
 	console.log(ruleForm.value.operatorUsers);
+};
+
+// 格式化日期
+const formatDate = (dateString: string | number | Date) => {
+	const date = new Date(dateString);
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`;
 };
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
