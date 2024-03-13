@@ -2,6 +2,7 @@
 enum Api {
 	AddOrderDetail = '/api/orderDetail/add',
 	DeleteOrderDetail = '/api/orderDetail/delete',
+	doneAndNext = '/api/orderDetail/doneAndNext',
 	UpdateOrderDetail = '/api/orderDetail/update',
 	PageOrderDetail = '/api/orderDetail/page',
 	GetOrderDetail = '/api/orderDetail/detail',
@@ -17,6 +18,14 @@ enum Api {
 export const addOrderDetail = (params?: any) =>
 	request({
 		url: Api.AddOrderDetail,
+		method: 'post',
+		data: params,
+	});
+
+// 删除订单排产
+export const doneAndNext = (params?: any) =>
+	request({
+		url: Api.doneAndNext,
 		method: 'post',
 		data: params,
 	});

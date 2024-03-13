@@ -1,13 +1,13 @@
 <template>
-	<el-scrollbar style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
+	<el-scrollbar height="20vw" style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
 		<el-space alignment="flex-start">
 			<el-card v-for="(item, index) in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
 				<div>
 					<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
-					<el-text style="margin: 0 2rem">操作人员: {{ item.deviceName }}</el-text>
+					<el-text style="margin: 0 2rem" @click="changeOperator(item.id)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
 					<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
 				</div>
-				<el-table :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" style="width: 100%" tooltip-effect="light" row-key="id" border="" size="small">
+				<el-table max-height="300" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
 					<!-- <el-table-column prop="" label="" width="30" show-overflow-tooltip="">
 						<template #default="scope">
 							<el-icon class="rank" size="14" style="display: inline; vertical-align: middle; color: #095474"><ele-Rank /></el-icon>
@@ -62,6 +62,23 @@
 
 	<addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initOrderDetailList" />
 	<editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="loadData" />
+	<!-- // 修改设备绑定人员 -->
+	<el-dialog v-model="editOperatorDialog" :width="500" draggable="">
+		<template #header>
+			<div style="color: #fff">修改操作人员</div>
+		</template>
+		<div>
+			<el-select multiple collapse-tags collapse-tags-tooltip v-model="operatorUsers" placeholder="请选择操作人员">
+				<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
+			</el-select>
+		</div>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="cancel">取 消</el-button>
+				<el-button type="primary" @click="submit">确 定</el-button>
+			</span>
+		</template></el-dialog
+	>
 </template>
 
 <script lang="ts" setup="" name="deviceList">
@@ -70,6 +87,9 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { auth } from '/@/utils/authFunction';
 import { pageDevice } from '/@/api/main/device';
 import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail } from '/@/api/main/orderDetail';
+import { getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
+import { updateDevice } from '/@/api/main/device';
+
 import editPaichanDialog from '/@/views/opration/sub/editPaichanDialog.vue';
 import addPaichanDialog from '/@/views/opration/sub/addPaichanDialog.vue';
 // 表格拖拽
@@ -84,6 +104,7 @@ const loading = ref(true);
 const scrollbarRef = ref();
 const addPaichanDialogRef = ref();
 const editPaichanDialogRef = ref();
+const editOperatorDialog = ref(false);
 const handleScroll = (e: any) => {
 	const wheelDelta = e.wheelDelta || -e.deltaY * 40;
 	scrollbarRef.value.setScrollLeft(scrollbarRef.value.wrapRef.scrollLeft - wheelDelta);
@@ -100,6 +121,7 @@ const openEditOrderDetail = async (orderDetailId: any, e: any) => {
 const currentDate = new Date().toDateString();
 let deviceList = ref<any>([]);
 let deviceType = ref<any>({});
+let deviceId = ref<any>('');
 let orderDetails = ref<any>({});
 let orderDetailCounts = ref<any>({});
 let orderDetailSums = ref<any>({});
@@ -109,12 +131,64 @@ const initDeviceList = async (dtId: any) => {
 	await initOrderDetailList();
 };
 
+// 渲染操作人员
+const renderingUsers = (users: string) => {
+	if (users == null) {
+		return;
+	}
+	// 将字符串转换为数组
+	const userValues = users.split(',');
+
+	// 遍历用户值数组
+	const labels = userValues.map((userValue) => {
+		// 找到对应value的label
+		const user = sysUserOperatorUsersDropdownList.value.find((item) => item.value === parseInt(userValue, 10));
+		// 如果找到了对应的label，则返回label，否则返回原始值
+		return user ? user.label : userValue;
+	});
+
+	console.log(labels); // 输出找到的labels数组
+	// 返回以逗号分隔的label字符串
+	return labels.join(',');
+};
+
+// 修改设备操作人员
+const operatorUsers = ref('');
+const changeOperator = async (devId: any) => {
+	deviceId.value = devId;
+	// operatorUsers.value = deviceList.value.find((v: { id: any }) => v.id === devId).operatorUsers;
+	editOperatorDialog.value = true;
+};
+
+// 提交 - 修改设备操作人员
+const submit = async () => {
+	const params = {
+		id: deviceId.value,
+		operatorUsers: operatorUsers.value.join(','),
+	};
+	await updateDevice(params);
+	loadData();
+	editOperatorDialog.value = false;
+};
+
+// 取消
+const cancel = () => {
+	editOperatorDialog.value = false;
+};
+
+const sysUserOperatorUsersDropdownList = ref<any>([]);
+const getSysUserOperatorUsersDropdownList = async () => {
+	let list = await getSysUserOperatorUsersDropdown();
+	sysUserOperatorUsersDropdownList.value = list.data.result ?? [];
+};
+getSysUserOperatorUsersDropdownList();
+
+// 加载各个设备排产列表
 const initOrderDetailList = async () => {
-	// console.log(deviceList.value);
 	const deviceIds = deviceList.value.map((v: { id: any }) => v.id);
-	// console.log(deviceIds);
 	for (const deviceId of deviceIds) {
 		var orderDetailRes = await listOrderDetailByDeviceId({ deviceId });
+		// 给表格赋值
 		orderDetails.value[deviceId] = orderDetailRes.data.result ?? [];
 		orderDetailCounts.value[deviceId] = orderDetailRes.data.result?.length ?? 0;
 		orderDetailSums.value[deviceId] = getSumNumber(orderDetailRes.data.result?.map((v: { qty: any }) => v.qty) ?? []);
