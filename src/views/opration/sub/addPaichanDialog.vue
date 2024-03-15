@@ -93,7 +93,7 @@ const deviceId = ref<any>();
 const formPaiChan = ref<any>({
 	operatorUsers: '',
 	classOutput: 0,
-	sort: 0,
+	sort: 999,
 	remark: '',
 });
 const produceName = ref<any>();

@@ -114,7 +114,8 @@
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="doneOne" type="success" plain>完工并下线</el-button>
+					<el-button @click="doneAndOffline" type="success" plain>完工并下线</el-button>
+					<el-button @click="done" type="success" plain>完工</el-button>
 					<el-button @click="deleteOne" type="danger" plain>下 线</el-button>
 					<el-divider direction="vertical" />
 					<el-button type="primary" @click="submit">确 定</el-button>
@@ -166,11 +167,11 @@
 				</span>
 			</template>
 		</el-dialog>
-		<!-- 下线弹框 -->
+		<!-- 完工弹框 -->
 		<el-dialog v-model="isShowDialogDone3" :width="650" draggable="">
 			<template #header>
 				<div style="color: #fff">
-					<span> 下线 </span>
+					<span> 完工 </span>
 				</div>
 			</template>
 			<div>
@@ -219,7 +220,7 @@ import type { FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { listDevice } from '/@/api/main/device';
 import { auth } from '/@/utils/authFunction';
-import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, doneAndNext, deviceErrorTypeDropdown } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, doneAndNext, deviceErrorTypeDropdown, deleteOrderDetail } from '/@/api/main/orderDetail';
 import { getOrderOrderIdDropdown, getDeviceDeviceIdDropdown, getOrderDetail, getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 
 interface ListItem {
@@ -335,13 +336,13 @@ const submit = async () => {
 	// 	}
 	// });
 };
-// 完工弹框
-const doneOne = () => {
+// 完工并下线弹框
+const doneAndOffline = () => {
 	isShowDialogDone.value = true;
 	ruleForm2.value.qty = orderDetailId.value.qty;
 	remoteMethod('1');
 };
-// 完工 接口
+// 完工并下线 接口
 const submitDone = async () => {
 	ruleForm2Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
@@ -373,12 +374,12 @@ const submitDone = async () => {
 	// isShowDialog.value = false;
 };
 
-// 删除排产 - 下线
-const deleteOne = async () => {
+// 完工
+const done = async () => {
 	isShowDialogDone3.value = true;
 	ruleForm3.value.qty = orderDetailId.value.qty;
 };
-// 下线 接口
+// 完工 接口
 const submitDone3 = async () => {
 	ruleForm3Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
@@ -407,6 +408,25 @@ const submitDone3 = async () => {
 		}
 	});
 };
+
+// 删除排产
+const deleteOne = async () => {
+	ElMessageBox.confirm(`确定要删除该排产吗?`, `删除排产`, {
+		//  - ${orderDetailId.value.id}
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning',
+	})
+		.then(async () => {
+			const params = {
+				id: orderDetailId.value.id,
+			};
+			await deleteOrderDetail(params);
+			closeDialog();
+			ElMessage.success('删除成功');
+		})
+		.catch(() => {});
+};
 // 修改排产时 - 切换设备
 const switchDevice = async () => {
 	await getlistOrderDetailByDeviceId();
@@ -432,7 +452,7 @@ const remoteMethod = async (query: string) => {
 				label: item.label,
 			}));
 			console.log('options', options);
-			errorTypeDropdown.value = options
+			errorTypeDropdown.value = options;
 			// options.value = options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
 		} catch (error) {
 			console.error('Error fetching remote data:', error);
