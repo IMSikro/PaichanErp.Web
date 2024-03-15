@@ -12,6 +12,7 @@ enum Api {
 	GetSysUserOperatorUsersDropdown = '/api/orderDetail/SysUserOperatorUsersDropdown',
 	listNotPaichanOrderByDeviceId = '/api/order/listNotPaichanOrderByDeviceId',
 	setOrderDetailSort = '/api/orderDetail/setOrderDetailSort',
+	deviceErrorTypeDropdown = '/api/orderDetail/deviceErrorTypeDropdown',
 }
 
 // 增加订单排产
@@ -99,5 +100,11 @@ export const getDeviceDeviceIdDropdown = () =>
 export const getSysUserOperatorUsersDropdown = () =>
 	request({
 		url: Api.GetSysUserOperatorUsersDropdown,
+		method: 'get',
+	});
+// 获取设备未生产类型列表
+export const deviceErrorTypeDropdown = () =>
+	request({
+		url: Api.deviceErrorTypeDropdown,
 		method: 'get',
 	});
