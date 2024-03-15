@@ -4,7 +4,7 @@
 			<el-card v-for="item in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
 				<div>
 					<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
-					<el-text style="margin: 0 2rem" @click="changeOperator(item.id)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
+					<el-text style="margin: 0 2rem" @click="changeOperator(item.id,item.operatorUsers)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
 					<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
 				</div>
 				<el-table max-height="300" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
@@ -114,6 +114,8 @@ const initDeviceList = async (dtId: any) => {
 
 // 渲染操作人员
 const renderingUsers = (users: string) => {
+	console.log(users);
+	
 	if (users == null) {
 		return;
 	}
@@ -134,10 +136,10 @@ const renderingUsers = (users: string) => {
 };
 
 // 修改设备操作人员
-const operatorUsers = ref('');
-const changeOperator = async (devId: any) => {
+const operatorUsers = ref<number[]>([]);
+const changeOperator = async (devId: any,users: string) => {
 	deviceId.value = devId;
-	// operatorUsers.value = deviceList.value.find((v: { id: any }) => v.id === devId).operatorUsers;
+	operatorUsers.value = users?.split(',')?.map(u => parseInt(u,10)) ?? [];
 	editOperatorDialog.value = true;
 };
 
