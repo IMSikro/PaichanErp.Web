@@ -170,9 +170,10 @@ const emit = defineEmits(['reloadDeviceList']);
 const openDialog = async (data: any) => {
 	deviceId.value = data.deviceId;
 	deviceTypeId.value = data.deviceType;
-	isShowDialog.value = true;
 	await getDeviceDeviceIdDropdownList();
 	await getdischargeOrderList();
+	await getSysUserOperatorUsersDropdownList();
+	isShowDialog.value = true;
 };
 
 // 关闭弹窗
@@ -238,7 +239,6 @@ const getSysUserOperatorUsersDropdownList = async () => {
 	let list = await getSysUserOperatorUsersDropdown();
 	sysUserOperatorUsersDropdownList.value = list.data.result ?? [];
 };
-getSysUserOperatorUsersDropdownList();
 
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });

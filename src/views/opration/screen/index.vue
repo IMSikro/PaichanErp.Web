@@ -32,9 +32,10 @@
     </div>
 </template>
 
-
 <script lang="ts" setup="" name="oprationScreen">
-import { onMounted, reactive, ref } from 'vue'
+import { defineAsyncComponent,onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router';
+import mittBus from '/@/utils/mitt';
 import { auth } from '/@/utils/authFunction';
 import { clearAccessTokens, getAPI } from '/@/utils/axios-utils';
 import { SysFileApi, SysOrgApi, SysUserApi, SysTenantApi } from '/@/api-services/api';
@@ -45,6 +46,15 @@ import { storeToRefs } from 'pinia';
 import { useUserInfo } from '/@/stores/userInfo';
 
 import DeviceList from '/@/views/opration/sub/deviceList.vue';
+
+// 定义变量内容
+const route = useRoute();
+
+// 0 刷新当前，1 关闭当前，2 关闭其它，3 关闭全部 4 当前页全屏
+// 1、刷新当前 tagsView
+const refreshCurrentTagsView = () => {
+	mittBus.emit('onCurrentContextmenuClick', Object.assign({}, { contextMenuClickId: 0, ...route }));
+};
 
 const stores = useUserInfo();
 const { userInfos } = storeToRefs(stores);

@@ -283,7 +283,6 @@ const openDialog = async (data: any) => {
 
 	orderDetailId.value = data.orderDetailId;
 	deviceTypeId.value = data.deviceType;
-	isShowDialog.value = true;
 	// ruleForm.value = JSON.parse(JSON.stringify(orderDetailId.value));
 
 	let rowModel = JSON.parse(JSON.stringify(orderDetailId.value));
@@ -295,6 +294,9 @@ const openDialog = async (data: any) => {
 	await getDeviceDeviceIdDropdownList();
 	await getOrderDetailModel();
 	await getlistOrderDetailByDeviceId();
+	await getSysUserOperatorUsersDropdownList();
+	
+	isShowDialog.value = true;
 };
 
 // 关闭弹窗
@@ -503,7 +505,7 @@ const getSysUserOperatorUsersDropdownList = async () => {
 	let list = await getSysUserOperatorUsersDropdown();
 	sysUserOperatorUsersDropdownList.value = list.data.result ?? [];
 };
-getSysUserOperatorUsersDropdownList();
+
 const console_Log = () => {
 	console.log(ruleForm.value.operatorUsers);
 };
