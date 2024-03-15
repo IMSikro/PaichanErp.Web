@@ -426,21 +426,22 @@ const remoteMethod = async (query: string) => {
 		try {
 			// 调用接口获取远程数据
 			const res = await deviceErrorTypeDropdown();
-			console.log('response', res.data.result);
 			// 处理接口返回的数据，将其格式化为列表项
 			const options = res.data.result.map((item: any) => ({
 				value: item.value,
 				label: item.label,
 			}));
-			options.value = options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
+			console.log('options', options);
+			errorTypeDropdown.value = options
+			// options.value = options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
 		} catch (error) {
 			console.error('Error fetching remote data:', error);
-			deviceErrorTypeDropdown.value = [];
+			errorTypeDropdown.value = [];
 		} finally {
 			loading.value = false;
 		}
 	} else {
-		deviceErrorTypeDropdown.value = [];
+		errorTypeDropdown.value = [];
 	}
 };
 
