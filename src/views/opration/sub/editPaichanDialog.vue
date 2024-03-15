@@ -12,7 +12,7 @@
 					<div>
 						当前排产信息：
 						<div style="width: 100px; color: white; text-align: center; display: inline; padding: 5px" :style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})` }">
-							{{ orderDetailModel.produceName }}
+							批次号: {{ orderDetailModel.orderDetailCode }} 产品编号: {{ orderDetailModel.produceName }}
 						</div>
 					</div>
 				</div>
@@ -32,7 +32,7 @@
 						</el-table-column>
 						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""
 							><template #default="scope">
-								<div @click="openEditOrderDetail(scope.row, $event)">
+								<div>
 									{{ scope.row.produceIdProduceName }}
 								</div>
 							</template>
@@ -250,24 +250,56 @@ const ruleForm3 = ref<any>({});
 // 	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur' }],
 // });
 //自行添加其他规则
+const validateDeviceErrorType = (rule, value, callback)=>{
+	if (ruleForm2.value.deviceErrorTime && ruleForm2.value.deviceErrorTime > 0) {
+		if (!value) {
+			callback(new Error('非生产时间类型不能为空！'));
+		} else {
+			callback()
+		}
+	} else {
+		callback()
+	}
+}
 const rules2 = ref<FormRules>({
 	deviceErrorTime: [
-		{ required: true, message: '请输入非生产时间(小时)！', trigger: 'blur' },
 		{
 			pattern: /^\d+(\.\d{1})?$/, // 正则表达式，确保为1位小数的数字
 			message: '请输入整数或1位小数的数字！',
 			trigger: 'blur',
 		},
 	],
+	deviceErrorType: [
+		{
+			validator: validateDeviceErrorType,
+			trigger: 'blur',
+		},
+	],
 	qty: [{ required: true, message: '请输入产量！', trigger: 'blur' }],
 });
+const validateDeviceErrorType3 = (rule, value, callback)=>{
+	if (ruleForm3.value.deviceErrorTime && ruleForm3.value.deviceErrorTime > 0) {
+		if (!value) {
+			callback(new Error('非生产时间类型不能为空！'));
+		} else {
+			callback()
+		}
+	} else {
+		callback()
+	}
+}
 //自行添加其他规则
 const rules3 = ref<FormRules>({
 	deviceErrorTime: [
-		{ required: true, message: '请输入非生产时间(小时)！', trigger: 'blur' },
 		{
 			pattern: /^\d+(\.\d{1})?$/, // 正则表达式，确保为1位小数的数字
 			message: '请输入整数或1位小数的数字！',
+			trigger: 'blur',
+		},
+	],
+	deviceErrorType: [
+		{
+			validator: validateDeviceErrorType3,
 			trigger: 'blur',
 		},
 	],
@@ -295,7 +327,7 @@ const openDialog = async (data: any) => {
 	await getOrderDetailModel();
 	await getlistOrderDetailByDeviceId();
 	await getSysUserOperatorUsersDropdownList();
-	
+
 	isShowDialog.value = true;
 };
 

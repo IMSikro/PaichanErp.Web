@@ -18,14 +18,6 @@
 							<template #default="props">
 								<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 0.5%">
 									<div style="display: flex; align-items: center">
-										<div>操作人员：</div>
-										<div>
-											<el-select multiple collapse-tags collapse-tags-tooltip size="small" v-model="formPaiChan.operatorUsers" placeholder="请选择操作人员" @change="console_Log" style="width: 165px">
-												<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
-											</el-select>
-										</div>
-									</div>
-									<div style="display: flex; align-items: center">
 										<div>班次产量：</div>
 										<el-input
 											v-model="formPaiChan.classOutput"
@@ -38,10 +30,6 @@
 									<div style="display: flex; align-items: center">
 										<div>备注：</div>
 										<el-input v-model="formPaiChan.remark" size="small" placeholder="请输入备注" style="width: 150px" clearable />
-									</div>
-									<div style="display: flex; align-items: center">
-										<div>排序：</div>
-										<el-input-number v-model="formPaiChan.sort" size="small" placeholder="请输入排序" style="width: 75px" clearable />
 									</div>
 									<div>
 										<el-button icon="ele-Promotion" size="small" text="" type="primary" @click="addPaiChan(props.row, $event)" v-auth="'orderDetail:edit'"></el-button>
@@ -124,13 +112,6 @@ const dischargeOrderList = ref<any>();
 const addPaiChan = async (row: any, e: any) => {
 	// 先执行calcSN
 	await calcSN(row);
-	if (formPaiChan.value.operatorUsers.length == 0) {
-		ElMessage({
-			message: '请选择操作人员',
-			type: 'error',
-		});
-		return;
-	}
 
 	if (formPaiChan.value.classOutput == 0) {
 		ElMessage({
@@ -139,7 +120,6 @@ const addPaiChan = async (row: any, e: any) => {
 		});
 		return;
 	}
-	const operatorUsersNew = formPaiChan.value.operatorUsers.join(',');
 	const params = {
 		qty: formPaiChan.value.classOutput,
 		pUnit: row.pUnit,
@@ -148,7 +128,6 @@ const addPaiChan = async (row: any, e: any) => {
 		orderId: row.id,
 		orderDetailCode: orderDetailCode.value,
 		deviceId: deviceId.value,
-		operatorUsers: operatorUsersNew,
 	};
 	// console.log(params);
 	let res = await addOrderDetail(params);
