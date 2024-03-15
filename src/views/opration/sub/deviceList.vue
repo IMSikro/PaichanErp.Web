@@ -1,18 +1,13 @@
 <template>
 	<el-scrollbar height="20vw" style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
 		<el-space alignment="flex-start">
-			<el-card v-for="(item, index) in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
+			<el-card v-for="item in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
 				<div>
 					<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
 					<el-text style="margin: 0 2rem" @click="changeOperator(item.id)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
 					<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
 				</div>
 				<el-table max-height="300" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
-					<!-- <el-table-column prop="" label="" width="30" show-overflow-tooltip="">
-						<template #default="scope">
-							<el-icon class="rank" size="14" style="display: inline; vertical-align: middle; color: #095474"><ele-Rank /></el-icon>
-						</template>
-					</el-table-column> -->
 					<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
 						<template #default="scope">
 							<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">
@@ -38,24 +33,10 @@
 							<span>{{ scope.row.qty ?? 0 }}</span>
 						</template>
 					</el-table-column>
-					<!-- <el-table-column label="操作" width="70" align="center" fixed="right" show-overflow-tooltip="" v-if="auth('orderDetail:edit')"> -->
-					<!-- <template #default="scope"> -->
-					<!-- <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrderDetail(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button> -->
-					<!-- <el-icon size="14" style="display: inline; vertical-align: middle; color: #095474; cursor: pointer" @click="deleteOne(scope.row.id, $event)"><ele-DeleteFilled /></el-icon> -->
-					<!-- </template> -->
-					<!-- </el-table-column> -->
 				</el-table>
 				<div style="text-align: center; width: 100%; position: relative; bottom: 0">
 					<el-text> 总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</el-text>
 				</div>
-				<!-- <img :src="item.imgUrl" class="image multi-content" />
-                <div style="padding: 14px">
-                    <span>{{ item.name }}</span>
-                    <div class="bottom card-header">
-                        <div class="time">{{ currentDate }}</div>
-                        <el-button text bg type="primary">开始派工</el-button>
-                    </div>
-                </div> -->
 			</el-card>
 		</el-space>
 	</el-scrollbar>
@@ -147,7 +128,7 @@ const renderingUsers = (users: string) => {
 		return user ? user.label : userValue;
 	});
 
-	console.log(labels); // 输出找到的labels数组
+	// console.log(labels); // 输出找到的labels数组
 	// 返回以逗号分隔的label字符串
 	return labels.join(',');
 };

@@ -140,13 +140,13 @@
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="非生产时间(小时)" prop="deviceErrorTime">
-									<el-input v-model="ruleForm2.deviceErrorTime" placeholder="请输入非生产时间(小时)" clearable />
+									<el-input v-model="ruleForm2.deviceErrorTime" placeholder="请输入时间" clearable />
 								</el-form-item>
 							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+							<el-col :xs="24" :sm="14" :md="14" :lg="14" :xl="14" class="mb20">
 								<el-form-item label="非生产时间类型" prop="timeType">
-									<el-select v-model="ruleForm2.timeType" multiple filterable remote reserve-keyword>
-										<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+									<el-select v-model="ruleForm2.timeType" filterable allow-create collapse-tags collapse-tags-tooltip :loading="loading" :reserve-keyword="false" default-first-option>
+										<el-option v-for="(item, index) in errorTypeDropdown" :key="index" :label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -184,13 +184,13 @@
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="非生产时间(小时)" prop="deviceErrorTime">
-									<el-input v-model="ruleForm3.deviceErrorTime" placeholder="请输入非生产时间(小时)" clearable />
+									<el-input v-model="ruleForm3.deviceErrorTime" placeholder="请输入时间" clearable />
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="非生产时间类型" prop="timeType">
-									<el-select v-model="ruleForm3.timeType" multiple filterable remote reserve-keyword>
-										<!-- <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" /> -->
+									<el-select v-model="ruleForm3.timeType" filterable allow-create collapse-tags collapse-tags-tooltip :loading="loading" :reserve-keyword="false" default-first-option>
+										<el-option v-for="(item, index) in errorTypeDropdown" :key="index" :label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -219,16 +219,23 @@ import type { FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { listDevice } from '/@/api/main/device';
 import { auth } from '/@/utils/authFunction';
-import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, doneAndNext } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, doneAndNext, deviceErrorTypeDropdown } from '/@/api/main/orderDetail';
 import { getOrderOrderIdDropdown, getDeviceDeviceIdDropdown, getOrderDetail, getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
+
+interface ListItem {
+	value: string;
+	label: string;
+}
 
 const isShowDialog = ref(false);
 const isShowDialogDone = ref(false);
 const isShowDialogDone3 = ref(false);
 const deviceTypeId = ref<number>();
 const orderDetailId = ref<number>();
-const deviceErrorTime = ref<any>();
-const ruleFormRef = ref();
+// const deviceErrorTime = ref<any>();
+const errorTypeDropdown = ref<ListItem[]>([]);
+const loading = ref(false);
+// const ruleFormRef = ref();
 const deviceId = ref<any>();
 const ruleForm = ref<any>({});
 const ruleForm2Ref = ref();
@@ -236,11 +243,11 @@ const ruleForm2 = ref<any>({});
 const ruleForm3Ref = ref();
 const ruleForm3 = ref<any>({});
 //自行添加其他规则
-const rules = ref<FormRules>({
-	deviceId: [{ required: true, message: '请选择设备！', trigger: 'change' }],
-	operatorUsers: [{ required: true, message: '请选择操作人员！', trigger: 'change' }],
-	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur' }],
-});
+// const rules = ref<FormRules>({
+// 	deviceId: [{ required: true, message: '请选择设备！', trigger: 'change' }],
+// 	operatorUsers: [{ required: true, message: '请选择操作人员！', trigger: 'change' }],
+// 	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur' }],
+// });
 //自行添加其他规则
 const rules2 = ref<FormRules>({
 	deviceErrorTime: [
@@ -332,24 +339,27 @@ const submit = async () => {
 const doneOne = () => {
 	isShowDialogDone.value = true;
 	ruleForm2.value.qty = orderDetailId.value.qty;
+	remoteMethod('1');
 };
 // 完工 接口
 const submitDone = async () => {
 	ruleForm2Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
-			ruleForm2.value.id = orderDetailId.value.id;
-			ruleForm2.value.deviceErrorTime = deviceErrorTime.value;
+			// 深拷贝ruleForm2赋值给params
+			const params = JSON.parse(JSON.stringify(ruleForm2.value));
 			// 完工日期
 			// 使用 ref 存储当前日期对象
 			const currentDate = ref(new Date());
 			const year = currentDate.value.getFullYear();
 			const month = currentDate.value.getMonth() + 1;
 			const day = currentDate.value.getDate();
-			ruleForm2.value.endDate = `${year}-${month}-${day}`;
-			let values = ruleForm2.value;
-			console.log('values', values);
-
-			await updateOrderDetail(values);
+			// 最终赋值
+			params.id = orderDetailId.value.id;
+			params.endDate = `${year}-${month}-${day}`;
+			params.deviceErrorType = ruleForm2.value.timeType;
+			delete params.timeType;
+			console.log('params', params);
+			await updateOrderDetail(params);
 			ElMessage.success('操作成功');
 			closeDialog();
 		} else {
@@ -366,23 +376,27 @@ const submitDone = async () => {
 // 删除排产 - 下线
 const deleteOne = async () => {
 	isShowDialogDone3.value = true;
+	ruleForm3.value.qty = orderDetailId.value.qty;
 };
 // 下线 接口
 const submitDone3 = async () => {
 	ruleForm3Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
-			ruleForm3.value.id = orderDetailId.value.id;
-			ruleForm3.value.deviceErrorTime = deviceErrorTime.value;
+			// 深拷贝ruleForm2赋值给params
+			const params = JSON.parse(JSON.stringify(ruleForm3.value));
 			// 完工日期
 			// 使用 ref 存储当前日期对象
 			const currentDate = ref(new Date());
 			const year = currentDate.value.getFullYear();
 			const month = currentDate.value.getMonth() + 1;
 			const day = currentDate.value.getDate();
-			ruleForm3.value.endDate = `${year}-${month}-${day}`;
-			let values = ruleForm3.value;
-			console.log('values', values);
-			// await doneAndNext(values);
+			// 最终赋值
+			params.id = orderDetailId.value.id;
+			params.endDate = `${year}-${month}-${day}`;
+			params.deviceErrorType = ruleForm3.value.timeType;
+			delete params.timeType;
+			console.log('params', params);
+			await doneAndNext(params);
 			ElMessage.success('操作成功');
 			closeDialog();
 		} else {
@@ -403,6 +417,31 @@ const getlistOrderDetailByDeviceId = async () => {
 	let list = await listOrderDetailByDeviceId({ deviceId: deviceId.value });
 	dischargeList.value = list.data.result ?? [];
 	// console.log('list', list.data.result);
+};
+
+// 远程搜索
+const remoteMethod = async (query: string) => {
+	if (query) {
+		loading.value = true;
+		try {
+			// 调用接口获取远程数据
+			const res = await deviceErrorTypeDropdown();
+			console.log('response', res.data.result);
+			// 处理接口返回的数据，将其格式化为列表项
+			const options = res.data.result.map((item: any) => ({
+				value: item.value,
+				label: item.label,
+			}));
+			options.value = options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
+		} catch (error) {
+			console.error('Error fetching remote data:', error);
+			deviceErrorTypeDropdown.value = [];
+		} finally {
+			loading.value = false;
+		}
+	} else {
+		deviceErrorTypeDropdown.value = [];
+	}
 };
 
 // 页面加载时
