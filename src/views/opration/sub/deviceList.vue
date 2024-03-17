@@ -1,13 +1,19 @@
 <template>
-	<el-scrollbar height="20vw" style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
-		<el-space alignment="flex-start">
-			<el-card v-for="item in deviceList" :key="item.id" :body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
-				<div>
-					<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
-					<el-text style="margin: 0 2rem" @click="changeOperator(item.id,item.operatorUsers)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
-					<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
-				</div>
-				<el-table max-height="300" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
+	<el-space alignment="flex-start">
+		<el-card
+			:style="{ 'min-height': minHeight + 55 + 'px' }"
+			style="max-width: 500px; position: relative"
+			v-for="item in deviceList"
+			:key="item.id"
+			:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
+		>
+			<div>
+				<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
+				<el-text style="margin: 0 2rem" @click="changeOperator(item.id, item.operatorUsers)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
+				<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
+			</div>
+			<div class="tableArea" style="position: relative; display: flex; flex-direction: column">
+				<el-table :height="minHeight" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
 					<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
 						<template #default="scope">
 							<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">
@@ -34,12 +40,13 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div style="text-align: center; width: 100%; position: relative; bottom: 0">
+				<div style="text-align: center">
 					<el-text> 总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</el-text>
 				</div>
-			</el-card>
-		</el-space>
-	</el-scrollbar>
+			</div>
+			<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99"><el-button link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button></div>
+		</el-card>
+	</el-space>
 
 	<addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initOrderDetailList" />
 	<editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="loadData" />
@@ -81,6 +88,7 @@ var props = defineProps({
 	dt: {},
 });
 
+const minHeight = ref(355);
 const loading = ref(true);
 const scrollbarRef = ref();
 const addPaichanDialogRef = ref();
@@ -100,6 +108,7 @@ const openEditOrderDetail = async (orderDetailId: any, e: any) => {
 };
 
 const currentDate = new Date().toDateString();
+const moreThen10 = ref(false);
 let deviceList = ref<any>([]);
 let deviceType = ref<any>({});
 let deviceId = ref<any>('');
@@ -112,10 +121,22 @@ const initDeviceList = async (dtId: any) => {
 	await initOrderDetailList();
 };
 
+// 展示更多
+const showMore = (id: any) => {
+	// 根据需要的高度重新计算min-height的值
+	const rowHeight = 50; // 一行内容的高度
+
+	const rowCount = orderDetailCounts.value[id]; // 根据具体的数据获取行数
+	console.log(rowHeight * rowCount);
+
+	// 如果已经展开，则重置为410px，否则根据行数计算适合的高度
+	minHeight.value = minHeight.value === 410 ? rowHeight * rowCount : 410;
+};
+
 // 渲染操作人员
 const renderingUsers = (users: string) => {
-	console.log(users);
-	
+	// console.log(users);
+
 	if (users == null) {
 		return;
 	}
@@ -125,7 +146,7 @@ const renderingUsers = (users: string) => {
 	// 遍历用户值数组
 	const labels = userValues.map((userValue) => {
 		// 找到对应value的label
-		const user = sysUserOperatorUsersDropdownList.value.find((item) => item.value === parseInt(userValue, 10));
+		const user = sysUserOperatorUsersDropdownList.value.find((item: { value: number }) => item.value === parseInt(userValue, 10));
 		// 如果找到了对应的label，则返回label，否则返回原始值
 		return user ? user.label : userValue;
 	});
@@ -137,9 +158,9 @@ const renderingUsers = (users: string) => {
 
 // 修改设备操作人员
 const operatorUsers = ref<number[]>([]);
-const changeOperator = async (devId: any,users: string) => {
+const changeOperator = async (devId: any, users: string) => {
 	deviceId.value = devId;
-	operatorUsers.value = users?.split(',')?.map(u => parseInt(u,10)) ?? [];
+	operatorUsers.value = users?.split(',')?.map((u) => parseInt(u, 10)) ?? [];
 	editOperatorDialog.value = true;
 };
 
