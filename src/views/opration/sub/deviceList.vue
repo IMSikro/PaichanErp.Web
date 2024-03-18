@@ -7,10 +7,12 @@
 			:key="item.id"
 			:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
 		>
-			<div>
-				<el-text style="margin-left: 1rem">设备编号: {{ item.deviceName }}</el-text>
-				<el-text style="margin: 0 2rem" @click="changeOperator(item.id, item.operatorUsers)">操作人员: {{ renderingUsers(item.operatorUsers) }}</el-text>
-				<div style="position: relative; display: flex; float: right; right: 0"><el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加未排产订单</el-button></div>
+			<div style="display: flex; flex-direction: column; position: relative; padding-left: 2%">
+				<div style="flex: 1">设备编号: {{ item.deviceName }}</div>
+				<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
+				<div style="position: absolute; top: 0; right: 0">
+					<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
+				</div>
 			</div>
 			<div class="tableArea" style="position: relative; display: flex; flex-direction: column">
 				<el-table :height="minHeight" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
@@ -153,7 +155,7 @@ const renderingUsers = (users: string) => {
 
 	// console.log(labels); // 输出找到的labels数组
 	// 返回以逗号分隔的label字符串
-	return labels.join(',');
+	return labels.join('\n');
 };
 
 // 修改设备操作人员
