@@ -15,11 +15,12 @@
 				</div>
 			</div>
 			<div class="tableArea" style="position: relative; display: flex; flex-direction: column">
-				<el-table :height="minHeight" :class="`tables${item.id}`" :data="orderDetails[item.id]" v-loading="loading" row-key="id" border="" size="small">
+				<el-table :height="minHeight" :class="`tables${item.id}`" :data="orderDetails[item.id]" @header-dragend="handleHeaderDragend" v-loading="loading" row-key="id" border="" size="small">
 					<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
 						<template #default="scope">
 							<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">
-								<span style="opacity: 0">{{ scope.row.id }}</span>
+								&nbsp;
+								<!-- <span style="opacity: 0">{{ scope.row.id }}</span> -->
 							</div>
 						</template>
 					</el-table-column>
@@ -122,6 +123,19 @@ const initDeviceList = async (dtId: any) => {
 	deviceList.value = res.data.result?.items ?? [];
 	await initOrderDetailList();
 };
+
+function handleHeaderDragend(newWidth: any, oldWidth: any, column: { label: any }, event: any) {
+	console.log(event);
+	console.log(oldWidth);
+	console.log(newWidth);
+	console.log(column);
+	// for (let item of orderDetailCounts.value.columnList) {
+	// 	if (item.label == column.label) {
+	// 		item.width = newWidth;
+	// 	}
+	// }
+	// rowDrop(); // 重新注册，防止变更宽度后无法拖动
+}
 
 // 展示更多
 const showMore = (id: any) => {
