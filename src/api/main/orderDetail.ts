@@ -13,7 +13,16 @@ enum Api {
 	listNotPaichanOrderByDeviceId = '/api/order/listNotPaichanOrderByDeviceId',
 	setOrderDetailSort = '/api/orderDetail/setOrderDetailSort',
 	deviceErrorTypeDropdown = '/api/orderDetail/deviceErrorTypeDropdown',
+	tableColumnPage = '/api/tableColumn/page',
 }
+
+// 查询列表展示 - 表格列
+export const tableColumnPage = (params?: any) =>
+	request({
+		url: Api.tableColumnPage,
+		method: 'post',
+		data: params,
+	});
 
 // 增加订单排产
 export const addOrderDetail = (params?: any) =>

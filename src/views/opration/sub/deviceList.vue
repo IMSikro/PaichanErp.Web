@@ -15,34 +15,35 @@
 				</div>
 			</div>
 			<div class="tableArea" style="position: relative; display: flex; flex-direction: column">
-				<el-table :height="minHeight" :class="`tables${item.id}`" :data="orderDetails[item.id]" @header-dragend="handleHeaderDragend" v-loading="loading" row-key="id" border="" size="small">
-					<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
-						<template #default="scope">
-							<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">
-								&nbsp;
-								<!-- <span style="opacity: 0">{{ scope.row.id }}</span> -->
+				<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
+				<vxe-table
+					border
+					show-overflow
+					:row-config="{ useKey: true, height: 28 }"
+					:scroll-y="{ enabled: false }"
+					:key="item.id"
+					:class="`tables${item.id}`"
+					:ref="tableRef"
+					:height="minHeight - 20"
+					:data="orderDetails[item.id]"
+					:column-config="{ resizable: true }"
+					:custom-config="{ storage: true }"
+					:toolbar-onfig="{ custom: true }"
+				>
+					<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type" :field="config.field" :title="config.title" :fixed="config.fixed" :width="config.width">
+						<template v-if="config.title == '颜色'" #default="{ row }">
+							<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
+						</template>
+						<template v-if="config.title == '产品编号'" #default="{ row }">
+							<div @click="openEditOrderDetail(row, $event)">
+								{{ row.produceIdProduceName }}
 							</div>
 						</template>
-					</el-table-column>
-					<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""
-						><template #default="scope">
-							<div @click="openEditOrderDetail(scope.row, $event)">
-								{{ scope.row.produceIdProduceName }}
-							</div>
+						<template v-if="config.title == '交期'" #default="{ row }">
+							<span>{{ formatDate(row.deliveryDate) }}</span>
 						</template>
-					</el-table-column>
-					<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip="">
-						<template #default="scope">
-							{{ formatDate(scope.row.deliveryDate) }}
-						</template>
-					</el-table-column>
-					<!-- <el-table-column prop="operatorUsersRealName" label="操作人员" width="100" show-overflow-tooltip="" /> -->
-					<el-table-column prop="qty" label="班次产量" show-overflow-tooltip="">
-						<template #default="scope">
-							<span>{{ scope.row.qty ?? 0 }}</span>
-						</template>
-					</el-table-column>
-				</el-table>
+					</vxe-column>
+				</vxe-table>
 				<div style="text-align: center">
 					<el-text> 总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</el-text>
 				</div>
@@ -77,7 +78,7 @@ import { nextTick, onMounted, reactive, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { auth } from '/@/utils/authFunction';
 import { pageDevice } from '/@/api/main/device';
-import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail, tableColumnPage } from '/@/api/main/orderDetail';
 import { getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 import { updateDevice } from '/@/api/main/device';
 
@@ -85,11 +86,30 @@ import editPaichanDialog from '/@/views/opration/sub/editPaichanDialog.vue';
 import addPaichanDialog from '/@/views/opration/sub/addPaichanDialog.vue';
 // 表格拖拽
 import Sortable from 'sortablejs';
+import { VxeTableInstance, VxeToolbarInstance, VxeColumnProps } from 'vxe-table';
 
 //父级传递来的参数
 var props = defineProps({
 	dt: {},
 });
+
+const tableColumn = ref<(VxeColumnProps & { key: number })[]>([]);
+
+const loadTableHeader = async () => {
+	const params = {
+		pageType: 'string',
+		prop: 'string',
+		lable: 'string',
+	};
+	var orderDetailRes = await tableColumnPage(params);
+	const newData = orderDetailRes.data.result.map((item: { prop: any; lable: any; width: string }, index: number) => ({
+		key: index + 6,
+		field: item.prop,
+		title: item.lable,
+		width: parseInt(item.width) || 200,
+	}));
+	tableColumn.value = newData;
+};
 
 const minHeight = ref(355);
 const loading = ref(true);
@@ -123,19 +143,6 @@ const initDeviceList = async (dtId: any) => {
 	deviceList.value = res.data.result?.items ?? [];
 	await initOrderDetailList();
 };
-
-function handleHeaderDragend(newWidth: any, oldWidth: any, column: { label: any }, event: any) {
-	console.log(event);
-	console.log(oldWidth);
-	console.log(newWidth);
-	console.log(column);
-	// for (let item of orderDetailCounts.value.columnList) {
-	// 	if (item.label == column.label) {
-	// 		item.width = newWidth;
-	// 	}
-	// }
-	// rowDrop(); // 重新注册，防止变更宽度后无法拖动
-}
 
 // 展示更多
 const showMore = (id: any) => {
@@ -226,12 +233,11 @@ const getSumNumber = (arr: number[]) => {
 // 拖拽排序
 const rowDrop = () => {
 	const deviceIds = deviceList.value.map((v: { id: any }) => v.id);
-	// console.log('orderDetails', orderDetails.value[deviceIds]);
 	if (!deviceIds.length) {
 		return;
 	}
 	deviceIds.forEach((item: string | number, i: any) => {
-		const el = document.querySelector(`.tables${item} .el-table__body-wrapper  table tbody`);
+		const el = document.querySelector(`.tables${item} .vxe-table--render-wrapper .vxe-table--body-wrapper  table tbody`);
 		Sortable.create(el, {
 			animation: 150,
 			ghostClass: 'blue-background-class',
@@ -322,7 +328,20 @@ const loadData = async () => {
 	rowDrop();
 };
 
+const tableRef = ref<VxeTableInstance>();
+const toolbarRef = ref<VxeToolbarInstance>();
+
+nextTick(() => {
+	// 将表格和工具栏进行关联
+	const $table = tableRef.value;
+	const $toolbar = toolbarRef.value;
+	if ($table && $toolbar) {
+		$table.connect($toolbar);
+	}
+});
+
 onMounted(async () => {
+	loadTableHeader();
 	loadData();
 	// console.log(deviceType.value.id);
 

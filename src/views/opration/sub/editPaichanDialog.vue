@@ -114,8 +114,8 @@
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="doneAndOffline" type="success" plain>完工并下线</el-button>
-					<el-button @click="done" type="success" plain>完工</el-button>
+					<el-button @click="doneAndOffline" type="success" plain>终结完工</el-button>
+					<el-button @click="done" type="success" plain>小计完工</el-button>
 					<el-button @click="deleteOne" type="danger" plain>下 线</el-button>
 					<el-divider direction="vertical" />
 					<el-button type="primary" @click="submit">确 定</el-button>
