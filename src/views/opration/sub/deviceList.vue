@@ -23,14 +23,21 @@
 					:scroll-y="{ enabled: false }"
 					:key="item.id"
 					:class="`tables${item.id}`"
-					:ref="tableRef"
 					:height="minHeight - 20"
 					:data="orderDetails[item.id]"
-					:column-config="{ resizable: true }"
 					:custom-config="{ storage: true }"
 					:toolbar-onfig="{ custom: true }"
 				>
-					<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type" :field="config.field" :title="config.title" :fixed="config.fixed" :width="config.width">
+					<vxe-column
+						v-for="config in tableColumn"
+						:key="config.key"
+						:type="config.type"
+						:field="config.field"
+						:visible="config.show"
+						:title="config.title"
+						:fixed="config.fixed"
+						:width="config.width"
+					>
 						<template v-if="config.title == '颜色'" #default="{ row }">
 							<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
 						</template>
@@ -97,18 +104,20 @@ const tableColumn = ref<(VxeColumnProps & { key: number })[]>([]);
 
 const loadTableHeader = async () => {
 	const params = {
-		pageType: 'string',
-		prop: 'string',
-		lable: 'string',
+		pageType: '',
+		prop: '',
+		lable: '',
 	};
 	var orderDetailRes = await tableColumnPage(params);
 	const newData = orderDetailRes.data.result.map((item: { prop: any; lable: any; width: string }, index: number) => ({
 		key: index + 6,
 		field: item.prop,
 		title: item.lable,
-		width: parseInt(item.width) || 200,
+		show: !item.isHidden,
+		width: parseInt(item.width),
 	}));
 	tableColumn.value = newData;
+	console.log('tableColumn', tableColumn.value);
 };
 
 const minHeight = ref(355);
@@ -136,6 +145,7 @@ let deviceList = ref<any>([]);
 let deviceType = ref<any>({});
 let deviceId = ref<any>('');
 let orderDetails = ref<any>({});
+let orderDetailsSplit = ref<any>({});
 let orderDetailCounts = ref<any>({});
 let orderDetailSums = ref<any>({});
 const initDeviceList = async (dtId: any) => {
@@ -147,13 +157,18 @@ const initDeviceList = async (dtId: any) => {
 // 展示更多
 const showMore = (id: any) => {
 	// 根据需要的高度重新计算min-height的值
-	const rowHeight = 50; // 一行内容的高度
+	const rowHeight = 40; // 一行内容的高度
 
 	const rowCount = orderDetailCounts.value[id]; // 根据具体的数据获取行数
 	console.log(rowHeight * rowCount);
 
-	// 如果已经展开，则重置为410px，否则根据行数计算适合的高度
-	minHeight.value = minHeight.value === 410 ? rowHeight * rowCount : 410;
+	// 如果已经展开，则重置为355px，否则根据行数计算适合的高度
+	minHeight.value = minHeight.value === 355 ? rowHeight * rowCount : 355;
+	if (minHeight.value === 355) {
+		initOrderDetailList();
+	} else {
+		initOrderDetailListAll();
+	}
 };
 
 // 渲染操作人员
@@ -210,15 +225,27 @@ const getSysUserOperatorUsersDropdownList = async () => {
 };
 getSysUserOperatorUsersDropdownList();
 
-// 加载各个设备排产列表
+// 加载各个设备排产列表 - 前十条
 const initOrderDetailList = async () => {
 	const deviceIds = deviceList.value.map((v: { id: any }) => v.id);
 	for (const deviceId of deviceIds) {
 		var orderDetailRes = await listOrderDetailByDeviceId({ deviceId });
 		// 给表格赋值
-		orderDetails.value[deviceId] = orderDetailRes.data.result ?? [];
+		orderDetailsSplit.value[deviceId] = orderDetailRes ?? [];
+		orderDetails.value[deviceId] = orderDetailRes.data.result.slice(0, 10) ?? [];
 		orderDetailCounts.value[deviceId] = orderDetailRes.data.result?.length ?? 0;
 		orderDetailSums.value[deviceId] = getSumNumber(orderDetailRes.data.result?.map((v: { qty: any }) => v.qty) ?? []);
+	}
+};
+// 加载各个设备排产列表 - 全部数据
+const initOrderDetailListAll = async () => {
+	const deviceIds = deviceList.value.map((v: { id: any }) => v.id);
+	for (const deviceId of deviceIds) {
+		// var orderDetailRes = await listOrderDetailByDeviceId({ deviceId });
+		// 给表格赋值
+		orderDetails.value[deviceId] = orderDetailsSplit.value[deviceId].data.result ?? [];
+		orderDetailCounts.value[deviceId] = orderDetailsSplit.value[deviceId].data.result?.length ?? 0;
+		orderDetailSums.value[deviceId] = getSumNumber(orderDetailsSplit.value[deviceId].data.result?.map((v: { qty: any }) => v.qty) ?? []);
 	}
 };
 
@@ -327,18 +354,6 @@ const loadData = async () => {
 	await initDeviceList(dtid);
 	rowDrop();
 };
-
-const tableRef = ref<VxeTableInstance>();
-const toolbarRef = ref<VxeToolbarInstance>();
-
-nextTick(() => {
-	// 将表格和工具栏进行关联
-	const $table = tableRef.value;
-	const $toolbar = toolbarRef.value;
-	if ($table && $toolbar) {
-		$table.connect($toolbar);
-	}
-});
 
 onMounted(async () => {
 	loadTableHeader();
@@ -451,5 +466,13 @@ onMounted(async () => {
 	border-radius: 4px;
 	background: var(--el-color-danger-light-9);
 	color: var(--el-color-danger);
+}
+:deep(.el-collapse-item__content) {
+	overflow: auto !important;
+}
+</style>
+<style>
+.el-collapse-item__content {
+	overflow: auto !important;
 }
 </style>
