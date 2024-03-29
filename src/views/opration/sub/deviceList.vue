@@ -1,64 +1,64 @@
 <template>
-	<el-space alignment="flex-start">
-		<el-card
-			:style="{ 'min-height': minHeight + 55 + 'px' }"
-			style="max-width: 500px; position: relative"
-			v-for="item in deviceList"
-			:key="item.id"
-			:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
-		>
-			<div style="display: flex; flex-direction: column; position: relative; padding-left: 2%">
-				<div style="flex: 1">设备编号: {{ item.deviceName }}</div>
-				<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
-				<div style="position: absolute; top: 0; right: 0">
-					<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
+	<el-scrollbar style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
+		<el-space alignment="flex-start">
+			<el-card
+				:style="{ 'min-height': minHeight + 55 + 'px' }"
+				style="max-width: 500px; position: relative"
+				v-for="item in deviceList"
+				:key="item.id"
+				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
+			>
+				<div style="display: flex; flex-direction: column; position: relative; padding-left: 2%">
+					<div style="flex: 1">设备编号: {{ item.deviceName }}</div>
+					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
+					<div style="position: absolute; top: 0; right: 0">
+						<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
+					</div>
 				</div>
-			</div>
-			<div class="tableArea" style="position: relative; display: flex; flex-direction: column">
-				<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
-				<vxe-table
-					border
-					show-overflow
-					:row-config="{ useKey: true, height: 28 }"
-					:scroll-y="{ enabled: false }"
-					:key="item.id"
-					:class="`tables${item.id}`"
-					:height="minHeight - 20"
-					:data="orderDetails[item.id]"
-					:custom-config="{ storage: true }"
-					:toolbar-onfig="{ custom: true }"
-				>
-					<vxe-column
-						v-for="config in tableColumn"
-						:key="config.key"
-						:type="config.type"
-						:field="config.field"
-						:visible="config.show"
-						:title="config.title"
-						:fixed="config.fixed"
-						:width="config.width"
+				<div class="tableArea" style="position: relative; display: flex; flex-direction: column" @wheel.prevent="handleScroll">
+					<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
+					<vxe-table
+						border
+						show-overflow
+						:row-config="{ useKey: true, height: 28 }"
+						:id="item.id.toString()"
+						:class="`tables${item.id}`"
+						:height="minHeight - 20"
+						:data="orderDetails[item.id]"
+						:custom-config="{ storage: true }"
+						:toolbar-onfig="{ custom: true }"
 					>
-						<template v-if="config.title == '颜色'" #default="{ row }">
-							<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
-						</template>
-						<template v-if="config.title == '产品编号'" #default="{ row }">
-							<div @click="openEditOrderDetail(row, $event)">
-								{{ row.produceIdProduceName }}
-							</div>
-						</template>
-						<template v-if="config.title == '交期'" #default="{ row }">
-							<span>{{ formatDate(row.deliveryDate) }}</span>
-						</template>
-					</vxe-column>
-				</vxe-table>
-				<div style="text-align: center">
-					<el-text> 总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</el-text>
+						<vxe-column
+							v-for="config in tableColumn"
+							:key="config.key"
+							:type="config.type"
+							:field="config.field"
+							:visible="config.show"
+							:title="config.title"
+							:fixed="config.fixed"
+							:width="config.width"
+						>
+							<template v-if="config.title == '颜色'" #default="{ row }">
+								<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
+							</template>
+							<template v-if="config.title == '产品编号'" #default="{ row }">
+								<div @click="openEditOrderDetail(row, $event)">
+									{{ row.produceIdProduceName }}
+								</div>
+							</template>
+							<template v-if="config.title == '交期'" #default="{ row }">
+								<span>{{ formatDate(row.deliveryDate) }}</span>
+							</template>
+						</vxe-column>
+					</vxe-table>
+					<div style="text-align: center">
+						<el-text> 总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</el-text>
+					</div>
 				</div>
-			</div>
-			<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99"><el-button link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button></div>
-		</el-card>
-	</el-space>
-
+				<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99"><el-button link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button></div>
+			</el-card>
+		</el-space>
+	</el-scrollbar>
 	<addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initOrderDetailList" />
 	<editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="loadData" />
 	<!-- // 修改设备绑定人员 -->
@@ -117,7 +117,6 @@ const loadTableHeader = async () => {
 		width: parseInt(item.width),
 	}));
 	tableColumn.value = newData;
-	console.log('tableColumn', tableColumn.value);
 };
 
 const minHeight = ref(355);
