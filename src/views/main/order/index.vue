@@ -55,7 +55,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6" class="mb10">
           </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
             <el-form-item>
               <el-button-group>
                 <el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'order:page'"> 查询 </el-button>
@@ -67,6 +67,10 @@
                 <el-button type="primary" icon="ele-Plus" @click="openAddOrder" v-auth="'order:add'"> 新增 </el-button>
 
               </el-button-group>
+              <el-button-group style="margin-left:20px">
+                <el-button type="success" icon="ele-Plus" @click="openImportOrder" v-auth="'order:import'"> 导入 </el-button>
+              </el-button-group>
+
 
             </el-form-item>
 
@@ -146,23 +150,54 @@
       <editDialog ref="editDialogRef" :title="editOrderTitle" @reloadTable="handleQuery" />
       <setOrderDetail ref="setOrderDetailRef" :title="setOrderDetailTitle" @reloadTable="handleQuery" />
     </el-card>
+    
+		<el-dialog v-model="state.dialogUploadVisible" :lock-scroll="false" draggable width="400px">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-UploadFilled /> </el-icon>
+					<span> 上传文件 </span>
+				</div>
+			</template>
+			<div>
+				<el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action="" :on-change="handleChange" accept=".xls,.xlsx">
+					<el-icon class="el-icon--upload">
+						<ele-UploadFilled />
+					</el-icon>
+					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+					<template #tip>
+						<div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
+					</template>
+				</el-upload>
+        <div>
+          点击此处下载文件模板
+					<el-button @click="downloadExcel">下载模板</el-button>
+        </div>
+			</div>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.dialogUploadVisible = false">取消</el-button>
+					<el-button type="primary" @click="uploadFile">确定</el-button>
+				</span>
+			</template>
+		</el-dialog>
+
   </div>
 </template>
 
 <script lang="ts" setup="" name="order">
-import { ref } from "vue";
+import { reactive,ref } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 //import { formatDate } from '/@/utils/formatTime';
+import { downloadByData,getFileName } from '/@/utils/download';
 
 import editDialog from '/@/views/main/order/component/editDialog.vue'
 import setOrderDetail from '/@/views/main/order/component/setOrderDetail.vue'
 import editDetailDialog from '/@/views/main/order/component/editDetailDialog.vue'
-import { pageOrder, deleteOrder } from '/@/api/main/order';
+import { pageOrder, deleteOrder,getOrderTempExcel,importOrderExcel } from '/@/api/main/order';
 import { getProduceProduceIdDropdown } from '/@/api/main/order';
 import { deleteOrderDetail } from '/@/api/main/orderDetail';
-
 
 const showAdvanceQueryUI = ref(false);
 const editDialogRef = ref();
@@ -181,6 +216,38 @@ const setOrderDetailTitle = ref("");
 // 改变高级查询的控件显示状态
 const changeAdvanceQueryUI = () => {
   showAdvanceQueryUI.value = !showAdvanceQueryUI.value;
+}
+
+const state = reactive({
+	dialogUploadVisible: false,
+	fileList: [] as any,
+});
+
+// 打开上传页面
+const openImportOrder = () => {
+	state.fileList = [];
+	state.dialogUploadVisible = true;
+};
+// 通过onChanne方法获得文件列表
+const handleChange = (file: any, fileList: []) => {
+	state.fileList = fileList;
+};
+// 上传
+const uploadFile = async () => {
+	if (state.fileList.length < 1) return;
+  const params = new FormData();
+  params.append('file',state.fileList[0].raw);
+	await importOrderExcel(params);
+	handleQuery();
+	ElMessage.success('上传成功');
+	state.dialogUploadVisible = false;
+};
+
+const downloadExcel = async () => {
+  var res = await getOrderTempExcel();
+  var fileName = getFileName(res.headers);
+  
+  downloadByData(res.data,fileName);
 }
 
 

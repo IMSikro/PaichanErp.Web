@@ -25,7 +25,7 @@
 
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6" class="mb10">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
             <el-form-item>
               <el-button-group>
                 <el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'produce:page'"> 查询 </el-button>
@@ -34,6 +34,10 @@
 
               <el-button-group style="margin-left:20px">
                 <el-button type="primary" icon="ele-Plus" @click="openAddProduce" v-auth="'produce:add'"> 新增 </el-button>
+              </el-button-group>
+
+              <el-button-group style="margin-left:20px">
+                <el-button type="success" icon="ele-Plus" @click="openImportProduce" v-auth="'produce:import'"> 导入 </el-button>
               </el-button-group>
 
             </el-form-item>
@@ -63,27 +67,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="isMix" label="是否搅拌" width="120" show-overflow-tooltip="">
+        <el-table-column prop="deviceTypes" label="工艺列表" width="120" show-overflow-tooltip="">
           <template #default="scope">
-            <el-tag v-if="scope.row.isMix"> 是 </el-tag>
-            <el-tag type="danger" v-else> 否 </el-tag>
-
-          </template>
-
-        </el-table-column>
-        <el-table-column prop="isExtrusion" label="是否挤出" width="120" show-overflow-tooltip="">
-          <template #default="scope">
-            <el-tag v-if="scope.row.isExtrusion"> 是 </el-tag>
-            <el-tag type="danger" v-else> 否 </el-tag>
-
-          </template>
-
-        </el-table-column>
-        <el-table-column prop="isMill" label="是否破碎" width="120" show-overflow-tooltip="">
-          <template #default="scope">
-            <el-tag v-if="scope.row.isMill"> 是 </el-tag>
-            <el-tag type="danger" v-else> 否 </el-tag>
-
+            <el-tag v-for="(v,i) in scope.row.deviceTypeList" :key="i"> {{ deviceTypeListRef[v] }} </el-tag>
           </template>
 
         </el-table-column>
@@ -108,19 +94,52 @@
         layout="total, sizes, prev, pager, next, jumper" />
       <editDialog ref="editDialogRef" :title="editProduceTitle" @reloadTable="handleQuery" />
     </el-card>
+
+		<el-dialog v-model="state.dialogUploadVisible" :lock-scroll="false" draggable width="400px">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-UploadFilled /> </el-icon>
+					<span> 上传文件 </span>
+				</div>
+			</template>
+			<div>
+				<el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action="" :on-change="handleChange" accept=".xls,.xlsx">
+					<el-icon class="el-icon--upload">
+						<ele-UploadFilled />
+					</el-icon>
+					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+					<template #tip>
+						<div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
+					</template>
+				</el-upload>
+        <div>
+          点击此处下载文件模板
+					<el-button @click="downloadExcel">下载模板</el-button>
+        </div>
+			</div>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.dialogUploadVisible = false">取消</el-button>
+					<el-button type="primary" @click="uploadFile">确定</el-button>
+				</span>
+			</template>
+		</el-dialog>
+
   </div>
 </template>
 
 <script lang="ts" setup="" name="produce">
-import { ref } from "vue";
+import { reactive,ref } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 //import { formatDate } from '/@/utils/formatTime';
+import { downloadByData,getFileName } from '/@/utils/download';
 
 import editDialog from '/@/views/main/produce/component/editDialog.vue'
-import { pageProduce, deleteProduce } from '/@/api/main/produce';
+import { pageProduce, deleteProduce,getProduceTempExcel,importProduceExcel } from '/@/api/main/produce';
 import { getProduceTypeProduceTypeDropdown } from '/@/api/main/produce';
+import { getDeviceTypeDeviceTypeIdDropdown } from '/@/api/main/device';
 
 
 const showAdvanceQueryUI = ref(false);
@@ -135,17 +154,53 @@ const tableParams = ref({
 });
 const editProduceTitle = ref("");
 
-// 改变高级查询的控件显示状态
-const changeAdvanceQueryUI = () => {
-  showAdvanceQueryUI.value = !showAdvanceQueryUI.value;
+
+const state = reactive({
+	dialogUploadVisible: false,
+	fileList: [] as any,
+});
+
+// 打开上传页面
+const openImportProduce = () => {
+	state.fileList = [];
+	state.dialogUploadVisible = true;
+};
+// 通过onChanne方法获得文件列表
+const handleChange = (file: any, fileList: []) => {
+	state.fileList = fileList;
+};
+// 上传
+const uploadFile = async () => {
+	if (state.fileList.length < 1) return;
+  const params = new FormData();
+  params.append('file',state.fileList[0].raw);
+	await importProduceExcel(params);
+	handleQuery();
+	ElMessage.success('上传成功');
+	state.dialogUploadVisible = false;
+};
+
+const downloadExcel = async () => {
+  var res = await getProduceTempExcel();
+  var fileName = getFileName(res.headers);
+  console.log(res,res.data);
+  
+  downloadByData(res.data,fileName);
 }
+
 
 // 查询操作
 const handleQuery = async () => {
   loading.value = true;
   var res = await pageProduce(Object.assign(queryParams.value, tableParams.value));
-  tableData.value = res.data.result?.items ?? [];
+  var produceList = res.data.result?.items ?? []
+  for (const p of produceList) {
+    p.deviceTypeList = p.deviceTypes?.split(',') ?? [];
+  }
+
+  tableData.value = produceList;
   tableParams.value.total = res.data.result?.total;
+
   loading.value = false;
 };
 
@@ -194,6 +249,18 @@ const getProduceTypeProduceTypeDropdownList = async () => {
   produceTypeProduceTypeDropdownList.value = list.data.result ?? [];
 };
 getProduceTypeProduceTypeDropdownList();
+
+const deviceTypeDeviceTypeIdDropdownList = ref<any>([]);
+const deviceTypeListRef = ref<any>({});
+const getDeviceTypeDeviceTypeIdDropdownList = async () => {
+  let list = await getDeviceTypeDeviceTypeIdDropdown();
+  var deviceTypes = list.data.result ?? [];
+  for (const dt of deviceTypes) {
+    deviceTypeListRef.value[dt.value] = dt.label;
+  }
+  deviceTypeDeviceTypeIdDropdownList.value = deviceTypes;
+};
+getDeviceTypeDeviceTypeIdDropdownList();
 
 handleQuery();
 </script>

@@ -6,6 +6,8 @@ enum Api {
 	PageOrder = '/api/order/page',
 	GetProduceProduceIdDropdown = '/api/order/ProduceProduceIdDropdown',
 	GetProduce = '/api/order/detail',
+	GetOrderTempExcel = '/api/order/getOrderTempExcel',
+	ImportOrderExcel = '/api/order/importOrderExcel',
 }
 
 // 增加订单列表
@@ -52,3 +54,20 @@ export const getProduceProduceIdDropdown = () =>
 		method: 'get'
 	});
 
+
+export const getOrderTempExcel = () =>
+	request({
+		url: Api.GetOrderTempExcel,
+		method: 'get',
+		responseType: 'blob',
+	});
+
+export const importOrderExcel = (params?: any) =>
+	request({
+		url: Api.ImportOrderExcel,
+		method: 'post',
+		data: params,
+		headers: {
+			"Content-Type": 'multipart/form-data'
+		},
+	});

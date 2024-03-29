@@ -57,26 +57,27 @@
 						</el-form-item>
 
 					</el-col>
-					<el-col :xs="16" :sm="8" :md="8" :lg="8" :xl="8" class="mb20">
-						<el-form-item label="是否搅拌" prop="isMix">
-							<el-switch v-model="ruleForm.isMix" active-text="是" inactive-text="否" />
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item v-for="v in deviceTypeDeviceTypeIdDropdownList" :key="v.value" :label="v.label">
+							<el-switch v-model="ruleFormdeviceType[v.value]" active-text="是" inactive-text="否" />
 
 						</el-form-item>
-
-					</el-col>
-					<el-col :xs="16" :sm="8" :md="8" :lg="8" :xl="8" class="mb20">
-						<el-form-item label="是否挤出" prop="isExtrusion">
+						<!-- <el-form-item label="是否挤出" prop="isExtrusion">
 							<el-switch v-model="ruleForm.isExtrusion" active-text="是" inactive-text="否" />
 
 						</el-form-item>
-
-					</el-col>
-					<el-col :xs="16" :sm="8" :md="8" :lg="8" :xl="8" class="mb20">
 						<el-form-item label="是否破碎" prop="isMill">
 							<el-switch v-model="ruleForm.isMill" active-text="是" inactive-text="否" />
 
 						</el-form-item>
+						<el-form-item label="是否破碎" prop="isMill">
+							<el-switch v-model="ruleForm.isMill" active-text="是" inactive-text="否" />
 
+						</el-form-item> -->
+
+
+					</el-col>
+					<el-col :xs="16" :sm="8" :md="8" :lg="8" :xl="8" class="mb20">
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品系数" prop="produceCoefficient">
@@ -127,6 +128,7 @@ import type { FormRules } from "element-plus";
 import { addProduce, updateProduce } from "/@/api/main/produce";
 import { LabToRgb } from "/@/utils/convertLabtoRgb";
 import { getProduceTypeProduceTypeDropdown } from '/@/api/main/produce';
+import { getDeviceTypeDeviceTypeIdDropdown } from '/@/api/main/device';
 
 //父级传递来的参数
 var props = defineProps({
@@ -140,6 +142,7 @@ const emit = defineEmits(["reloadTable"]);
 const ruleFormRef = ref();
 const isShowDialog = ref(false);
 const ruleForm = ref<any>({});
+const ruleFormdeviceType = ref<any>({});
 //自行添加其他规则
 const rules = ref<FormRules>({
 	produceCode: [{ required: true, message: '请输入产品编号！', trigger: 'blur', },],
@@ -151,6 +154,13 @@ const rules = ref<FormRules>({
 // 打开弹窗
 const openDialog = (row: any) => {
 	ruleForm.value = JSON.parse(JSON.stringify(row));
+	ruleFormdeviceType.value = {};
+
+	var dtList = ruleForm.value?.deviceTypes?.split(',') ?? []
+	for (const dt of dtList) {
+		ruleFormdeviceType.value[dt] = true;
+	}
+
 	isShowDialog.value = true;
 };
 
@@ -170,6 +180,13 @@ const submit = async () => {
 	ruleFormRef.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
 			let values = ruleForm.value;
+
+			var deviceTypes = [];
+			var keys = Object.keys(ruleFormdeviceType.value);
+			for (const k of keys) {
+				if(ruleFormdeviceType.value[k]) deviceTypes.push(k)
+			}
+			values.deviceTypes = deviceTypes.join(',')
 			if (ruleForm.value.id == undefined || ruleForm.value.id == null || ruleForm.value.id == "" || ruleForm.value.id == 0) {
 				await addProduce(values);
 			} else {
@@ -191,6 +208,16 @@ const getProduceTypeProduceTypeDropdownList = async () => {
 	produceTypeProduceTypeDropdownList.value = list.data.result ?? [];
 };
 getProduceTypeProduceTypeDropdownList();
+
+const deviceTypeDeviceTypeIdDropdownList = ref<any>([]);
+const deviceTypeListRef = ref<any>({});
+const getDeviceTypeDeviceTypeIdDropdownList = async () => {
+	let list = await getDeviceTypeDeviceTypeIdDropdown();
+	deviceTypeDeviceTypeIdDropdownList.value = list.data.result ?? [];
+	console.log(deviceTypeDeviceTypeIdDropdownList.value);
+	
+};
+getDeviceTypeDeviceTypeIdDropdownList();
 
 const handleSelect = () => {
 	var rgb = LabToRgb(ruleForm.value.colorLab);

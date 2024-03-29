@@ -134,6 +134,19 @@ export interface SysUser {
      */
     birthday?: Date | null;
     /**
+     * 工时单价
+     * @type {number}
+     * @memberof SysUser
+     */
+    unitPrice?: number | null;
+    /**
+     * 个人技能
+     * @type {string}
+     * @memberof SysUser
+     */
+    personalSkill?: string | null;
+
+    /**
      * 民族
      * @type {string}
      * @memberof SysUser

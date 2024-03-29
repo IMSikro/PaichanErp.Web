@@ -28,14 +28,14 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="设备" prop="deviceId">
-							<el-select clearable filterable v-model="ruleForm.deviceId" placeholder="请选择设备">
+							<el-select clearable filterable v-model="ruleForm.deviceId" placeholder="请选择设备" @change="setDeviceQty">
 								<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :value="item.value" :label="item.label" />
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="操作人员" prop="operatorUsers">
-							<el-select filterable v-model="ruleForm.operatorUsers" placeholder="请选择操作人员" multiple @change="console_Log">
+							<el-select filterable v-model="ruleForm.operatorUsers" placeholder="请选择操作人员" multiple>
 								<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
 							</el-select>
 						</el-form-item> </el-col
@@ -113,22 +113,29 @@ const rules = ref<FormRules>({
 
 // 打开弹窗
 const openDialog = async (row: any) => {
+	await getDeviceDeviceIdDropdownList();
 	let rowModel = JSON.parse(JSON.stringify(row));
 	if ('isAdd' in rowModel) {
-		let orderModel = await getProduce({ id: rowModel.orderId });
-		const order = orderModel.data.result ?? {};
-
+		// let orderModel = await getProduce({ id: rowModel.orderId });
+		// const order = orderModel.data.result ?? {};
+		
 		let detailListModel = await pageOrderDetail(Object.assign({ orderId: rowModel.orderId }));
 		const detailList = detailListModel.data.result;
-		console.log(order, detailList);
+		// console.log(order, detailList);
 
-		let sn = detailList.total > 0 ? Number(detailList.items.findLast((d) => d.id > 0).orderDetailCode.split('-')[1]) + 1 : 1;
+		let sn = detailList.total > 0 ? (detailList.items.findLast((d) => d.id > 0).sn ?? 0) + 1 : 1;
+
 		let qty = 0;
-		if (detailList.total > 0)
-			for (var i = detailList.items.length - 1; i >= 0; i--) {
-				qty += detailList.items[i].qty;
-			}
-		qty = rowModel.quantity - qty;
+		if(ruleForm.value.deviceId > 0)
+			if (detailList.total > 0){
+				var deviceTypeId = deviceDeviceIdDropdownList.value.find(d => d.value == ruleForm.value.deviceId).deviceTypeId;
+				var itemList = detailList.items.filter(od => od.deviceTypeId == deviceTypeId);
+				for (var i = itemList.length - 1; i >= 0; i--) {
+					qty += itemList[i].qty;
+				}
+			
+			qty = rowModel.quantity - qty;
+		}
 		console.log(qty);
 		ruleForm.value = { orderId: rowModel.orderId, orderDetailCode: `${rowModel.orderDetailCode}-${sn}`, qty, pUnit: rowModel.pUnit, sort: sn };
 	} else {
@@ -140,9 +147,27 @@ const openDialog = async (row: any) => {
 	isShowDialog.value = true;
 };
 
-const console_Log = () => {
-	console.log(ruleForm.value.operatorUsers);
-};
+const setDeviceQty = async () => {
+	let orderModel = await getProduce({ id: ruleForm.value.orderId });
+	const order = orderModel.data.result ?? {};
+
+	let detailListModel = await pageOrderDetail(Object.assign({ orderId: ruleForm.value.orderId }));
+	const detailList = detailListModel.data.result;
+	console.log(order, detailList);
+
+	let qty = 0;
+	if(ruleForm.value.deviceId > 0)
+		if (detailList.total > 0){
+			var deviceTypeId = deviceDeviceIdDropdownList.value.find(d => d.value == ruleForm.value.deviceId).deviceTypeId;
+			var itemList = detailList.items.filter(od => od.deviceTypeId == deviceTypeId);
+			for (var i = itemList.length - 1; i >= 0; i--) {
+				qty += itemList[i].qty;
+			}
+		
+		qty = order.quantity - qty;
+	}
+	ruleForm.value.qty = qty
+}
 
 // 关闭弹窗
 const closeDialog = () => {
@@ -190,7 +215,7 @@ const getDeviceDeviceIdDropdownList = async () => {
 	let list = await getDeviceDeviceIdDropdown();
 	deviceDeviceIdDropdownList.value = list.data.result ?? [];
 };
-getDeviceDeviceIdDropdownList();
+// getDeviceDeviceIdDropdownList();
 
 const sysUserOperatorUsersDropdownList = ref<any>([]);
 const getSysUserOperatorUsersDropdownList = async () => {

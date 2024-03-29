@@ -70,6 +70,16 @@
 									<el-input-number v-model="state.ruleForm.orderNo" placeholder="排序" class="w100" />
 								</el-form-item>
 							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb5">
+								<el-form-item label="工时单价">
+									<el-input-number v-model="state.ruleForm.unitPrice" placeholder="工时单价" class="w100" />
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb5">
+								<el-form-item label="个人技能">
+									<el-input v-model="state.ruleForm.personalSkill" placeholder="个人技能" clearable />
+								</el-form-item>
+							</el-col>
 							<el-divider border-style="dashed" content-position="center">
 								<div style="color: #b1b3b8">机构组织</div>
 							</el-divider>

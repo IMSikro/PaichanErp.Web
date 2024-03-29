@@ -26,6 +26,9 @@
 						<el-form-item>
 							<el-button type="primary" icon="ele-Plus" @click="openAddUser" v-auth="'sysUser:add'"> 新增 </el-button>
 						</el-form-item>
+						<el-form-item>
+							<el-button type="success" icon="ele-Plus" @click="openImportUser" v-auth="'sysUser:import'"> 导入 </el-button>
+						</el-form-item>
 					</el-form>
 				</el-card>
 
@@ -52,17 +55,19 @@
 								<el-tag type="danger" v-else> 女 </el-tag>
 							</template>
 						</el-table-column>
+						<el-table-column prop="personalSkill" label="个人技能" width="70" align="center" show-overflow-tooltip />
+						<el-table-column prop="unitPrice" label="工时单价" width="70" align="center" show-overflow-tooltip />
+						<el-table-column label="状态" width="70" align="center" show-overflow-tooltip>
+							<template #default="scope">
+								<el-switch v-model="scope.row.status" :active-value="1" :inactive-value="2" size="small" @change="changeStatus(scope.row)" v-auth="'sysUser:setStatus'" />
+							</template>
+						</el-table-column>
 						<el-table-column label="账号类型" width="100" align="center" show-overflow-tooltip>
 							<template #default="scope">
 								<el-tag v-if="scope.row.accountType === 888"> 系统管理员 </el-tag>
 								<el-tag v-else-if="scope.row.accountType === 777"> 普通账号 </el-tag>
 								<el-tag v-else-if="scope.row.accountType === 666"> 会员 </el-tag>
 								<el-tag v-else> 其他 </el-tag>
-							</template>
-						</el-table-column>
-						<el-table-column label="状态" width="70" align="center" show-overflow-tooltip>
-							<template #default="scope">
-								<el-switch v-model="scope.row.status" :active-value="1" :inactive-value="2" size="small" @change="changeStatus(scope.row)" v-auth="'sysUser:setStatus'" />
 							</template>
 						</el-table-column>
 						<el-table-column prop="orderNo" label="排序" width="70" align="center" show-overflow-tooltip />
@@ -99,6 +104,37 @@
 		</el-row>
 
 		<EditUser ref="editUserRef" :title="state.editUserTitle" :orgData="state.orgTreeData" @handleQuery="handleQuery" />
+		
+		<el-dialog v-model="state.dialogUploadVisible" :lock-scroll="false" draggable width="400px">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-UploadFilled /> </el-icon>
+					<span> 上传文件 </span>
+				</div>
+			</template>
+			<div>
+				<el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action="" :on-change="handleChange" accept=".xls,.xlsx">
+					<el-icon class="el-icon--upload">
+						<ele-UploadFilled />
+					</el-icon>
+					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+					<template #tip>
+						<div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
+					</template>
+				</el-upload>
+        <div>
+          点击此处下载文件模板
+					<el-button @click="downloadExcel">下载模板</el-button>
+        </div>
+			</div>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.dialogUploadVisible = false">取消</el-button>
+					<el-button type="primary" @click="uploadFile">确定</el-button>
+				</span>
+			</template>
+		</el-dialog>
+
 	</div>
 </template>
 
@@ -109,10 +145,12 @@ import { formatDate } from '/@/utils/formatTime';
 import { auth } from '/@/utils/authFunction';
 import OrgTree from '/@/views/system/org/component/orgTree.vue';
 import EditUser from '/@/views/system/user/component/editUser.vue';
+import { downloadByData,getFileName } from '/@/utils/download';
 
 import { getAPI } from '/@/utils/axios-utils';
 import { SysUserApi, SysOrgApi } from '/@/api-services/api';
 import { SysUser, SysOrg } from '/@/api-services/models';
+import { getUserTempExcel,importUserExcel } from '/@/api/main/sysUserEx';
 
 const orgTreeRef = ref<InstanceType<typeof OrgTree>>();
 const editUserRef = ref<InstanceType<typeof EditUser>>();
@@ -132,7 +170,40 @@ const state = reactive({
 		total: 0 as any,
 	},
 	editUserTitle: '',
+	dialogUploadVisible: false,
+	fileList: [] as any,
 });
+
+
+// 打开上传页面
+const openImportUser = () => {
+	state.fileList = [];
+	state.dialogUploadVisible = true;
+};
+// 通过onChanne方法获得文件列表
+const handleChange = (file: any, fileList: []) => {
+	state.fileList = fileList;
+};
+// 上传
+const uploadFile = async () => {
+	if (state.fileList.length < 1) return;
+  const params = new FormData();
+  params.append('file',state.fileList[0].raw);
+	await importUserExcel(params);
+	loadOrgData();
+	handleQuery();
+	ElMessage.success('上传成功');
+	state.dialogUploadVisible = false;
+};
+
+const downloadExcel = async () => {
+  var res = await getUserTempExcel();
+  var fileName = getFileName(res.headers);
+  console.log(res,res.data);
+  
+  downloadByData(res.data,fileName);
+}
+
 
 onMounted(async () => {
 	loadOrgData();

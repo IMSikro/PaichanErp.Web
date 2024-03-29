@@ -6,6 +6,8 @@ enum Api {
 	PageDevice = '/api/device/page',
 	ListDevice = '/api/device/list',
 	GetDeviceTypeDeviceTypeIdDropdown = '/api/device/DeviceTypeDeviceTypeIdDropdown',
+	GetDeviceTempExcel = '/api/device/getDeviceTempExcel',
+	ImportDeviceExcel = '/api/device/importDeviceExcel',
 }
 
 // 增加设备列表
@@ -54,3 +56,19 @@ export const getDeviceTypeDeviceTypeIdDropdown = () =>
 		method: 'get'
 	});
 
+export const getDeviceTempExcel = () =>
+	request({
+		url: Api.GetDeviceTempExcel,
+		method: 'get',
+		responseType: 'blob',
+	});
+
+export const importDeviceExcel = (params?: any) =>
+	request({
+		url: Api.ImportDeviceExcel,
+		method: 'post',
+		data: params,
+		headers: {
+			"Content-Type": 'multipart/form-data'
+		},
+	});
