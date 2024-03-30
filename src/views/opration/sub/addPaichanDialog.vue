@@ -14,7 +14,7 @@
 				<div class="dischargeOrderList">
 					<div style="margin: 2% 0 1% 0">未排产订单列表：</div>
 					<el-table class="tables" :data="dischargeOrderList" v-loading="loading" style="width: 100%" tooltip-effect="light" border="" size="small">
-						<el-table-column type="expand">
+						<!-- <el-table-column type="expand">
 							<template #default="props">
 								<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 0.5%">
 									<div style="display: flex; align-items: center">
@@ -36,7 +36,7 @@
 									</div>
 								</div>
 							</template>
-						</el-table-column>
+						</el-table-column> -->
 						<el-table-column prop="orderId" label="颜色" width="100" show-overflow-tooltip="">
 							<template #default="scope">
 								<div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }">&nbsp;</div>
@@ -54,7 +54,19 @@
 								<span>{{ scope.row.orderSurplusQuantity + (scope.row.pUnit ?? '') }}</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="deliveryDate" label="交货日期" width="" show-overflow-tooltip="" />
+						<el-table-column prop="deliveryDate" label="交货日期" width="100" show-overflow-tooltip="">
+							<template #default="scope">
+								<span>{{ formatDate(scope.row.deliveryDate) }}</span>
+							</template>
+						</el-table-column>
+						<el-table-column label="班次产量" width="100" show-overflow-tooltip="">
+							<template #default="scope">
+								<el-input v-model="scope.row.classOutput" @change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
+							</template>
+						</el-table-column>
+						<el-table-column label="操作" width="50" show-overflow-tooltip="">
+							<template #default="scope"> <el-button icon="ele-Promotion" size="small" text="" type="primary" @click="addPaiChan(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button></template>
+						</el-table-column>
 					</el-table>
 				</div>
 			</div>
@@ -112,7 +124,7 @@ const dischargeOrderList = ref<any>();
 const addPaiChan = async (row: any, e: any) => {
 	// 先执行calcSN
 	await calcSN(row);
-
+	formPaiChan.value.classOutput = row.classOutput;
 	if (formPaiChan.value.classOutput == 0) {
 		ElMessage({
 			message: '班次产量不得为0',
@@ -189,7 +201,11 @@ const getdischargeOrderList = async () => {
 	};
 	let list = await listNotPaichanOrderByDeviceId(params);
 	dischargeOrderList.value = list.data.result ?? [];
-	formPaiChan.value.classOutput = list.data.result[0].orderSurplusQuantity;
+	// 遍历list.data.result的orderSurplusQuantity赋值给每一行的classOutput2;
+	dischargeOrderList.value.forEach((item: any) => {
+		item.classOutput = item.orderSurplusQuantity;
+	});
+	// formPaiChan.value.classOutput = list.data.result[0].orderSurplusQuantity;
 };
 
 const orderOrderIdDropdownList = ref<any>([]);
@@ -217,6 +233,15 @@ const sysUserOperatorUsersDropdownList = ref<any>([]);
 const getSysUserOperatorUsersDropdownList = async () => {
 	let list = await getSysUserOperatorUsersDropdown();
 	sysUserOperatorUsersDropdownList.value = list.data.result ?? [];
+};
+
+// 格式化日期
+const formatDate = (dateString: string | number | Date) => {
+	const date = new Date(dateString);
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`;
 };
 
 //将属性或者函数暴露给父组件

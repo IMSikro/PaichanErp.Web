@@ -9,7 +9,7 @@
 				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
 			>
 				<div style="display: flex; flex-direction: column; position: relative; padding-left: 2%">
-					<div style="flex: 1">设备编号: {{ item.deviceName }}</div>
+					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceName }}</div>
 					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
 					<div style="position: absolute; top: 0; right: 0">
 						<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
@@ -94,6 +94,7 @@ import addPaichanDialog from '/@/views/opration/sub/addPaichanDialog.vue';
 // 表格拖拽
 import Sortable from 'sortablejs';
 import { VxeTableInstance, VxeToolbarInstance, VxeColumnProps } from 'vxe-table';
+import router from '/@/router';
 
 //父级传递来的参数
 var props = defineProps({
@@ -153,6 +154,10 @@ const initDeviceList = async (dtId: any) => {
 	await initOrderDetailList();
 };
 
+// 跳转设备列表页面
+const goToDeviceManageDevice = () => {
+	router.push({ name: 'device' });
+};
 // 展示更多
 const showMore = (id: any) => {
 	// 根据需要的高度重新计算min-height的值
