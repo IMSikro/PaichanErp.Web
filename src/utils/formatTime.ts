@@ -9,7 +9,11 @@
  * @description format 季度 + 星期 + 几周："YYYY-mm-dd HH:MM:SS WWW QQQQ ZZZ"
  * @returns 返回拼接后的时间字符串
  */
-export function formatDate(date: Date, format: string): string {
+export function formatDate(dateString: string | Date, format: string): string {
+	if (!dateString) return '';
+	let date: Date;
+	typeof dateString === 'string' || 'object' ? (date = new Date(dateString)) : (date = dateString);
+	date = new Date(date);
 	let we = date.getDay(); // 星期
 	let z = getWeek(date); // 周
 	let qut = Math.floor((date.getMonth() + 3) / 3).toString(); // 季度

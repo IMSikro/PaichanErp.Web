@@ -78,13 +78,13 @@
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
         <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
         <el-table-column prop="updateUserName" label="修改者姓名" width="140" show-overflow-tooltip="" />
-        <el-table-column label="操作" width="140" align="center" fixed="right" show-overflow-tooltip=""
+        <el-table-column label="操作" width="80" align="center" fixed="left" show-overflow-tooltip=""
           v-if="auth('produce:edit') || auth('produce:delete')">
           <template #default="scope">
             <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditProduce(scope.row)"
-              v-auth="'produce:edit'"> 编辑 </el-button>
+              v-auth="'produce:edit'">  </el-button>
             <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProduce(scope.row)"
-              v-auth="'produce:delete'"> 删除 </el-button>
+              v-auth="'produce:delete'">  </el-button>
           </template>
         </el-table-column>
       </el-table>

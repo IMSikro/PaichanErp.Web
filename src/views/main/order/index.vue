@@ -91,7 +91,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="orderDetailCode" label="班次序号" width="140" show-overflow-tooltip="" />
-              <el-table-column prop="startDate" label="开始时间" width="140" show-overflow-tooltip="" />
+              <!-- <el-table-column prop="startDate" label="开始时间" width="140" show-overflow-tooltip="" /> -->
               <el-table-column prop="endDate" label="结束时间" width="140" show-overflow-tooltip="" />
               <el-table-column prop="deviceId" label="设备" width="120" show-overflow-tooltip="">
                 <template #default="scope">
@@ -102,13 +102,13 @@
               <el-table-column prop="qty" label="班次产量" width="140" show-overflow-tooltip="" />
               <el-table-column prop="pUnit" label="计量单位" width="140" show-overflow-tooltip="" />
               <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
-              <el-table-column label="操作" width="140" align="center" fixed="right" show-overflow-tooltip=""
+              <el-table-column label="操作" width="70" align="center" fixed="left" show-overflow-tooltip=""
                 v-if="auth('orderDetail:edit') || auth('orderDetail:delete')">
                 <template #default="scope">
                   <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrderDetail(scope.row)"
-                    v-auth="'orderDetail:edit'"> 编辑 </el-button>
+                    v-auth="'orderDetail:edit'">  </el-button>
                   <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delOrderDetail(scope.row)"
-                    v-auth="'orderDetail:delete'"> 删除 </el-button>
+                    v-auth="'orderDetail:delete'">  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -116,10 +116,18 @@
         </el-table-column>
         <el-table-column type="index" label="序号" width="55" align="center" />
         <el-table-column prop="orderCode" label="订单编号" width="140" show-overflow-tooltip="" />
-        <el-table-column prop="orderDate" label="下单日期" width="140" show-overflow-tooltip="" />
-        <el-table-column prop="deliveryDate" label="交货日期" width="140" show-overflow-tooltip="" />
-        <el-table-column prop="startDate" label="实际开工时间" width="90" show-overflow-tooltip="" />
-        <el-table-column prop="endDate" label="实际完成时间" width="90" show-overflow-tooltip="" />
+        <el-table-column prop="orderDate" label="下单日期" width="140" show-overflow-tooltip="" >
+          <template #default="scope">
+            <span>{{ formatDate(scope.row.orderDate,'YYYY-mm-dd') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="deliveryDate" label="交货日期" width="140" show-overflow-tooltip=""  >
+          <template #default="scope">
+            <span>{{ formatDate(scope.row.deliveryDate,'YYYY-mm-dd') }}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column prop="startDate" label="实际开工时间" width="90" show-overflow-tooltip="" />
+        <el-table-column prop="endDate" label="实际完成时间" width="90" show-overflow-tooltip="" /> -->
         <el-table-column prop="produceId" label="产品编号" width="120" show-overflow-tooltip="">
           <template #default="scope">
             <span>{{ scope.row.produceIdProduceName }}</span>
@@ -131,15 +139,24 @@
         <el-table-column prop="pUnit" label="计量单位" width="140" show-overflow-tooltip="" />
         <el-table-column prop="customer" label="客户" width="140" show-overflow-tooltip="" />
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
-        <el-table-column label="操作" width="200" align="center" fixed="right" show-overflow-tooltip=""
-          v-if="auth('order:edit') || auth('order:delete')">
+        <el-table-column label="操作" width="110" align="center" fixed="left" show-overflow-tooltip=""
+          v-if="auth('order:edit') || auth('order:delete') || auth('orderDetail:add')">
           <template #default="scope">
-            <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openAddOrderDetail(scope.row)"
+            <el-button icon="ele-Promotion" size="small" text="" type="primary" @click="openAddOrderDetail(scope.row)"
               v-auth="'orderDetail:add'"> 排产 </el-button>
-            <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrder(scope.row)"
-              v-auth="'order:edit'"> 编辑 </el-button>
+              <el-dropdown>
+									<el-button icon="ele-MoreFilled" size="small" text type="primary" style="padding-left: 12px" />
+									<template #dropdown>
+										<el-dropdown-menu>
+											<el-dropdown-item icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrder(scope.row)" :disabled="!auth('order:edit')"> 修改 </el-dropdown-item>
+											<el-dropdown-item icon="ele-Delete" size="small" text="" type="primary" @click="delOrder(scope.row)" divided :disabled="!auth('order:delete')"> 删除 </el-dropdown-item>
+										</el-dropdown-menu>
+									</template>
+								</el-dropdown>
+            <!-- <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrder(scope.row)"
+              v-auth="'order:edit'"> 修改 </el-button>
             <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delOrder(scope.row)"
-              v-auth="'order:delete'"> 删除 </el-button>
+              v-auth="'order:delete'"> 删除 </el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -189,7 +206,7 @@ import { reactive,ref } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
-//import { formatDate } from '/@/utils/formatTime';
+import { formatDate } from '/@/utils/formatTime';
 import { downloadByData,getFileName } from '/@/utils/download';
 
 import editDialog from '/@/views/main/order/component/editDialog.vue'
