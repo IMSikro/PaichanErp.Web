@@ -8,9 +8,9 @@
 				<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
 			</template>
 		</vxe-grid>
-		<el-button type="primary" @click="resetNormal()" style="width: 8%">保存修改</el-button>
+		<el-button type="primary" @click="saveTable()" style="width: 8%">保存修改</el-button>
 		<div class="json_area">
-			<el-input v-model="jsonData" style="width: 100%" :rows="25" type="textarea" />
+			<el-input v-model="jsonData" style="width: 100%" :rows="25" disabled type="textarea" />
 		</div>
 	</div>
 </template>
@@ -59,9 +59,29 @@ const resetNormal = () => {
 		},
 	];
 	gridOptions2.data = newData;
-	tableColumnReset().then(() => {
+	ElMessageBox.confirm('确定要重置吗？', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning',
+	}).then(() => {
+		tableColumnReset().then(() => {
+			ElMessage({
+				message: '重置成功',
+				type: 'success',
+			});
+		});
+	});
+};
+
+// 保存修改
+const saveTable = () => {
+	ElMessageBox.confirm('确定要保存修改吗？', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning',
+	}).then(() => {
 		ElMessage({
-			message: '重置成功',
+			message: '保存成功',
 			type: 'success',
 		});
 	});
