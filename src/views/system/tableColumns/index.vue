@@ -1,6 +1,17 @@
 <template>
 	<div class="tableColumns-container">
-		<vxe-grid ref="xGrid2" v-bind="gridOptions2"></vxe-grid>
+		<div class="control_area" style="margin: 0.2% 0 1% 0">
+			<el-button type="primary" @click="resetNormal()" style="width: 8%">重置为默认</el-button>
+		</div>
+		<vxe-grid ref="xGrid2" v-bind="gridOptions2" @resizable-change="resizableChange">
+			<template #color_default="{ row }">
+				<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
+			</template>
+		</vxe-grid>
+		<el-button type="primary" @click="resetNormal()" style="width: 8%">保存修改</el-button>
+		<div class="json_area">
+			<el-input v-model="jsonData" style="width: 100%" :rows="25" type="textarea" />
+		</div>
 	</div>
 </template>
 
@@ -14,74 +25,92 @@ import Sortable from 'sortablejs';
 import { tableColumnPage } from '/@/api/main/orderDetail';
 
 const xGrid2 = ref({} as VxeGridInstance);
+const jsonData = ref('');
 
-const meanNum = (list: any[], field: string) => {
-	let count = 0;
-	list.forEach((item) => {
-		count += Number(item[field]);
-	});
-	return count / list.length;
-};
-
-const sumNum = (list: any[], field: string) => {
-	let count = 0;
-	list.forEach((item) => {
-		count += Number(item[field]);
-	});
-	return count;
+// 重置为默认
+const resetNormal = () => {
+	const newData = [
+		{
+			id: 33187620429061,
+			orderId: 31705350596165,
+			orderIdBatchNumber: 'S2024010001',
+			orderDetailCode: 'S2024010001-7',
+			sn: 7,
+			startDate: null,
+			endDate: null,
+			deliveryDate: '2024-01-31 00:00:00',
+			deviceTypeId: 31640794926405,
+			deviceId: 32450617877829,
+			deviceErrorTime: null,
+			deviceErrorType: null,
+			deviceIdDeviceCode: 'JC001',
+			operatorUsers: '32835490344773',
+			operatorUsersRealName: '张三',
+			qty: 1,
+			pUnit: '吨',
+			produceId: 31640920050757,
+			produceIdProduceName: 'PM00001TN',
+			produceName: 'PM00001TN',
+			colorRgb: '207,75,34',
+			sort: 999,
+			remark: '',
+			createUserName: '超级管理员',
+			updateUserName: null,
+		},
+	];
+	gridOptions2.data = newData;
 };
 
 const gridOptions2 = reactive({
 	border: true,
-	showFooter: true,
+	showOverflow: true,
+	resizable: true,
+	rowConfig: {
+		height: 28,
+	},
 	class: 'sortable-column-demo',
+	headerCellStyle: {
+		height: '28px',
+	},
 	columnConfig: {
 		useKey: true,
 	},
 	scrollX: {
 		enabled: false,
 	},
-	toolbarConfig: {
-		custom: true,
-	},
 	columns: [
-		{ field: 'name', title: 'Name', fixed: 'left', width: 300 },
-		{ field: 'nickname', title: 'Nickname' },
+		{ field: 'name', title: 'Name' },
 		{ field: 'role', title: 'Role' },
-		{ field: 'sex', title: 'Sex' },
-		{ field: 'age', title: 'Age' },
-		{ field: 'date3', title: 'Date' },
-		{ field: 'address', title: 'Address', width: 200, fixed: 'right', showOverflow: true },
 	],
 	data: [
-		{ id: 10001, name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' },
-		{ id: 10002, name: 'Test2', nickname: 'T2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
-		{ id: 10003, name: 'Test3', nickname: 'T3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
-		{ id: 10004, name: 'Test4', nickname: 'T4', role: 'Designer', sex: 'Women', age: 23, address: 'Shenzhen' },
-		{ id: 10005, name: 'Test5', nickname: 'T5', role: 'Develop', sex: 'Women', age: 30, address: 'Shanghai' },
+		{
+			id: 33187620429061,
+			orderId: 31705350596165,
+			orderIdBatchNumber: 'S2024010001',
+			orderDetailCode: 'S2024010001-7',
+			sn: 7,
+			startDate: null,
+			endDate: null,
+			deliveryDate: '2024-01-31 00:00:00',
+			deviceTypeId: 31640794926405,
+			deviceId: 32450617877829,
+			deviceErrorTime: null,
+			deviceErrorType: null,
+			deviceIdDeviceCode: 'JC001',
+			operatorUsers: '32835490344773',
+			operatorUsersRealName: '张三',
+			qty: 1,
+			pUnit: '吨',
+			produceId: 31640920050757,
+			produceIdProduceName: 'PM00001TN',
+			produceName: 'PM00001TN',
+			colorRgb: '207,75,34',
+			sort: 999,
+			remark: '',
+			createUserName: '超级管理员',
+			updateUserName: null,
+		},
 	],
-	footerMethod({ columns, data }) {
-		return [
-			columns.map((column, columnIndex) => {
-				if (columnIndex === 0) {
-					return '平均';
-				}
-				if (['age', 'sex'].includes(column.property)) {
-					return meanNum(data, column.property);
-				}
-				return null;
-			}),
-			columns.map((column, columnIndex) => {
-				if (columnIndex === 0) {
-					return '和值';
-				}
-				if (['age', 'sex'].includes(column.property)) {
-					return sumNum(data, column.property);
-				}
-				return null;
-			}),
-		];
-	},
 } as VxeGridProps);
 
 let sortable2: any;
@@ -90,7 +119,7 @@ const columnDrop2 = () => {
 	const $grid = xGrid2.value;
 	sortable2 = Sortable.create($grid.$el.querySelector('.body--wrapper>.vxe-table--header .vxe-header--row'), {
 		handle: '.vxe-header--column',
-		onEnd: (sortableEvent) => {
+		onEnd: (sortableEvent: { item: any; newIndex: number; oldIndex: number }) => {
 			const targetThElem = sortableEvent.item;
 			const newIndex = sortableEvent.newIndex as number;
 			const oldIndex = sortableEvent.oldIndex as number;
@@ -136,7 +165,26 @@ onUnmounted(() => {
 
 onMounted(async () => {
 	handleQuery();
+
+	setTimeout(() => {
+		nextTick(() => {
+			jsonData.value = JSON.stringify(gridOptions2.columns, null, 2);
+		});
+	}, 2000);
 });
+
+// 改变列宽
+const resizableChange = (params: any) => {
+	// console.log('resizableChange', params);
+	console.log(params.columnIndex, params.resizeWidth);
+	gridOptions2.columns[params.columnIndex].width = params.resizeWidth;
+	console.log('columns', gridOptions2.columns);
+	// 提示新列宽
+	ElMessage({
+		message: `列宽：${params.resizeWidth}px`,
+		type: 'success',
+	});
+};
 
 // 查询操作
 const handleQuery = async () => {
@@ -146,13 +194,24 @@ const handleQuery = async () => {
 		lable: '',
 	};
 	var orderDetailRes = await tableColumnPage(params);
-	const newData = orderDetailRes.data.result.map((item: { prop: any; lable: any; width: string }, index: number) => ({
-		key: index + 6,
-		field: item.prop,
-		title: item.lable,
-		show: !item.isHidden,
-		width: parseInt(item.width),
-	}));
-	console.log('newData', newData);
+	const newData = orderDetailRes.data.result.map((item: { prop: any; lable: any; width: string }, index: number) => {
+		let newItem = {
+			key: index + 6,
+			field: item.prop,
+			title: item.lable,
+			width: parseInt(item.width),
+		};
+
+		// 添加条件：当title为颜色时，添加一个字段
+		if (item.lable === '颜色') {
+			newItem.slots = {
+				default: 'color_default',
+			};
+		}
+
+		return newItem;
+	});
+
+	gridOptions2.columns = newData;
 };
 </script>
