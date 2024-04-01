@@ -1,8 +1,8 @@
 <template>
 	<div class="layout-footer pb15">
 		<div class="layout-footer-warp">
-			<div>Admin.NET</div>
-			<div class="mt5">Copyright © 2023 Daming All rights reserved.</div>
+			<div>云制库</div>
+			<div class="mt5">Copyright © 2024 All rights reserved.</div>
 		</div>
 	</div>
 </template>

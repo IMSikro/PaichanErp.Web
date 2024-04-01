@@ -102,8 +102,8 @@ const dragRef: any = ref(null);
 const state = reactive({
 	isShowPassword: false,
 	ruleForm: {
-		account: 'superadmin',
-		password: '123456',
+		account: '',
+		password: '',
 		code: '',
 		codeId: 0,
 	},
@@ -135,6 +135,9 @@ onMounted(async () => {
 	state.captchaEnabled = res1.data.result.captchaEnabled ?? true;
 
 	getCaptcha();
+
+	state.ruleForm.account = Local.get('loginuser');
+	state.ruleForm.password = Local.get('loginpwd');
 });
 // 获取验证码
 const getCaptcha = async () => {
@@ -178,6 +181,8 @@ const onSignIn = async () => {
 const saveTokenAndInitRoutes = async (accessToken: string | any) => {
 	// 缓存token
 	Local.set(accessTokenKey, accessToken);
+	Local.set('loginuser', state.ruleForm.account);
+	Local.set('loginpwd', state.ruleForm.password);
 	// Local.set(refreshAccessTokenKey, refreshAccessToken);
 	Session.set('token', accessToken);
 

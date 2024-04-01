@@ -17,10 +17,12 @@ const qrcodeRef = ref<HTMLElement | null>(null);
 
 // 初始化生成二维码
 const initQrcode = () => {
+	let hostname = location.host;
+    const loginUrl = `http://${hostname}/#/login?redirect=/dashboard/oprationScreen&params={}`
 	nextTick(() => {
 		(<HTMLElement>qrcodeRef.value).innerHTML = '';
 		new QRCode(qrcodeRef.value, {
-			text: `https://gitee.com/zuohuaijun/Admin.NET`,
+			text: loginUrl,
 			width: 260,
 			height: 260,
 			colorDark: '#000000',
