@@ -75,15 +75,9 @@ const resetNormal = () => {
 
 // 保存修改
 const saveTable = () => {
-	ElMessageBox.confirm('确定要保存修改吗？', '提示', {
-		confirmButtonText: '确定',
-		cancelButtonText: '取消',
-		type: 'warning',
-	}).then(() => {
-		ElMessage({
-			message: '保存成功',
-			type: 'success',
-		});
+	ElMessage({
+		message: '保存成功',
+		type: 'success',
 	});
 };
 
