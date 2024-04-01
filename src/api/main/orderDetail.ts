@@ -14,7 +14,16 @@ enum Api {
 	setOrderDetailSort = '/api/orderDetail/setOrderDetailSort',
 	deviceErrorTypeDropdown = '/api/orderDetail/deviceErrorTypeDropdown',
 	tableColumnPage = '/api/tableColumn/page',
+	tableColumnReset = '/api/tableColumn/reset',
 }
+
+// 重置列表展示 - 表格列
+export const tableColumnReset = (params?: any) =>
+	request({
+		url: Api.tableColumnReset,
+		method: 'post',
+		data: params,
+	});
 
 // 查询列表展示 - 表格列
 export const tableColumnPage = (params?: any) =>

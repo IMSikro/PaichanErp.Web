@@ -22,7 +22,7 @@ import { reactive, ref, onUnmounted, nextTick, onMounted } from 'vue';
 import { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table';
 import Sortable from 'sortablejs';
 
-import { tableColumnPage } from '/@/api/main/orderDetail';
+import { tableColumnPage, tableColumnReset } from '/@/api/main/orderDetail';
 
 const xGrid2 = ref({} as VxeGridInstance);
 const jsonData = ref('');
@@ -59,6 +59,12 @@ const resetNormal = () => {
 		},
 	];
 	gridOptions2.data = newData;
+	tableColumnReset().then(() => {
+		ElMessage({
+			message: '重置成功',
+			type: 'success',
+		});
+	});
 };
 
 const gridOptions2 = reactive({
