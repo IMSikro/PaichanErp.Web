@@ -3,12 +3,12 @@
 		<div class="control_area" style="margin: 0.2% 0 1% 0">
 			<el-button type="primary" @click="resetNormal()" style="width: 8%">重置为默认</el-button>
 		</div>
-		<vxe-grid ref="xGrid2" v-bind="gridOptions2" @resizable-change="resizableChange">
+		<vxe-grid ref="xGrid2" v-bind="gridOptions2" @resizable-change="resizableChange" @custom="toolbarCustomEvent">
 			<template #color_default="{ row }">
 				<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
 			</template>
 		</vxe-grid>
-		<el-button type="primary" @click="saveTable()" style="width: 8%">保存修改</el-button>
+		<el-button type="primary" @click="saveTableBTN()" style="width: 8%">保存修改</el-button>
 		<div class="json_area">
 			<el-input v-model="jsonData" style="width: 100%" :rows="25" disabled type="textarea" />
 		</div>
@@ -19,10 +19,10 @@
 import { ElMessageBox, ElMessage } from 'element-plus';
 
 import { reactive, ref, onUnmounted, nextTick, onMounted } from 'vue';
-import { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table';
+import { VXETable, VxeGridInstance, VxeGridProps, VxeTableEvents } from 'vxe-table';
 import Sortable from 'sortablejs';
 
-import { tableColumnPage, tableColumnReset } from '/@/api/main/orderDetail';
+import { tableColumnPage, tableColumnReset, tableColumnUpdateList } from '/@/api/main/orderDetail';
 
 const xGrid2 = ref({} as VxeGridInstance);
 const jsonData = ref('');
@@ -73,11 +73,39 @@ const resetNormal = () => {
 	});
 };
 
+const saveTableBTN = () => {
+	const $table = xGrid2.value;
+	if ($table) {
+		const visibleColumn = $table.getColumns();
+		saveTable(visibleColumn);
+	}
+};
+
 // 保存修改
-const saveTable = () => {
-	ElMessage({
-		message: '保存成功',
-		type: 'success',
+const saveTable = (newTable: any) => {
+	let params = [];
+	params = gridOptions2.columns;
+	console.log('old', gridOptions2.columns);
+	console.log('newTable', newTable);
+
+	// 解析newTable，提取以下结构：{prop: 'name', lable: 'Name', width: '100', isHidden: true, sort: 0}
+	// newTable.forEach((item: any, index: any) => {
+	// 	console.log(item);
+	// 	params.push({
+	// 		prop: item.field,
+	// 		lable: item.title,
+	// 		width: item.width,
+	// 		isHidden: item.visible,
+	// 		sort: index,
+	// 	});
+	// });
+	// gridOptions2.columns = params;
+	// console.log('new', gridOptions2.columns);
+	tableColumnUpdateList(params).then(() => {
+		ElMessage({
+			message: '保存成功',
+			type: 'success',
+		});
 	});
 };
 
@@ -97,6 +125,9 @@ const gridOptions2 = reactive({
 	},
 	scrollX: {
 		enabled: false,
+	},
+	toolbarConfig: {
+		custom: true,
 	},
 	columns: [
 		{ field: 'name', title: 'Name' },
@@ -185,25 +216,52 @@ onUnmounted(() => {
 
 onMounted(async () => {
 	handleQuery();
+	loadjsonData();
+});
 
+const loadjsonData = () => {
 	setTimeout(() => {
 		nextTick(() => {
 			jsonData.value = JSON.stringify(gridOptions2.columns, null, 2);
 		});
-	}, 2000);
-});
+	}, 1000);
+};
 
 // 改变列宽
 const resizableChange = (params: any) => {
 	// console.log('resizableChange', params);
-	console.log(params.columnIndex, params.resizeWidth);
+	// console.log(params.columnIndex, params.resizeWidth);
 	gridOptions2.columns[params.columnIndex].width = params.resizeWidth;
-	console.log('columns', gridOptions2.columns);
+	// console.log('columns', gridOptions2.columns);
+	loadjsonData();
 	// 提示新列宽
 	ElMessage({
 		message: `列宽：${params.resizeWidth}px`,
 		type: 'success',
 	});
+};
+
+// 自定义工具栏按钮事件
+const toolbarCustomEvent: VxeTableEvents.Custom = (params) => {
+	const $table = xGrid2.value;
+	if ($table) {
+		const visibleColumn = $table.getColumns();
+		switch (params.type) {
+			case 'confirm': {
+				VXETable.modal.message({ content: `点击了确认，显示为 ${visibleColumn.length} 列`, status: 'info' });
+				saveTable(visibleColumn);
+				break;
+			}
+			case 'reset': {
+				// VXETable.modal.message({ content: `点击了重置，显示为 ${visibleColumn.length} 列`, status: 'info' });
+				break;
+			}
+			case 'close': {
+				// VXETable.modal.message({ content: `关闭了面板，显示为 ${visibleColumn.length} 列`, status: 'info' });
+				break;
+			}
+		}
+	}
 };
 
 // 查询操作

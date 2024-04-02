@@ -15,7 +15,16 @@ enum Api {
 	deviceErrorTypeDropdown = '/api/orderDetail/deviceErrorTypeDropdown',
 	tableColumnPage = '/api/tableColumn/page',
 	tableColumnReset = '/api/tableColumn/reset',
+	tableColumnUpdateList = '/api/tableColumn/updateList',
 }
+
+// 更新列表展示 - 表格列
+export const tableColumnUpdateList = (params?: any) =>
+	request({
+		url: Api.tableColumnUpdateList,
+		method: 'post',
+		data: params,
+	});
 
 // 重置列表展示 - 表格列
 export const tableColumnReset = (params?: any) =>
