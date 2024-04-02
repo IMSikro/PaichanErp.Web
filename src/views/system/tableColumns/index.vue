@@ -84,29 +84,57 @@ const saveTableBTN = () => {
 // 保存修改
 const saveTable = (newTable: any) => {
 	let params = [];
-	params = gridOptions2.columns;
+	// params = gridOptions2.columns;
 	console.log('old', gridOptions2.columns);
 	console.log('newTable', newTable);
+	if (newTable.length === 0) {
+		gridOptions2.columns.forEach((item: any, index: any) => {
+			params.push({
+				prop: item.field,
+				lable: item.title,
+				width: item.width,
+				isHidden: false,
+				sort: index,
+			});
+		});
+	} else {
+		// 在newTable和gridOptions2.columns中遍历对比，
+		// 对比newTable的title是否等于gridOptions2.columns的lable
+		// 如果等于，就把gridOptions2.columns的所有属性都赋值给newTable
+		gridOptions2.columns.forEach((item: any, index: any) => {
+			newTable.forEach((item2: any, index2: any) => {
+				if (item.proplable === item2.field) {
+					item.width = item2.width;
+					item.isHidden = item2.visible;
+				}
+			});
+		});
+		console.log('nnnnnnnnn', gridOptions2.columns);
 
-	// 解析newTable，提取以下结构：{prop: 'name', lable: 'Name', width: '100', isHidden: true, sort: 0}
-	// newTable.forEach((item: any, index: any) => {
-	// 	console.log(item);
-	// 	params.push({
-	// 		prop: item.field,
-	// 		lable: item.title,
-	// 		width: item.width,
-	// 		isHidden: item.visible,
-	// 		sort: index,
+		// newTable.forEach((item: any, index: any) => {
+		// 	console.log('item', item);
+		// 	params.push({
+		// 		prop: item.field,
+		// 		lable: item.title,
+		// 		width: item.width,
+		// 		isHidden: !item.visible,
+		// 		sort: index,
+		// 	});
+		// });
+	}
+
+	// // 页面显示用
+	// gridOptions2.columns = newTable;
+	// loadjsonData();
+	// console.log('params', params);
+	// // gridOptions2.columns = params;
+	// // console.log('new', gridOptions2.columns);
+	// tableColumnUpdateList(params).then(() => {
+	// 	ElMessage({
+	// 		message: '保存成功',
+	// 		type: 'success',
 	// 	});
 	// });
-	// gridOptions2.columns = params;
-	// console.log('new', gridOptions2.columns);
-	tableColumnUpdateList(params).then(() => {
-		ElMessage({
-			message: '保存成功',
-			type: 'success',
-		});
-	});
 };
 
 const gridOptions2 = reactive({
@@ -129,10 +157,7 @@ const gridOptions2 = reactive({
 	toolbarConfig: {
 		custom: true,
 	},
-	columns: [
-		{ field: 'name', title: 'Name' },
-		{ field: 'role', title: 'Role' },
-	],
+	columns: [],
 	data: [
 		{
 			id: 33187620429061,
@@ -234,11 +259,16 @@ const resizableChange = (params: any) => {
 	gridOptions2.columns[params.columnIndex].width = params.resizeWidth;
 	// console.log('columns', gridOptions2.columns);
 	loadjsonData();
-	// 提示新列宽
-	ElMessage({
-		message: `列宽：${params.resizeWidth}px`,
-		type: 'success',
-	});
+	const $table = xGrid2.value;
+	if ($table) {
+		const visibleColumn = $table.getColumns();
+		saveTable(visibleColumn);
+	}
+	// // 提示新列宽
+	// ElMessage({
+	// 	message: `列宽：${params.resizeWidth}px`,
+	// 	type: 'success',
+	// });
 };
 
 // 自定义工具栏按钮事件
@@ -277,6 +307,7 @@ const handleQuery = async () => {
 			key: index + 6,
 			field: item.prop,
 			title: item.lable,
+			show: item.isHidden,
 			width: parseInt(item.width),
 		};
 
