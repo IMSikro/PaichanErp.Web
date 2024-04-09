@@ -84,9 +84,6 @@ const saveTableBTN = () => {
 // 保存修改
 const saveTable = (newTable: any) => {
 	let params = [];
-	// params = gridOptions2.columns;
-	console.log('old', gridOptions2.columns);
-	console.log('newTable', newTable);
 	if (newTable.length === 0) {
 		gridOptions2.columns.forEach((item: any, index: any) => {
 			params.push({
@@ -98,43 +95,43 @@ const saveTable = (newTable: any) => {
 			});
 		});
 	} else {
-		// 在newTable和gridOptions2.columns中遍历对比，
-		// 对比newTable的title是否等于gridOptions2.columns的lable
-		// 如果等于，就把gridOptions2.columns的所有属性都赋值给newTable
-		gridOptions2.columns.forEach((item: any, index: any) => {
-			newTable.forEach((item2: any, index2: any) => {
-				if (item.proplable === item2.field) {
-					item.width = item2.width;
-					item.isHidden = item2.visible;
-				}
-			});
+		// // 在newTable和gridOptions2.columns中遍历对比，
+		// 提取数据组成新的数组
+		const newData = gridOptions2.columns.map((gridItem, index) => {
+			// 在 newTable 中查找是否存在相同的 field
+			const tableItem = newTable.find((item) => item.field === gridItem.field);
+
+			// 如果找到了对应的项，则使用 tableItem 的数据，否则使用默认数据
+			if (tableItem) {
+				return {
+					prop: tableItem.field, // prop 取 field
+					label: tableItem.title, // label 取 title
+					width: gridItem.width.toString(), // width 取 width，转换为字符串
+					isHidden: true, // 因为找到了对应的项，所以 isHidden 为 true
+					sort: index, // 使用循环的下标作为 sort 的值
+				};
+			} else {
+				// 如果未找到对应的项，则使用默认数据
+				return {
+					prop: gridItem.field, // prop 取 field
+					label: gridItem.title, // 使用默认的 label
+					width: gridItem.width.toString(), // width 取 width，转换为字符串
+					isHidden: false, // 因为未找到对应的项，所以 isHidden 为 false
+					sort: index, // 使用循环的下标作为 sort 的值
+				};
+			}
 		});
-		console.log('nnnnnnnnn', gridOptions2.columns);
 
-		// newTable.forEach((item: any, index: any) => {
-		// 	console.log('item', item);
-		// 	params.push({
-		// 		prop: item.field,
-		// 		lable: item.title,
-		// 		width: item.width,
-		// 		isHidden: !item.visible,
-		// 		sort: index,
-		// 	});
-		// });
+		// 输出结果
+		params = newData;
+		console.log(newData);
 	}
-
-	// // 页面显示用
-	// gridOptions2.columns = newTable;
-	// loadjsonData();
-	// console.log('params', params);
-	// // gridOptions2.columns = params;
-	// // console.log('new', gridOptions2.columns);
-	// tableColumnUpdateList(params).then(() => {
-	// 	ElMessage({
-	// 		message: '保存成功',
-	// 		type: 'success',
-	// 	});
-	// });
+	tableColumnUpdateList(params).then(() => {
+		ElMessage({
+			message: '保存成功',
+			type: 'success',
+		});
+	});
 };
 
 const gridOptions2 = reactive({
@@ -261,8 +258,12 @@ const resizableChange = (params: any) => {
 	loadjsonData();
 	const $table = xGrid2.value;
 	if ($table) {
-		const visibleColumn = $table.getColumns();
-		saveTable(visibleColumn);
+		setTimeout(() => {
+			nextTick(() => {
+				const visibleColumn = $table.getColumns();
+				saveTable(visibleColumn);
+			});
+		}, 500);
 	}
 	// // 提示新列宽
 	// ElMessage({
@@ -307,7 +308,7 @@ const handleQuery = async () => {
 			key: index + 6,
 			field: item.prop,
 			title: item.lable,
-			show: item.isHidden,
+			visible: item.isHidden,
 			width: parseInt(item.width),
 		};
 
@@ -320,6 +321,7 @@ const handleQuery = async () => {
 
 		return newItem;
 	});
+	console.log('newData', newData);
 
 	gridOptions2.columns = newData;
 };
