@@ -1,8 +1,6 @@
 <template>
 	<div class="bigScreen-container">
-		<div>
-			<h1>{{ state.orgData.name }} - 排产控制台</h1>
-		</div>
+		<div class="bigTitle">{{ state.orgData.name }} - 排产控制台</div>
 	</div>
 </template>
 
@@ -33,6 +31,17 @@ onMounted(async () => {
 </script>
 <style scoped>
 .bigScreen-container {
-	background-color: aqua;
+	display: flex;
+	color: #ffffff;
+	background-color: #000d3a;
+	.bigTitle {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 2rem;
+		width: 100%;
+		height: 6.0625rem;
+		background: url('../../../assets/bigScreen/bigTitle.png') no-repeat center center;
+	}
 }
 </style>
