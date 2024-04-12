@@ -8,17 +8,18 @@
 				:key="item.id"
 				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
 			>
-				<div style="display: flex; flex-direction: column; position: relative; padding-left: 2%">
+				<div class="jbbg"></div>
+				<div class="baseInfo">
 					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceName }}</div>
-					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
-					<div style="position: absolute; top: 0; right: 0">
+					<div style="flex: 1; font-size: 12px; color: #bebebe" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
+					<div class="btnArea">
 						<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
 					</div>
 				</div>
 				<div class="tableArea" style="position: relative; display: flex; flex-direction: column" @wheel.prevent="handleScroll">
 					<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
 					<vxe-table
-						border
+						border="none"
 						show-overflow
 						:row-config="{ useKey: true, height: 28 }"
 						:id="item.id.toString()"
@@ -27,6 +28,7 @@
 						:data="orderDetails[item.id]"
 						:custom-config="{ storage: true }"
 						:toolbar-onfig="{ custom: true }"
+						class="vxe-my-style-table"
 					>
 						<vxe-column
 							v-for="config in tableColumn"
@@ -51,11 +53,11 @@
 							</template>
 						</vxe-column>
 					</vxe-table>
-					<div style="text-align: center">
-						<el-text> 总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</el-text>
-					</div>
+					<div style="text-align: left; color: white; padding-left: 5%">总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</div>
 				</div>
-				<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99"><el-button link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button></div>
+				<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99">
+					<el-button style="color: white" link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button>
+				</div>
 			</el-card>
 		</el-space>
 	</el-scrollbar>
@@ -113,7 +115,7 @@ const loadTableHeader = async () => {
 		key: index + 6,
 		field: item.prop,
 		title: item.lable,
-		show: !item.isHidden,
+		show: item.isHidden,
 		width: parseInt(item.width),
 	}));
 	tableColumn.value = newData;
@@ -401,7 +403,7 @@ onMounted(async () => {
 	max-width: 500px;
 	position: relative;
 	margin: 10px 15px 0 0;
-	background-color: transparent;
+	background-color: #011446;
 	color: white;
 	border: 2px solid #013068;
 	background-image: url('../../../assets/bigScreen/top-left.png'), url('../../../assets/bigScreen/top-right.png'), url('../../../assets/bigScreen/bottom-right.png'),
@@ -412,10 +414,87 @@ onMounted(async () => {
 		bottom right,
 		bottom left;
 	background-repeat: no-repeat;
+
+	.jbbg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 0;
+		width: 227px;
+		height: 57px;
+		background: linear-gradient(270deg, rgba(1, 20, 71, 0.7) 6.39%, rgba(1, 20, 71, 0.7) 89.55%, rgba(0, 91, 227, 0.7) 100%);
+	}
+	.baseInfo {
+		display: flex;
+		font-size: 14px;
+		flex-direction: column;
+		position: relative;
+		padding-left: 8%;
+		padding-top: 1%;
+		height: 57px;
+
+		.btnArea {
+			position: absolute;
+			top: 16px;
+			right: 32px;
+			width: 64px;
+			height: 32px;
+			.el-button {
+				font-size: 14px;
+				border: 0;
+				width: 100%;
+				height: 100%;
+				background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100%;
+			}
+		}
+	}
+}
+
+.tableArea {
+	/* 表单部分 */
+	.vxe-my-style-table {
+		border: 0;
+		font-size: 14px;
+		background-color: #011446;
+	}
 }
 </style>
 <style>
 .el-collapse-item__content {
 	overflow: auto !important;
+}
+.vxe-table--header-wrapper,
+.vxe-header--row,
+.vxe-table--header {
+	height: 32px;
+	line-height: 32px;
+	font-size: 14px;
+	color: white;
+	border: 0;
+	background-color: #011446;
+}
+/*调整表格 单元格背景颜色*/
+.vxe-table .vxe-table--body-wrapper,
+.vxe-table .vxe-table--footer-wrapper {
+	background-color: #011446;
+}
+/*调整表格文字及位置*/
+.vxe-table .vxe-body--column,
+.vxe-table .vxe-footer--column,
+.vxe-table .vxe-header--column {
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: #ffffff;
+	padding: 0 !important;
+	background-color: transparent;
+	background-image: none !important;
+}
+.vxe-table--render-default .vxe-table--body-wrapper table {
+	background-color: transparent;
+}
+.layout-parent > div:first-child {
+	height: unset !important;
 }
 </style>

@@ -114,7 +114,7 @@ const loadTableHeader = async () => {
 		key: index + 6,
 		field: item.prop,
 		title: item.lable,
-		show: !item.isHidden,
+		show: item.isHidden,
 		width: parseInt(item.width),
 	}));
 	tableColumn.value = newData;
