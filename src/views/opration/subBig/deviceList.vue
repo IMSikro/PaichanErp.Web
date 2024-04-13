@@ -9,6 +9,7 @@
 				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
 			>
 				<div class="jbbg"></div>
+				<div class="smallIcon"></div>
 				<div class="baseInfo">
 					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceName }}</div>
 					<div style="flex: 1; font-size: 12px; color: #bebebe" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
@@ -53,9 +54,9 @@
 							</template>
 						</vxe-column>
 					</vxe-table>
-					<div style="text-align: left; color: white; padding-left: 5%">总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</div>
+					<div class="bottomInfo">总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</div>
 				</div>
-				<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99">
+				<div class="moreBTN">
 					<el-button style="color: white" link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button>
 				</div>
 			</el-card>
@@ -414,7 +415,15 @@ onMounted(async () => {
 		bottom right,
 		bottom left;
 	background-repeat: no-repeat;
-
+	.smallIcon {
+		position: absolute;
+		top: 2.5%;
+		left: 5%;
+		z-index: 0;
+		width: 9px;
+		height: 14px;
+		background: url('../../../assets/bigScreen/instruct.png') no-repeat center center / 100% 100%;
+	}
 	.jbbg {
 		position: absolute;
 		top: 0;
@@ -457,6 +466,20 @@ onMounted(async () => {
 		font-size: 14px;
 		background-color: #011446;
 	}
+	.bottomInfo {
+		text-align: left;
+		color: white;
+		position: absolute;
+		left: 2%;
+		bottom: -3%;
+		z-index: 99;
+	}
+}
+.moreBTN {
+	position: absolute;
+	right: 2%;
+	bottom: 1%;
+	z-index: 99;
 }
 </style>
 <style>
