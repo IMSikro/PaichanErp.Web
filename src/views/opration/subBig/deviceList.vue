@@ -92,7 +92,7 @@ import { getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 import { updateDevice } from '/@/api/main/device';
 
 import editPaichanDialog from '/@/views/opration/sub/editPaichanDialog.vue';
-import addPaichanDialog from '/@/views/opration/sub/addPaichanDialog.vue';
+import addPaichanDialog from '/@/views/opration/subBig/addPaichanDialog.vue';
 // 表格拖拽
 import Sortable from 'sortablejs';
 import { VxeColumnProps } from 'vxe-table';
