@@ -67,7 +67,7 @@
 				</div>
 			</template>
 			<div>
-				<div class="formArea" style="margin: 1% 0">
+				<div class="formArea" style="margin: 1% 0; color: white">
 					<el-form :model="ruleForm2" ref="ruleForm2Ref" label-width="auto" :rules="rules2">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -87,19 +87,14 @@
 									</el-select>
 								</el-form-item>
 							</el-col>
-							<!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20" style="opacity: 1;">
-								<el-form-item label="日期" prop="endDate">
-									<el-date-picker placeholder="请选择完工日期" value-format="YYYY/MM/DD" type="date" v-model="ruleForm2.endDate" />
-								</el-form-item>
-							</el-col> -->
 						</el-row>
 					</el-form>
 				</div>
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="isShowDialogDone = false">取 消</el-button>
-					<el-button type="primary" @click="submitDone">确 定</el-button>
+					<el-button type="customize" @click="isShowDialogDone = false">取 消</el-button>
+					<el-button type="customize" @click="submitDone">确 定</el-button>
 				</span>
 			</template>
 		</el-dialog>
@@ -111,7 +106,7 @@
 				</div>
 			</template>
 			<div>
-				<div class="formArea" style="margin: 1% 0">
+				<div class="formArea" style="margin: 1% 0; color: white">
 					<el-form :model="ruleForm3" ref="ruleForm3Ref" label-width="auto" :rules="rules3">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -131,19 +126,14 @@
 									</el-select>
 								</el-form-item>
 							</el-col>
-							<!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20" style="opacity: 1;">
-								<el-form-item label="日期" prop="endDate">
-									<el-date-picker placeholder="请选择完工日期" value-format="YYYY/MM/DD" type="date" v-model="ruleForm2.endDate" />
-								</el-form-item>
-							</el-col> -->
 						</el-row>
 					</el-form>
 				</div>
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="isShowDialogDone3 = false">取 消</el-button>
-					<el-button type="primary" @click="submitDone3">确 定</el-button>
+					<el-button type="customize" @click="isShowDialogDone3 = false">取 消</el-button>
+					<el-button type="customize" @click="submitDone3">确 定</el-button>
 				</span>
 			</template>
 		</el-dialog>
@@ -514,6 +504,7 @@ defineExpose({ openDialog });
 :deep(.el-dialog__headerbtn) {
 	right: -89% !important;
 	top: 155%;
+	opacity: 0;
 }
 /* 下拉框样式 */
 :deep(.el-select__wrapper) {
@@ -592,5 +583,8 @@ defineExpose({ openDialog });
 	border: 0;
 	color: white;
 	background-color: rgba(255, 49, 0, 0.5);
+}
+:deep(.el-form-item__label) {
+	color: white;
 }
 </style>

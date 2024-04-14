@@ -251,6 +251,7 @@ defineExpose({ openDialog });
 :deep(.el-dialog__headerbtn) {
 	right: -89% !important;
 	top: 130%;
+	opacity: 0;
 }
 /* 下拉框样式 */
 :deep(.el-select__wrapper) {
