@@ -76,7 +76,7 @@
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button class="cancel" type="customize" click="cancel">取 消</el-button>
+				<el-button class="cancel" type="customize" @click="canceledit()">取 消</el-button>
 				<el-button class="sure" type="customize" @click="submit">确 定</el-button>
 			</span>
 		</template></el-dialog
@@ -221,7 +221,7 @@ const submit = async () => {
 };
 
 // 取消
-const cancel = () => {
+const canceledit = () => {
 	editOperatorDialog.value = false;
 };
 
