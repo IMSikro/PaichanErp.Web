@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts" setup="" name="deviceList">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { pageDevice } from '/@/api/main/device';
 import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail, tableColumnPage } from '/@/api/main/orderDetail';
@@ -97,6 +97,7 @@ import addPaichanDialog from '/@/views/opration/subBig/addPaichanDialog.vue';
 import Sortable from 'sortablejs';
 import { VxeColumnProps } from 'vxe-table';
 import router from '/@/router';
+import { onBeforeRouteLeave } from 'vue-router';
 
 //父级传递来的参数
 var props = defineProps({
@@ -365,6 +366,18 @@ onMounted(async () => {
 	loadTableHeader();
 	loadData();
 	loading.value = false;
+	setTimeout(() => {
+		nextTick(() => {
+			// 进入当前路由时设置背景颜色为 #000d3a
+			document.querySelector('.layout-parent').style.backgroundColor = '#000d3a';
+		});
+	}, 1000);
+});
+
+onBeforeRouteLeave((to, from, next) => {
+	// 离开当前路由时取消背景颜色设置
+	document.querySelector('.layout-parent').style.backgroundColor = 'unset';
+	next();
 });
 </script>
 
@@ -563,4 +576,7 @@ onMounted(async () => {
 	color: white;
 	background: url('../../../assets/bigScreen/customize_bg.png') no-repeat center center / 100% 100% !important;
 }
+/* .layout-parent {
+	background-color: #000d3a;
+} */
 </style>
