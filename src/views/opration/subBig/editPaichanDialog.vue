@@ -63,7 +63,7 @@
 		<el-dialog v-model="isShowDialogDone" :width="650" draggable="">
 			<template #header>
 				<div style="color: #fff">
-					<span> 完工并下线 </span>
+					<span> 终结完工 </span>
 				</div>
 			</template>
 			<div>
@@ -102,7 +102,7 @@
 		<el-dialog v-model="isShowDialogDone3" :width="650" draggable="">
 			<template #header>
 				<div style="color: #fff">
-					<span> 完工 </span>
+					<span> 小计完工 </span>
 				</div>
 			</template>
 			<div>
