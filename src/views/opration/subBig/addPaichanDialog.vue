@@ -45,11 +45,13 @@
 						</el-table-column>
 						<el-table-column label="班次产量" width="100" show-overflow-tooltip="">
 							<template #default="scope">
-								<el-input v-model="scope.row.classOutput" @change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
+								<el-input class="yieldNum" v-model="scope.row.classOutput" @change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
 							</template>
 						</el-table-column>
 						<el-table-column label="操作" width="50" show-overflow-tooltip="">
-							<template #default="scope"> <el-button icon="ele-Promotion" size="small" text="" type="primary" @click="addPaiChan(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button></template>
+							<template #default="scope">
+								<el-button style="color: #4080ff" icon="ele-Promotion" size="small" text="" type="primary" @click="addPaiChan(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button
+							></template>
 						</el-table-column>
 					</el-table>
 				</div>
@@ -230,31 +232,33 @@ const formatDate = (dateString: string | number | Date) => {
 defineExpose({ openDialog });
 </script>
 <style scoped>
+/* 弹出框样式 */
 :deep(.el-dialog) {
 	--el-dialog-bg-color: transparent;
 	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
 	padding: 5% 3% 1% 1%;
 	min-height: 530px;
-	.el-dialog__header {
-		width: 100px;
-	}
-	.el-dialog__body {
-		padding: 0 !important;
-	}
 }
 :deep(.el-dialog__header) {
 	width: 280px;
 	height: 40px;
 	position: absolute;
-	top: 0;
-	left: 32%;
+	top: 1.5%;
+	left: 38%;
+	font-size: 18.68px;
 	background-color: transparent;
+}
+:deep(.el-dialog__headerbtn) {
+	right: -89% !important;
+	top: 130%;
 }
 /* 下拉框样式 */
 :deep(.el-select__wrapper) {
-	box-shadow: none;
-	color: white;
 	background-color: transparent;
+	box-shadow: 0 0 0 1px #00a0e9 inset;
+}
+:deep(.el-select__placeholder) {
+	color: white !important;
 }
 .el-select-dropdown__item {
 	background-color: #001730;
@@ -262,9 +266,13 @@ defineExpose({ openDialog });
 	--el-scrollbar-bg-color: white;
 	--el-scrollbar-hover-bg-color: white;
 }
+:deep(.el-scrollbar__view .el-select-dropdown__list) {
+	padding-top: 0 !important;
+}
 /* el-table样式 */
 .tables {
 	margin: 2% 0 0 0;
+	--el-table-border-color: transparent;
 }
 :deep(.el-table .cell) {
 	color: white;
@@ -288,5 +296,18 @@ defineExpose({ openDialog });
 /* 这里是滑过斑马纹滑过时的颜色 */
 :deep(.el-table--enable-row-hover .el-table__body tr:hover > td) {
 	background-color: #1e116d;
+}
+:deep(.el-table__inner-wrapper::before) {
+	background-color: transparent;
+}
+/* 班次产量 */
+:deep(.el-input__wrapper) {
+	background-color: transparent;
+	border: 1px solid #00539f;
+	box-shadow: unset;
+}
+:deep(.el-input__inner) {
+	text-align: center;
+	color: white;
 }
 </style>

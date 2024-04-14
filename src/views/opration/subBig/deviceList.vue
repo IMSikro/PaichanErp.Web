@@ -65,19 +65,19 @@
 	<addPaichanDialog ref="addPaichanDialogRef" @reloadDeviceList="initOrderDetailList" />
 	<editPaichanDialog ref="editPaichanDialogRef" @reloadDeviceList="loadData" />
 	<!-- // 修改设备绑定人员 -->
-	<el-dialog v-model="editOperatorDialog" :width="500" draggable="">
+	<el-dialog class="custDialog" v-model="editOperatorDialog" :width="850" draggable="">
 		<template #header>
 			<div style="color: #fff">修改操作人员</div>
 		</template>
 		<div>
-			<el-select multiple collapse-tags collapse-tags-tooltip v-model="operatorUsers" placeholder="请选择操作人员">
+			<el-select class="personChose" multiple collapse-tags collapse-tags-tooltip v-model="operatorUsers" placeholder="请选择操作人员">
 				<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
 			</el-select>
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button @click="cancel">取 消</el-button>
-				<el-button type="primary" @click="submit">确 定</el-button>
+				<el-button class="cancel" type="customize" click="cancel">取 消</el-button>
+				<el-button class="sure" type="customize" @click="submit">确 定</el-button>
 			</span>
 		</template></el-dialog
 	>
@@ -91,7 +91,7 @@ import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail, table
 import { getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 import { updateDevice } from '/@/api/main/device';
 
-import editPaichanDialog from '/@/views/opration/sub/editPaichanDialog.vue';
+import editPaichanDialog from '/@/views/opration/subBig/editPaichanDialog.vue';
 import addPaichanDialog from '/@/views/opration/subBig/addPaichanDialog.vue';
 // 表格拖拽
 import Sortable from 'sortablejs';
@@ -519,5 +519,47 @@ onMounted(async () => {
 }
 .layout-parent > div:first-child {
 	height: unset !important;
+}
+:deep(.cancel) {
+	border: 0 !important;
+	color: white !important;
+	background-color: transparent !important;
+	background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100% !important;
+}
+</style>
+<style>
+/* 弹出框样式 */
+.custDialog {
+	--el-dialog-bg-color: transparent;
+	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
+	padding: 5% 3% 1% 1%;
+	min-height: 500px;
+	.el-dialog__header {
+		width: 280px;
+		height: 40px;
+		position: absolute;
+		top: 1.5%;
+		left: 38%;
+		font-size: 18.68px;
+		background-color: transparent;
+	}
+	.el-dialog__headerbtn {
+		right: -89% !important;
+		top: 125%;
+	}
+	/* 下拉框样式 */
+	.el-select__wrapper {
+		background-color: transparent;
+	}
+}
+.el-button--customize {
+	border: 0;
+	color: white;
+	background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100%;
+}
+.el-button--customize:hover {
+	border: 0;
+	color: white;
+	background: url('../../../assets/bigScreen/customize_bg.png') no-repeat center center / 100% 100% !important;
 }
 </style>
