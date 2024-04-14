@@ -485,7 +485,7 @@ defineExpose({ openDialog });
 :deep(.el-dialog) {
 	--el-dialog-bg-color: transparent;
 	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
-	padding: 3.5% 3% 1% 1%;
+	padding: 4% 3% 1% 1%;
 	min-height: 530px;
 	color: white;
 }
