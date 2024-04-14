@@ -559,7 +559,6 @@ onBeforeRouteLeave((to, from, next) => {
 	.el-dialog__headerbtn {
 		right: -89% !important;
 		top: 125%;
-		opacity: 0;
 	}
 	/* 下拉框样式 */
 	.el-select__wrapper {
