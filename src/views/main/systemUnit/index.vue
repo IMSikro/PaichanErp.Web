@@ -1,40 +1,30 @@
 ﻿<template>
-  <div class="produceProcess-container">
+  <div class="systemUnit-container">
     <el-card shadow="hover" :body-style="{ paddingBottom: '0' }">
       <el-form :model="queryParams" ref="queryForm" labelWidth="90">
         <el-row>
           <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10">
-            <el-form-item label="产品编号">
-              <el-select clearable="" filterable="" v-model="queryParams.produceId" placeholder="请选择产品编号">
-                <el-option v-for="(item, index) in  produceProduceIdDropdownList" :key="index" :value="item.value"
-                  :label="item.label" />
-
-              </el-select>
-
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10">
-            <el-form-item label="工艺名称">
-              <el-input v-model="queryParams.processName" clearable="" placeholder="请输入工艺名称" />
+            <el-form-item label="计量单位">
+              <el-input v-model="queryParams.unitName" clearable="" placeholder="请输入计量单位" />
 
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6" class="mb10">
             <el-form-item>
-              <el-button-group>
-                <el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'produceProcess:page'"> 查询
+              <el-button-group style="margin-right:20px;">
+                <el-button icon="ele-Search" @click="handleQuery" v-auth="'systemUnit:page'"> 查询
                 </el-button>
                 <el-button icon="ele-Refresh" @click="() => queryParams = {}"> 重置 </el-button>
-
               </el-button-group>
 
               <el-button-group style="margin-left:20px">
-                <el-button type="primary" icon="ele-Plus" @click="openAddProduceProcess" v-auth="'produceProcess:add'"> 新增
+                <el-button icon="ele-Plus" @click="openAddSystemUnit" v-auth="'systemUnit:add'"> 新增
                 </el-button>
 
               </el-button-group>
 
             </el-form-item>
+
           </el-col>
         </el-row>
       </el-form>
@@ -42,24 +32,17 @@
     <el-card class="full-table" shadow="hover" style="margin-top: 8px">
       <el-table :data="tableData" style="width: 100%" v-loading="loading" tooltip-effect="light" row-key="id" border="">
         <el-table-column type="index" label="序号" width="55" align="center" />
-        <el-table-column prop="produceId" label="产品编号" width="120" show-overflow-tooltip="">
-          <template #default="scope">
-            <span>{{ scope.row.produceIdProduceCode }}</span>
-
-          </template>
-
-        </el-table-column>
-        <el-table-column prop="processName" label="工艺名称" width="140" show-overflow-tooltip="" />
+        <el-table-column prop="unitName" label="计量单位" width="140" show-overflow-tooltip="" />
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
         <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
         <el-table-column prop="updateUserName" label="修改者姓名" width="140" show-overflow-tooltip="" />
-        <el-table-column label="操作" width="140" align="center" fixed="right" show-overflow-tooltip=""
-          v-if="auth('produceProcess:edit') || auth('produceProcess:delete')">
+        <el-table-column label="操作" width="80" align="center" fixed="left" show-overflow-tooltip=""
+          v-if="auth('systemUnit:edit') || auth('systemUnit:delete')">
           <template #default="scope">
-            <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditProduceProcess(scope.row)"
-              v-auth="'produceProcess:edit'"> 编辑 </el-button>
-            <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProduceProcess(scope.row)"
-              v-auth="'produceProcess:delete'"> 删除 </el-button>
+            <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditSystemUnit(scope.row)"
+              v-auth="'systemUnit:edit'"> </el-button>
+            <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delSystemUnit(scope.row)"
+              v-auth="'systemUnit:delete'"> </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -67,21 +50,20 @@
         :total="tableParams.total" :page-sizes="[10, 20, 50, 100, 200, 500]" small="" background=""
         @size-change="handleSizeChange" @current-change="handleCurrentChange"
         layout="total, sizes, prev, pager, next, jumper" />
-      <editDialog ref="editDialogRef" :title="editProduceProcessTitle" @reloadTable="handleQuery" />
+      <editDialog ref="editDialogRef" :title="editSystemUnitTitle" @reloadTable="handleQuery" />
     </el-card>
   </div>
 </template>
 
-<script lang="ts" setup="" name="produceProcess">
+<script lang="ts" setup="" name="systemUnit">
 import { ref } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 //import { formatDate } from '/@/utils/formatTime';
 
-import editDialog from '/@/views/main/produceProcess/component/editDialog.vue'
-import { pageProduceProcess, deleteProduceProcess } from '/@/api/main/produceProcess';
-import { getProduceProduceIdDropdown } from '/@/api/main/produceProcess';
+import editDialog from '/@/views/main/systemUnit/component/editDialog.vue'
+import { pageSystemUnit, deleteSystemUnit } from '/@/api/main/systemUnit';
 
 
 const showAdvanceQueryUI = ref(false);
@@ -94,7 +76,7 @@ const tableParams = ref({
   pageSize: 10,
   total: 0,
 });
-const editProduceProcessTitle = ref("");
+const editSystemUnitTitle = ref("");
 
 // 改变高级查询的控件显示状态
 const changeAdvanceQueryUI = () => {
@@ -105,33 +87,33 @@ const changeAdvanceQueryUI = () => {
 // 查询操作
 const handleQuery = async () => {
   loading.value = true;
-  var res = await pageProduceProcess(Object.assign(queryParams.value, tableParams.value));
+  var res = await pageSystemUnit(Object.assign(queryParams.value, tableParams.value));
   tableData.value = res.data.result?.items ?? [];
   tableParams.value.total = res.data.result?.total;
   loading.value = false;
 };
 
 // 打开新增页面
-const openAddProduceProcess = () => {
-  editProduceProcessTitle.value = '添加产品工艺';
+const openAddSystemUnit = () => {
+  editSystemUnitTitle.value = '添加计量单位';
   editDialogRef.value.openDialog({});
 };
 
 // 打开编辑页面
-const openEditProduceProcess = (row: any) => {
-  editProduceProcessTitle.value = '编辑产品工艺';
+const openEditSystemUnit = (row: any) => {
+  editSystemUnitTitle.value = '编辑计量单位';
   editDialogRef.value.openDialog(row);
 };
 
 // 删除
-const delProduceProcess = (row: any) => {
+const delSystemUnit = (row: any) => {
   ElMessageBox.confirm(`确定要删除吗?`, "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   })
     .then(async () => {
-      await deleteProduceProcess(row);
+      await deleteSystemUnit(row);
       handleQuery();
       ElMessage.success("删除成功");
     })
@@ -150,13 +132,6 @@ const handleCurrentChange = (val: number) => {
   handleQuery();
 };
 
-const produceProduceIdDropdownList = ref<any>([]);
-const getProduceProduceIdDropdownList = async () => {
-  let list = await getProduceProduceIdDropdown();
-  produceProduceIdDropdownList.value = list.data.result ?? [];
-};
-getProduceProduceIdDropdownList();
-
 handleQuery();
 </script>
 <style scoped>
@@ -166,4 +141,3 @@ handleQuery();
   width: 100%;
 }
 </style>
-

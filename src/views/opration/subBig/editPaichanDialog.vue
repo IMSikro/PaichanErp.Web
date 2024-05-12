@@ -10,26 +10,32 @@
 				<div>
 					<div>
 						当前排产信息：
-						<div style="width: 100px; color: white; text-align: center; display: inline; padding: 5px" :style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})` }">
-							批次号: {{ orderDetailModel.orderDetailCode }} 产品编号: {{ orderDetailModel.produceName }}
+						<div style="width: 100px; color: white; text-align: center; display: inline; padding: 5px"
+							:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})` }">
+							产品编号: {{ orderDetailModel.produceIdProduceName }} 批次号: {{ orderDetailModel.orderDetailCode
+							}}
 						</div>
 					</div>
 				</div>
 				选择目标设备：
 				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
-					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label"
+						:value="item.value" />
 				</el-select>
 				<div>
-					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }" ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
+					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
+						ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
 						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
 							<template #default="scope">
-								<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">
+								<div class="rank"
+									:style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }"
+									style="font-size: 10px; color: transparent; user-select: none">
 									<span style="opacity: 0">{{ scope.row.id }}</span>
 								</div>
 							</template>
 						</el-table-column>
-						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""
-							><template #default="scope">
+						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""><template
+								#default="scope">
 								<div>
 									{{ scope.row.produceIdProduceName }}
 								</div>
@@ -71,8 +77,8 @@
 					<el-form :model="ruleForm2" ref="ruleForm2Ref" label-width="auto" :rules="rules2">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="产量" prop="qty">
-									<el-input v-model="ruleForm2.qty" placeholder="请输入产量" maxlength="20" clearable />
+								<el-form-item label="完工数量" prop="qty">
+									<el-input v-model="ruleForm2.qty" placeholder="请输入完工数量" maxlength="20" clearable />
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -81,9 +87,11 @@
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="14" :md="14" :lg="14" :xl="14" class="mb20">
-								<el-form-item label="非生产时间类型" prop="timeType">
-									<el-select v-model="ruleForm2.timeType" filterable allow-create collapse-tags collapse-tags-tooltip :loading="loading" :reserve-keyword="false" default-first-option>
-										<el-option v-for="(item, index) in errorTypeDropdown" :key="index" :label="item.label" :value="item.value" />
+								<el-form-item label="非生产时间类型" prop="deviceErrorTypeId">
+									<el-select v-model="ruleForm2.deviceErrorTypeId" filterable clearable
+										:loading="loading">
+										<el-option v-for="(item, index) in deviceErrorTypeDropdownList" :key="index"
+											:label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -110,8 +118,8 @@
 					<el-form :model="ruleForm3" ref="ruleForm3Ref" label-width="auto" :rules="rules3">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="产量" prop="qty">
-									<el-input v-model="ruleForm3.qty" placeholder="请输入产量" maxlength="20" clearable />
+								<el-form-item label="完工数量" prop="qty">
+									<el-input v-model="ruleForm3.qty" placeholder="请输入完工数量" maxlength="20" clearable />
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -120,9 +128,10 @@
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="非生产时间类型" prop="timeType">
-									<el-select v-model="ruleForm3.timeType" filterable allow-create collapse-tags collapse-tags-tooltip :loading="loading" :reserve-keyword="false" default-first-option>
-										<el-option v-for="(item, index) in errorTypeDropdown" :key="index" :label="item.label" :value="item.value" />
+								<el-form-item label="非生产时间类型" prop="deviceErrorTypeId">
+									<el-select v-model="ruleForm3.deviceErrorTypeId" filterable clearable>
+										<el-option v-for="(item, index) in deviceErrorTypeDropdownList" :key="index"
+											:label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -178,7 +187,7 @@ const ruleForm3 = ref<any>({});
 //自行添加其他规则
 const validateDeviceErrorType = (rule, value, callback) => {
 	if (ruleForm2.value.deviceErrorTime && ruleForm2.value.deviceErrorTime > 0) {
-		if (!value) {
+		if (!value || value == 0) {
 			callback(new Error('非生产时间类型不能为空！'));
 		} else {
 			callback();
@@ -195,7 +204,7 @@ const rules2 = ref<FormRules>({
 			trigger: 'blur',
 		},
 	],
-	deviceErrorType: [
+	deviceErrorTypeId: [
 		{
 			validator: validateDeviceErrorType,
 			trigger: 'blur',
@@ -205,7 +214,7 @@ const rules2 = ref<FormRules>({
 });
 const validateDeviceErrorType3 = (rule, value, callback) => {
 	if (ruleForm3.value.deviceErrorTime && ruleForm3.value.deviceErrorTime > 0) {
-		if (!value) {
+		if (!value || value == 0) {
 			callback(new Error('非生产时间类型不能为空！'));
 		} else {
 			callback();
@@ -223,7 +232,7 @@ const rules3 = ref<FormRules>({
 			trigger: 'blur',
 		},
 	],
-	deviceErrorType: [
+	deviceErrorTypeId: [
 		{
 			validator: validateDeviceErrorType3,
 			trigger: 'blur',
@@ -300,7 +309,7 @@ const submit = async () => {
 const doneAndOffline = () => {
 	isShowDialogDone.value = true;
 	ruleForm2.value.qty = orderDetailId.value.qty;
-	remoteMethod('1');
+	// remoteMethod('1');
 };
 // 完工并下线 接口
 const submitDone = async () => {
@@ -385,7 +394,7 @@ const deleteOne = async () => {
 			closeDialog();
 			ElMessage.success('删除成功');
 		})
-		.catch(() => {});
+		.catch(() => { });
 };
 // 修改排产时 - 切换设备
 const switchDevice = async () => {
@@ -400,33 +409,33 @@ const getlistOrderDetailByDeviceId = async () => {
 };
 
 // 远程搜索
-const remoteMethod = async (query: string) => {
-	if (query) {
-		loading.value = true;
-		try {
-			// 调用接口获取远程数据
-			const res = await deviceErrorTypeDropdown();
-			// 处理接口返回的数据，将其格式化为列表项
-			const options = res.data.result.map((item: any) => ({
-				value: item.value,
-				label: item.label,
-			}));
-			console.log('options', options);
-			errorTypeDropdown.value = options;
-			// options.value = options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
-		} catch (error) {
-			console.error('Error fetching remote data:', error);
-			errorTypeDropdown.value = [];
-		} finally {
-			loading.value = false;
-		}
-	} else {
-		errorTypeDropdown.value = [];
-	}
-};
+// const remoteMethod = async (query: string) => {
+// 	if (query) {
+// 		loading.value = true;
+// 		try {
+// 			// 调用接口获取远程数据
+// 			const res = await deviceErrorTypeDropdown();
+// 			// 处理接口返回的数据，将其格式化为列表项
+// 			const options = res.data.result.map((item: any) => ({
+// 				value: item.value,
+// 				label: item.label,
+// 			}));
+// 			console.log('options', options);
+// 			errorTypeDropdown.value = options;
+// 			// options.value = options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
+// 		} catch (error) {
+// 			console.error('Error fetching remote data:', error);
+// 			errorTypeDropdown.value = [];
+// 		} finally {
+// 			loading.value = false;
+// 		}
+// 	} else {
+// 		errorTypeDropdown.value = [];
+// 	}
+// };
 
 // 页面加载时
-onMounted(async () => {});
+onMounted(async () => { });
 
 // 查看排产详情信息
 const orderDetailModel = ref<any>({});
@@ -443,6 +452,13 @@ const getOrderOrderIdDropdownList = async () => {
 	orderOrderIdDropdownList.value = list.data.result ?? [];
 };
 getOrderOrderIdDropdownList();
+
+const deviceErrorTypeDropdownList = ref<any>([]);
+const getDeviceErrorTypeDropdownList = async () => {
+	let list = await deviceErrorTypeDropdown();
+	deviceErrorTypeDropdownList.value = list.data.result ?? [];
+};
+getDeviceErrorTypeDropdownList();
 
 const deviceDeviceIdDropdownList = ref<any>([]);
 const getDeviceDeviceIdDropdownList = async () => {
@@ -489,9 +505,11 @@ defineExpose({ openDialog });
 	min-height: 530px;
 	color: white;
 }
+
 :deep(.el-dialog__body) {
 	color: white;
 }
+
 :deep(.el-dialog__header) {
 	width: 280px;
 	height: 40px;
@@ -501,35 +519,43 @@ defineExpose({ openDialog });
 	font-size: 18.68px;
 	background-color: transparent;
 }
+
 :deep(.el-dialog__headerbtn) {
 	right: -89% !important;
 	top: 155%;
 }
+
 /* 下拉框样式 */
 :deep(.el-select__wrapper) {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #00a0e9 inset;
 }
+
 :deep(.el-select__placeholder) {
 	color: white !important;
 }
+
 .el-select-dropdown__item {
 	background-color: #001730;
 	color: white;
 	--el-scrollbar-bg-color: white;
 	--el-scrollbar-hover-bg-color: white;
 }
+
 :deep(.el-scrollbar__view .el-select-dropdown__list) {
 	padding-top: 0 !important;
 }
+
 /* el-table样式 */
 .tables {
 	margin: 2% 0 0 0;
 	--el-table-border-color: transparent;
 }
+
 :deep(.el-table .cell) {
 	color: white;
 }
+
 /* striped先开启斑马纹属性，这里是修改斑马纹颜色 */
 :deep(.el-table--striped .el-table__body tr.el-table__row--striped td) {
 	background: #03275a;
@@ -550,39 +576,47 @@ defineExpose({ openDialog });
 :deep(.el-table--enable-row-hover .el-table__body tr:hover > td) {
 	background-color: #1e116d;
 }
+
 :deep(.el-table__inner-wrapper::before) {
 	background-color: transparent;
 }
+
 /* 班次产量 */
 :deep(.el-input__wrapper) {
 	background-color: transparent;
 	border: 1px solid #00539f;
 	box-shadow: unset;
 }
+
 :deep(.el-input__inner) {
 	text-align: center;
 	color: white;
 }
+
 .el-button--customize {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100%;
 }
+
 .el-button--customize:hover {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/customize_bg.png') no-repeat center center / 100% 100% !important;
 }
+
 .el-button--down {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/dange_btn_bg.png') no-repeat center center / 100% 100%;
 }
+
 .el-button--down:hover {
 	border: 0;
 	color: white;
 	background-color: rgba(255, 49, 0, 0.5);
 }
+
 :deep(.el-form-item__label) {
 	color: white;
 }

@@ -10,11 +10,11 @@
 			<el-form :model="ruleForm" ref="ruleFormRef" label-width="auto" :rules="rules">
 				<el-row :gutter="35">
 					<el-form-item v-show="false">
-						<el-input v-model="ruleForm.id" />
+						<el-input v-model="ruleForm.id" v-show="false" />
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="设备类型" prop="typeName">
-							<el-input v-model="ruleForm.typeName" placeholder="请输入设备类型" maxlength="50" show-word-limit
+						<el-form-item label="工艺设备" prop="typeName">
+							<el-input v-model="ruleForm.typeName" placeholder="请输入工艺设备" maxlength="50" show-word-limit
 								clearable />
 
 						</el-form-item>
@@ -27,6 +27,11 @@
 
 						</el-form-item>
 
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="排序" prop="sort">
+							<el-input-number v-model="ruleForm.sort" placeholder="请输入排序" clearable />
+						</el-form-item>
 					</el-col>
 				</el-row>
 			</el-form>
@@ -66,7 +71,7 @@ const isShowDialog = ref(false);
 const ruleForm = ref<any>({});
 //自行添加其他规则
 const rules = ref<FormRules>({
-	typeName: [{ required: true, message: '请输入设备类型！', trigger: 'blur', },],
+	typeName: [{ required: true, message: '请输入工艺设备！', trigger: 'blur', },],
 });
 
 // 打开弹窗
@@ -119,7 +124,3 @@ onMounted(async () => {
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
 </script>
-
-
-
-

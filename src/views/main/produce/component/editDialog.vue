@@ -10,11 +10,12 @@
 			<el-form :model="ruleForm" ref="ruleFormRef" label-width="auto" :rules="rules">
 				<el-row :gutter="35">
 					<el-form-item v-show="false">
-						<el-input v-model="ruleForm.id" />
+						<el-input v-model="ruleForm.id" v-show="false" />
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品类型" prop="produceType">
-							<el-select clearable filterable v-model="ruleForm.produceType" placeholder="请选择产品类型">
+							<el-select clearable filterable v-model="ruleForm.produceType" placeholder="请选择产品类型"
+								@change="handleSelect">
 								<el-option v-for="(item, index) in produceTypeProduceTypeDropdownList" :key="index"
 									:value="item.value" :label="item.label" />
 
@@ -27,40 +28,44 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品编号" prop="produceCode">
-							<el-input v-model="ruleForm.produceCode" placeholder="请输入产品编号" maxlength="100" show-word-limit
-								clearable />
-
+							<el-input v-model="ruleForm.produceCode"
+								@input="ruleForm.produceCode = ruleForm.produceCode.toUpperCase()" placeholder="请输入产品编号"
+								maxlength="100" show-word-limit clearable />
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品名称" prop="produceName">
-							<el-input v-model="ruleForm.produceName" placeholder="请输入产品名称" maxlength="100" show-word-limit
-								clearable />
+							<el-input v-model="ruleForm.produceName" placeholder="请输入产品名称" maxlength="100"
+								show-word-limit clearable />
 
 						</el-form-item>
 
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品LAB颜色" prop="colorLab">
-							<el-input v-model="ruleForm.colorLab" placeholder="请输入产品LAB颜色" maxlength="100" show-word-limit
-								clearable @blur="handleSelect" />
+							<el-input v-model="ruleForm.colorLab" placeholder="请输入产品LAB颜色" maxlength="100"
+								show-word-limit clearable @blur="handleColor" />
 
 						</el-form-item>
 
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品RGB颜色" prop="colorRgb">
-							<el-input v-model="ruleForm.colorRgb" placeholder="请输入产品RGB颜色" maxlength="100" show-word-limit
-								clearable :disabled="true" />
-
+							<el-input v-model="ruleForm.colorRgb" placeholder="请输入产品RGB颜色" maxlength="100"
+								show-word-limit clearable :disabled="true" />
 						</el-form-item>
-
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item v-for="v in deviceTypeDeviceTypeIdDropdownList" :key="v.value" :label="v.label">
+						<el-form-item label="颜色显示" prop="colorRgb">
+							<el-tag :color="`rgb(${ruleForm.colorRgb ?? '255,255,255'})`" :style="{ width: '100%' }" />
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+						v-for="v in deviceTypeDeviceTypeIdDropdownList" :key="v.value" :label="v.label">
+						<el-form-item :label="v.label">
 							<el-switch v-model="ruleFormdeviceType[v.value]" active-text="是" inactive-text="否" />
-
 						</el-form-item>
 						<!-- <el-form-item label="是否挤出" prop="isExtrusion">
 							<el-switch v-model="ruleForm.isExtrusion" active-text="是" inactive-text="否" />
@@ -77,7 +82,7 @@
 
 
 					</el-col>
-					<el-col :xs="16" :sm="8" :md="8" :lg="8" :xl="8" class="mb20">
+					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品系数" prop="produceCoefficient">
@@ -89,9 +94,19 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品系列" prop="produceSeries">
-							<el-input v-model="ruleForm.produceSeries" placeholder="请输入产品系列" maxlength="255" show-word-limit
-								clearable />
+							<el-input v-model="ruleForm.produceSeries" placeholder="请输入产品系列" maxlength="255"
+								show-word-limit clearable :disabled="true" />
 
+						</el-form-item>
+
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="计量单位" prop="unitId">
+							<el-select clearable filterable v-model="ruleForm.unitId" placeholder="请选择计量单位">
+								<el-option v-for="(item, index) in systemUnitDropdownList" :key="index"
+									:value="item.value" :label="item.label" />
+
+							</el-select>
 						</el-form-item>
 
 					</el-col>
@@ -127,7 +142,7 @@ import { ElMessage } from "element-plus";
 import type { FormRules } from "element-plus";
 import { addProduce, updateProduce } from "/@/api/main/produce";
 import { LabToRgb } from "/@/utils/convertLabtoRgb";
-import { getProduceTypeProduceTypeDropdown } from '/@/api/main/produce';
+import { getProduceTypeProduceTypeDropdown, systemUnitDropdown } from '/@/api/main/produce';
 import { getDeviceTypeDeviceTypeIdDropdown } from '/@/api/main/device';
 
 //父级传递来的参数
@@ -161,6 +176,8 @@ const openDialog = (row: any) => {
 		ruleFormdeviceType.value[dt] = true;
 	}
 
+	if (ruleForm.value.produceType) handleSelect();
+
 	isShowDialog.value = true;
 };
 
@@ -184,7 +201,7 @@ const submit = async () => {
 			var deviceTypes = [];
 			var keys = Object.keys(ruleFormdeviceType.value);
 			for (const k of keys) {
-				if(ruleFormdeviceType.value[k]) deviceTypes.push(k)
+				if (ruleFormdeviceType.value[k]) deviceTypes.push(k)
 			}
 			values.deviceTypes = deviceTypes.join(',')
 			if (ruleForm.value.id == undefined || ruleForm.value.id == null || ruleForm.value.id == "" || ruleForm.value.id == 0) {
@@ -209,23 +226,32 @@ const getProduceTypeProduceTypeDropdownList = async () => {
 };
 getProduceTypeProduceTypeDropdownList();
 
+const systemUnitDropdownList = ref<any>([]);
+const getSystemUnitDropdownList = async () => {
+	let list = await systemUnitDropdown();
+	systemUnitDropdownList.value = list.data.result ?? [];
+};
+getSystemUnitDropdownList();
+
 const deviceTypeDeviceTypeIdDropdownList = ref<any>([]);
 const deviceTypeListRef = ref<any>({});
 const getDeviceTypeDeviceTypeIdDropdownList = async () => {
 	let list = await getDeviceTypeDeviceTypeIdDropdown();
 	deviceTypeDeviceTypeIdDropdownList.value = list.data.result ?? [];
 	console.log(deviceTypeDeviceTypeIdDropdownList.value);
-	
+
 };
 getDeviceTypeDeviceTypeIdDropdownList();
 
-const handleSelect = () => {
+const handleColor = () => {
 	var rgb = LabToRgb(ruleForm.value.colorLab);
 	ruleForm.value.colorRgb = rgb;
-
-	console.log(ruleForm.value);
 };
 
+const handleSelect = () => {
+	var produceType = produceTypeProduceTypeDropdownList.value.find((x: { value: number }) => x.value == ruleForm.value.produceType);
+	ruleForm.value.produceSeries = produceType.produceSeries;
+};
 
 
 
@@ -237,7 +263,3 @@ onMounted(async () => {
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
 </script>
-
-
-
-

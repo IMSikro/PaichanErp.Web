@@ -10,43 +10,50 @@
 			<el-form :model="ruleForm" ref="ruleFormRef" label-width="auto" :rules="rules">
 				<el-row :gutter="35">
 					<el-form-item v-show="false">
-						<el-input v-model="ruleForm.id" />
-						<el-input v-model="ruleForm.startDate" />
-						<el-input v-model="ruleForm.endDate" />
+						<el-input v-model="ruleForm.id" v-show="false" />
+						<el-input v-model="ruleForm.startDate" v-show="false" />
+						<el-input v-model="ruleForm.endDate" v-show="false" />
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="订单批号" prop="orderId">
-							<el-select clearable filterable v-model="ruleForm.orderId" placeholder="请选择订单批号" :disabled="true">
-								<el-option v-for="(item, index) in orderOrderIdDropdownList" :key="index" :value="item.value" :label="item.label" :disable="true" />
+							<el-select clearable filterable v-model="ruleForm.orderId" placeholder="请选择订单批号"
+								:disabled="true">
+								<el-option v-for="(item, index) in orderOrderIdDropdownList" :key="index"
+									:value="item.value" :label="item.label" :disable="true" />
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="班次序号" prop="orderDetailCode">
-							<el-input v-model="ruleForm.orderDetailCode" placeholder="请输入班次序号" maxlength="255" show-word-limit clearable :disable="true" :disabled="true" />
+							<el-input v-model="ruleForm.orderDetailCode" placeholder="请输入班次序号" maxlength="255"
+								show-word-limit clearable :disable="true" :disabled="true" />
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="设备" prop="deviceId">
-							<el-select clearable filterable v-model="ruleForm.deviceId" placeholder="请选择设备" @change="setDeviceQty">
-								<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :value="item.value" :label="item.label" />
+							<el-select clearable filterable v-model="ruleForm.deviceId" placeholder="请选择设备"
+								@change="setDeviceQty">
+								<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index"
+									:value="item.value" :label="item.label" />
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="操作人员" prop="operatorUsers">
 							<el-select filterable v-model="ruleForm.operatorUsers" placeholder="请选择操作人员" multiple>
-								<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
+								<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index"
+									:value="item.value" :label="item.label" />
 							</el-select>
-						</el-form-item> </el-col
-					><el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						</el-form-item> </el-col><el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="班次产量" prop="qty">
-							<el-input v-model="ruleForm.qty" placeholder="请输入班次产量" maxlength="53" show-word-limit clearable />
+							<el-input v-model="ruleForm.qty" placeholder="请输入班次产量" maxlength="53" show-word-limit
+								clearable />
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="计量单位" prop="pUnit">
-							<el-input v-model="ruleForm.pUnit" placeholder="请输入计量单位" maxlength="255" show-word-limit clearable :disabled="true" />
+							<el-input v-model="ruleForm.pUnit" placeholder="请输入计量单位" maxlength="255" show-word-limit
+								clearable :disabled="true" />
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -56,7 +63,8 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="备注" prop="remark">
-							<el-input v-model="ruleForm.remark" placeholder="请输入备注" maxlength="255" show-word-limit clearable />
+							<el-input v-model="ruleForm.remark" placeholder="请输入备注" maxlength="255" show-word-limit
+								clearable />
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -118,7 +126,7 @@ const openDialog = async (row: any) => {
 	if ('isAdd' in rowModel) {
 		// let orderModel = await getProduce({ id: rowModel.orderId });
 		// const order = orderModel.data.result ?? {};
-		
+
 		let detailListModel = await pageOrderDetail(Object.assign({ orderId: rowModel.orderId }));
 		const detailList = detailListModel.data.result;
 		// console.log(order, detailList);
@@ -126,16 +134,16 @@ const openDialog = async (row: any) => {
 		let sn = detailList.total > 0 ? (detailList.items.findLast((d) => d.id > 0).sn ?? 0) + 1 : 1;
 
 		let qty = 0;
-		if(ruleForm.value.deviceId > 0)
-			if (detailList.total > 0){
+		if (ruleForm.value.deviceId > 0)
+			if (detailList.total > 0) {
 				var deviceTypeId = deviceDeviceIdDropdownList.value.find(d => d.value == ruleForm.value.deviceId).deviceTypeId;
 				var itemList = detailList.items.filter(od => od.deviceTypeId == deviceTypeId);
 				for (var i = itemList.length - 1; i >= 0; i--) {
 					qty += itemList[i].qty;
 				}
-			
-			qty = rowModel.quantity - qty;
-		}
+
+				qty = rowModel.quantity - qty;
+			}
 		console.log(qty);
 		ruleForm.value = { orderId: rowModel.orderId, orderDetailCode: `${rowModel.orderDetailCode}-${sn}`, qty, pUnit: rowModel.pUnit, sort: sn };
 	} else {
@@ -156,16 +164,16 @@ const setDeviceQty = async () => {
 	console.log(order, detailList);
 
 	let qty = 0;
-	if(ruleForm.value.deviceId > 0)
-		if (detailList.total > 0){
+	if (ruleForm.value.deviceId > 0)
+		if (detailList.total > 0) {
 			var deviceTypeId = deviceDeviceIdDropdownList.value.find(d => d.value == ruleForm.value.deviceId).deviceTypeId;
 			var itemList = detailList.items.filter(od => od.deviceTypeId == deviceTypeId);
 			for (var i = itemList.length - 1; i >= 0; i--) {
 				qty += itemList[i].qty;
 			}
-		
-		qty = order.quantity - qty;
-	}
+
+			qty = order.quantity - qty;
+		}
 	ruleForm.value.qty = qty
 }
 
@@ -225,7 +233,7 @@ const getSysUserOperatorUsersDropdownList = async () => {
 getSysUserOperatorUsersDropdownList();
 
 // 页面加载时
-onMounted(async () => {});
+onMounted(async () => { });
 
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });

@@ -1,48 +1,35 @@
 <template>
 	<el-scrollbar style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
 		<el-space alignment="flex-start">
-			<el-card
-				class="everyCard"
-				:style="{ 'min-height': minHeight + 55 + 'px' }"
-				v-for="item in deviceList"
+			<el-card class="everyCard" :style="{ 'min-height': minHeight + 55 + 'px' }" v-for="item in deviceList"
 				:key="item.id"
-				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
-			>
+				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
 				<div class="jbbg"></div>
 				<div class="smallIcon"></div>
 				<div class="baseInfo">
-					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceName }}</div>
-					<div style="flex: 1; font-size: 12px; color: #bebebe" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
+					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceCode }}</div>
+					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{
+		renderingUsers(item.operatorUsers)
+	}}</div>
 					<div class="btnArea">
-						<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
+						<el-button type="primary" size="small"
+							@click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
 					</div>
 				</div>
-				<div class="tableArea" style="position: relative; display: flex; flex-direction: column" @wheel.prevent="handleScroll">
+				<div class="tableArea" style="position: relative; display: flex; flex-direction: column"
+					@wheel.prevent="handleScroll">
 					<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
-					<vxe-table
-						border="none"
-						show-overflow
-						:row-config="{ useKey: true, height: 28 }"
-						:id="item.id.toString()"
-						:class="`tables${item.id}`"
-						:height="minHeight - 20"
-						:data="orderDetails[item.id]"
-						:custom-config="{ storage: true }"
-						:toolbar-onfig="{ custom: true }"
-						class="vxe-my-style-table"
-					>
-						<vxe-column
-							v-for="config in tableColumn"
-							:key="config.key"
-							:type="config.type"
-							:field="config.field"
-							:visible="config.show"
-							:title="config.title"
-							:fixed="config.fixed"
-							:width="config.width"
-						>
+					<vxe-table border="none" show-overflow :row-config="{ useKey: true, height: 28 }"
+						:id="item.id.toString()" :class="`tables${item.id}`" :height="minHeight - 20"
+						:data="orderDetails[item.id]" :custom-config="{ storage: true }"
+						:toolbar-onfig="{ custom: true }" class="vxe-my-style-table">
+						<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type"
+							:field="config.field" :visible="config.show" :title="config.title" :fixed="config.fixed"
+							:width="config.width">
 							<template v-if="config.title == '颜色'" #default="{ row }">
-								<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
+								<div class="rank"
+									:style="{ 'background-color': `rgb(${row.colorRgb})`, border: '1px solid white' }"
+									style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
 							</template>
 							<template v-if="config.title == '产品编号'" #default="{ row }">
 								<div @click="openEditOrderDetail(row, $event)">
@@ -54,10 +41,13 @@
 							</template>
 						</vxe-column>
 					</vxe-table>
-					<div class="bottomInfo">总产量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;总批次: {{ orderDetailCounts[item.id] }}</div>
+					<div class="bottomInfo">数量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;批数: {{
+		orderDetailCounts[item.id]
+	}}</div>
 				</div>
 				<div class="moreBTN">
-					<el-button style="color: white" link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button>
+					<el-button style="color: white" link @click="showMore(item.id)"
+						v-if="orderDetailCounts[item.id] > 10">更多</el-button>
 				</div>
 			</el-card>
 		</el-space>
@@ -70,8 +60,10 @@
 			<div style="color: #fff">修改操作人员</div>
 		</template>
 		<div>
-			<el-select class="personChose" multiple collapse-tags collapse-tags-tooltip v-model="operatorUsers" placeholder="请选择操作人员">
-				<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
+			<el-select class="personChose" multiple collapse-tags collapse-tags-tooltip v-model="operatorUsers"
+				placeholder="请选择操作人员">
+				<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value"
+					:label="item.label" />
 			</el-select>
 		</div>
 		<template #footer>
@@ -79,8 +71,8 @@
 				<el-button class="cancel" type="customize" @click="canceledit()">取 消</el-button>
 				<el-button class="sure" type="customize" @click="submit">确 定</el-button>
 			</span>
-		</template></el-dialog
-	>
+		</template>
+	</el-dialog>
 </template>
 
 <script lang="ts" setup="" name="deviceList">
@@ -317,7 +309,7 @@ const rowDrop = () => {
 				evt.oldIndex;
 			},
 			//取消选中事件
-			onUnchoose: function (/**Event*/ evt: any) {},
+			onUnchoose: function (/**Event*/ evt: any) { },
 		});
 	});
 };
@@ -337,7 +329,7 @@ const deleteOne = async (id: any, e: any) => {
 			loadData();
 			ElMessage.success('删除成功');
 		})
-		.catch(() => {});
+		.catch(() => { });
 };
 
 // 格式化日期
@@ -410,9 +402,11 @@ onBeforeRouteLeave((to, from, next) => {
 	background: var(--el-color-danger-light-9);
 	color: var(--el-color-danger);
 }
+
 :deep(.el-collapse-item__content) {
 	overflow: auto !important;
 }
+
 .everyCard {
 	max-width: 500px;
 	position: relative;
@@ -428,6 +422,7 @@ onBeforeRouteLeave((to, from, next) => {
 		bottom right,
 		bottom left;
 	background-repeat: no-repeat;
+
 	.smallIcon {
 		position: absolute;
 		top: 2.5%;
@@ -437,6 +432,7 @@ onBeforeRouteLeave((to, from, next) => {
 		height: 14px;
 		background: url('../../../assets/bigScreen/instruct.png') no-repeat center center / 100% 100%;
 	}
+
 	.jbbg {
 		position: absolute;
 		top: 0;
@@ -446,6 +442,7 @@ onBeforeRouteLeave((to, from, next) => {
 		height: 57px;
 		background: linear-gradient(270deg, rgba(1, 20, 71, 0.7) 6.39%, rgba(1, 20, 71, 0.7) 89.55%, rgba(0, 91, 227, 0.7) 100%);
 	}
+
 	.baseInfo {
 		display: flex;
 		font-size: 14px;
@@ -461,6 +458,7 @@ onBeforeRouteLeave((to, from, next) => {
 			right: 32px;
 			width: 64px;
 			height: 32px;
+
 			.el-button {
 				font-size: 14px;
 				border: 0;
@@ -473,12 +471,14 @@ onBeforeRouteLeave((to, from, next) => {
 }
 
 .tableArea {
+
 	/* 表单部分 */
 	.vxe-my-style-table {
 		border: 0;
 		font-size: 14px;
 		background-color: #011446;
 	}
+
 	.bottomInfo {
 		text-align: left;
 		color: white;
@@ -488,6 +488,7 @@ onBeforeRouteLeave((to, from, next) => {
 		z-index: 99;
 	}
 }
+
 .moreBTN {
 	position: absolute;
 	right: 2%;
@@ -499,6 +500,7 @@ onBeforeRouteLeave((to, from, next) => {
 .el-collapse-item__content {
 	overflow: auto !important;
 }
+
 .vxe-table--header-wrapper,
 .vxe-header--row,
 .vxe-table--header {
@@ -509,11 +511,13 @@ onBeforeRouteLeave((to, from, next) => {
 	border: 0;
 	background-color: #011446;
 }
+
 /*调整表格 单元格背景颜色*/
 .vxe-table .vxe-table--body-wrapper,
 .vxe-table .vxe-table--footer-wrapper {
 	background-color: #011446;
 }
+
 /*调整表格文字及位置*/
 .vxe-table .vxe-body--column,
 .vxe-table .vxe-footer--column,
@@ -527,12 +531,15 @@ onBeforeRouteLeave((to, from, next) => {
 	background-color: transparent;
 	background-image: none !important;
 }
+
 .vxe-table--render-default .vxe-table--body-wrapper table {
 	background-color: transparent;
 }
-.layout-parent > div:first-child {
+
+.layout-parent>div:first-child {
 	height: unset !important;
 }
+
 :deep(.cancel) {
 	border: 0 !important;
 	color: white !important;
@@ -547,6 +554,7 @@ onBeforeRouteLeave((to, from, next) => {
 	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
 	padding: 5% 3% 1% 1%;
 	min-height: 500px;
+
 	.el-dialog__header {
 		width: 280px;
 		height: 40px;
@@ -556,26 +564,35 @@ onBeforeRouteLeave((to, from, next) => {
 		font-size: 18.68px;
 		background-color: transparent;
 	}
+
 	.el-dialog__headerbtn {
 		right: -89% !important;
 		top: 125%;
 	}
+
 	/* 下拉框样式 */
 	.el-select__wrapper {
 		background-color: transparent;
 	}
 }
+
 .el-button--customize {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100%;
 }
+
 .el-button--customize:hover {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/customize_bg.png') no-repeat center center / 100% 100% !important;
 }
+
 /* .layout-parent {
 	background-color: #000d3a;
 } */
+
+.layout-navbars-close-full .layout-navbars-close-full-icon {
+	background: rgba(255, 255, 255, 0.7);
+}
 </style>

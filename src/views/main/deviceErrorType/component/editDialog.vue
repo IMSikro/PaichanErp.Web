@@ -1,5 +1,5 @@
 ﻿<template>
-	<div class="sysWechatPay-container">
+	<div class="deviceErrorType-container">
 		<el-dialog v-model="isShowDialog" :width="800" draggable="">
 			<template #header>
 				<div style="color: #fff">
@@ -12,6 +12,22 @@
 					<el-form-item v-show="false">
 						<el-input v-model="ruleForm.id" v-show="false" />
 					</el-form-item>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="非生产工时类型" prop="errorTypeName">
+							<el-input v-model="ruleForm.errorTypeName" placeholder="请输入非生产工时类型" maxlength="100"
+								show-word-limit clearable />
+
+						</el-form-item>
+
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="备注" prop="remark">
+							<el-input v-model="ruleForm.remark" placeholder="请输入备注" maxlength="255" show-word-limit
+								clearable />
+
+						</el-form-item>
+
+					</el-col>
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -34,7 +50,7 @@ import { ref, onMounted } from "vue";
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 import { ElMessage } from "element-plus";
 import type { FormRules } from "element-plus";
-import { addSysWechatPay, updateSysWechatPay } from "/@/api/main/sysWechatPay";
+import { addDeviceErrorType, updateDeviceErrorType } from "/@/api/main/deviceErrorType";
 
 //父级传递来的参数
 var props = defineProps({
@@ -50,6 +66,7 @@ const isShowDialog = ref(false);
 const ruleForm = ref<any>({});
 //自行添加其他规则
 const rules = ref<FormRules>({
+	errorTypeName: [{ required: true, message: '请输入非生产时间类型名称！', trigger: 'blur', },],
 });
 
 // 打开弹窗
@@ -75,9 +92,9 @@ const submit = async () => {
 		if (isValid) {
 			let values = ruleForm.value;
 			if (ruleForm.value.id == undefined || ruleForm.value.id == null || ruleForm.value.id == "" || ruleForm.value.id == 0) {
-				await addSysWechatPay(values);
+				await addDeviceErrorType(values);
 			} else {
-				await updateSysWechatPay(values);
+				await updateDeviceErrorType(values);
 			}
 			closeDialog();
 		} else {

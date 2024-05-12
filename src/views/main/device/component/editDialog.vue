@@ -10,11 +10,11 @@
 			<el-form :model="ruleForm" ref="ruleFormRef" label-width="auto" :rules="rules">
 				<el-row :gutter="35">
 					<el-form-item v-show="false">
-						<el-input v-model="ruleForm.id" />
+						<el-input v-model="ruleForm.id" v-show="false" />
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="设备类型" prop="deviceTypeId">
-							<el-select clearable filterable v-model="ruleForm.deviceTypeId" placeholder="请选择设备类型">
+						<el-form-item label="工艺设备" prop="deviceTypeId">
+							<el-select clearable filterable v-model="ruleForm.deviceTypeId" placeholder="请选择工艺设备">
 								<el-option v-for="(item, index) in deviceTypeDeviceTypeIdDropdownList" :key="index"
 									:value="item.value" :label="item.label" />
 
@@ -27,16 +27,17 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="设备编号" prop="deviceCode">
-							<el-input v-model="ruleForm.deviceCode" placeholder="请输入设备编号" maxlength="100" show-word-limit
-								clearable />
+							<el-input v-model="ruleForm.deviceCode"
+								@input="ruleForm.deviceCode = ruleForm.deviceCode.toUpperCase()" placeholder="请输入设备编号"
+								maxlength="100" show-word-limit clearable />
 
 						</el-form-item>
 
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="设备名称" prop="deviceName">
-							<el-input v-model="ruleForm.deviceName" placeholder="请输入设备名称" maxlength="100" show-word-limit
-								clearable />
+							<el-input v-model="ruleForm.deviceName" placeholder="请输入设备名称" maxlength="100"
+								show-word-limit clearable />
 
 						</el-form-item>
 
@@ -56,6 +57,11 @@
 
 						</el-form-item>
 
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="排序" prop="sort">
+							<el-input-number v-model="ruleForm.sort" placeholder="请输入排序" clearable />
+						</el-form-item>
 					</el-col>
 				</el-row>
 			</el-form>
@@ -157,7 +163,3 @@ onMounted(async () => {
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
 </script>
-
-
-
-

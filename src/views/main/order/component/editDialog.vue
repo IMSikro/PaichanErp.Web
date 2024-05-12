@@ -10,9 +10,9 @@
 			<el-form :model="ruleForm" ref="ruleFormRef" label-width="auto" :rules="rules">
 				<el-row :gutter="35">
 					<el-form-item v-show="false">
-						<el-input v-model="ruleForm.id" />
-						<el-input v-model="ruleForm.startDate" />
-						<el-input v-model="ruleForm.endDate" />
+						<el-input v-model="ruleForm.id" v-show="false" />
+						<el-input v-model="ruleForm.startDate" v-show="false" />
+						<el-input v-model="ruleForm.endDate" v-show="false" />
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="订单编号" prop="orderCode">
@@ -72,8 +72,8 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="产品名称" prop="produceName">
-							<el-input v-model="ruleForm.produceName" placeholder="请输入产品名称" maxlength="50" show-word-limit
-								clearable :disabled="true" />
+							<el-input v-model="ruleForm.produceName" placeholder="请输入产品名称" maxlength="50"
+								show-word-limit clearable :disabled="true" />
 
 						</el-form-item>
 
@@ -159,8 +159,9 @@ const rules = ref<FormRules>({
 });
 
 const selectChange = () => {
-	let produceItem = produceProduceIdDropdownList.value.find((v) => v.value == ruleForm.value.produceId);
-	ruleForm.value.produceName = produceItem.text
+	let produceItem = produceProduceIdDropdownList.value.find((v: { value: any; }) => v.value == ruleForm.value.produceId);
+	ruleForm.value.produceName = produceItem.text;
+	ruleForm.value.pUnit = produceItem.unit;
 };
 
 // 打开弹窗
@@ -220,7 +221,3 @@ onMounted(async () => {
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
 </script>
-
-
-
-

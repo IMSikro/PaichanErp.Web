@@ -27,17 +27,17 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
             <el-form-item>
-              <el-button-group>
-                <el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'produce:page'"> 查询 </el-button>
+              <el-button-group style="margin-right:20px;">
+                <el-button icon="ele-Search" @click="handleQuery" v-auth="'produce:page'"> 查询
+                </el-button>
                 <el-button icon="ele-Refresh" @click="() => queryParams = {}"> 重置 </el-button>
               </el-button-group>
 
-              <el-button-group style="margin-left:20px">
-                <el-button type="primary" icon="ele-Plus" @click="openAddProduce" v-auth="'produce:add'"> 新增 </el-button>
-              </el-button-group>
-
-              <el-button-group style="margin-left:20px">
-                <el-button type="success" icon="ele-Plus" @click="openImportProduce" v-auth="'produce:import'"> 导入 </el-button>
+              <el-button-group>
+                <el-button icon="ele-Plus" @click="openAddProduce" v-auth="'produce:add'"> 新增
+                </el-button>
+                <el-button icon="ele-Plus" @click="openImportProduce" v-auth="'produce:import'"> 导入
+                </el-button>
               </el-button-group>
 
             </el-form-item>
@@ -60,7 +60,7 @@
         <el-table-column prop="produceName" label="产品名称" width="140" show-overflow-tooltip="" />
         <el-table-column prop="colorLab" label="产品LAB颜色" width="105" show-overflow-tooltip="" />
         <el-table-column prop="colorRgb" label="产品RGB颜色" width="105" show-overflow-tooltip="" />
-        <el-table-column prop="colorRgb" label="产品RGB颜色" width="105" show-overflow-tooltip="">
+        <el-table-column label="颜色显示" width="105" show-overflow-tooltip="">
           <template #default="scope">
             <div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }">
               &nbsp;
@@ -69,12 +69,13 @@
         </el-table-column>
         <el-table-column prop="deviceTypes" label="工艺列表" width="120" show-overflow-tooltip="">
           <template #default="scope">
-            <el-tag v-for="(v,i) in scope.row.deviceTypeList" :key="i"> {{ deviceTypeListRef[v] }} </el-tag>
+            <el-tag v-for="(v, i) in scope.row.deviceTypeList" :key="i"> {{ deviceTypeListRef[v] }} </el-tag>
           </template>
 
         </el-table-column>
         <el-table-column prop="produceCoefficient" label="产品系数" width="140" show-overflow-tooltip="" />
         <el-table-column prop="produceSeries" label="产品系列" width="140" show-overflow-tooltip="" />
+        <el-table-column prop="pUnit" label="计量单位" width="140" show-overflow-tooltip="" />
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
         <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
         <el-table-column prop="updateUserName" label="修改者姓名" width="140" show-overflow-tooltip="" />
@@ -82,9 +83,9 @@
           v-if="auth('produce:edit') || auth('produce:delete')">
           <template #default="scope">
             <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditProduce(scope.row)"
-              v-auth="'produce:edit'">  </el-button>
+              v-auth="'produce:edit'"> </el-button>
             <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProduce(scope.row)"
-              v-auth="'produce:delete'">  </el-button>
+              v-auth="'produce:delete'"> </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,49 +96,51 @@
       <editDialog ref="editDialogRef" :title="editProduceTitle" @reloadTable="handleQuery" />
     </el-card>
 
-		<el-dialog v-model="state.dialogUploadVisible" :lock-scroll="false" draggable width="400px">
-			<template #header>
-				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-UploadFilled /> </el-icon>
-					<span> 上传文件 </span>
-				</div>
-			</template>
-			<div>
-				<el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action="" :on-change="handleChange" accept=".xls,.xlsx">
-					<el-icon class="el-icon--upload">
-						<ele-UploadFilled />
-					</el-icon>
-					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-					<template #tip>
-						<div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
-					</template>
-				</el-upload>
+    <el-dialog v-model="state.dialogUploadVisible" :lock-scroll="false" draggable width="400px">
+      <template #header>
+        <div style="color: #fff">
+          <el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-UploadFilled />
+          </el-icon>
+          <span> 上传文件 </span>
+        </div>
+      </template>
+      <div>
+        <el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action=""
+          :on-change="handleChange" accept=".xls,.xlsx">
+          <el-icon class="el-icon--upload">
+            <ele-UploadFilled />
+          </el-icon>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <template #tip>
+            <div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
+          </template>
+        </el-upload>
         <div>
           点击此处下载文件模板
-					<el-button @click="downloadExcel">下载模板</el-button>
+          <el-button @click="downloadExcel">下载模板</el-button>
         </div>
-			</div>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button @click="state.dialogUploadVisible = false">取消</el-button>
-					<el-button type="primary" @click="uploadFile">确定</el-button>
-				</span>
-			</template>
-		</el-dialog>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="state.dialogUploadVisible = false">取消</el-button>
+          <el-button type="primary" @click="uploadFile">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
 
   </div>
 </template>
 
 <script lang="ts" setup="" name="produce">
-import { reactive,ref } from "vue";
+import { reactive, ref } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 //import { formatDate } from '/@/utils/formatTime';
-import { downloadByData,getFileName } from '/@/utils/download';
+import { downloadByData, getFileName } from '/@/utils/download';
 
 import editDialog from '/@/views/main/produce/component/editDialog.vue'
-import { pageProduce, deleteProduce,getProduceTempExcel,importProduceExcel } from '/@/api/main/produce';
+import { pageProduce, deleteProduce, getProduceTempExcel, importProduceExcel } from '/@/api/main/produce';
 import { getProduceTypeProduceTypeDropdown } from '/@/api/main/produce';
 import { getDeviceTypeDeviceTypeIdDropdown } from '/@/api/main/device';
 
@@ -156,36 +159,36 @@ const editProduceTitle = ref("");
 
 
 const state = reactive({
-	dialogUploadVisible: false,
-	fileList: [] as any,
+  dialogUploadVisible: false,
+  fileList: [] as any,
 });
 
 // 打开上传页面
 const openImportProduce = () => {
-	state.fileList = [];
-	state.dialogUploadVisible = true;
+  state.fileList = [];
+  state.dialogUploadVisible = true;
 };
 // 通过onChanne方法获得文件列表
 const handleChange = (file: any, fileList: []) => {
-	state.fileList = fileList;
+  state.fileList = fileList;
 };
 // 上传
 const uploadFile = async () => {
-	if (state.fileList.length < 1) return;
+  if (state.fileList.length < 1) return;
   const params = new FormData();
-  params.append('file',state.fileList[0].raw);
-	await importProduceExcel(params);
-	handleQuery();
-	ElMessage.success('上传成功');
-	state.dialogUploadVisible = false;
+  params.append('file', state.fileList[0].raw);
+  await importProduceExcel(params);
+  handleQuery();
+  ElMessage.success('上传成功');
+  state.dialogUploadVisible = false;
 };
 
 const downloadExcel = async () => {
   var res = await getProduceTempExcel();
   var fileName = getFileName(res.headers);
-  console.log(res,res.data);
-  
-  downloadByData(res.data,fileName);
+  console.log(res, res.data);
+
+  downloadByData(res.data, fileName);
 }
 
 
@@ -271,4 +274,3 @@ handleQuery();
   width: 100%;
 }
 </style>
-

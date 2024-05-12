@@ -4,7 +4,8 @@ enum Api {
 	DeleteProduce = '/api/produce/delete',
 	UpdateProduce = '/api/produce/update',
 	PageProduce = '/api/produce/page',
-	GetProduceTypeProduceTypeDropdown = '/api/produce/ProduceTypeProduceTypeDropdown',
+	GetProduceTypeProduceTypeDropdown = '/api/produce/produceTypeProduceTypeDropdown',
+	SystemUnitDropdown = '/api/produce/systemUnitDropdown',
 	GetProduceTempExcel = '/api/produce/getProduceTempExcel',
 	ImportProduceExcel = '/api/produce/importProduceExcel',
 }
@@ -62,4 +63,10 @@ export const importProduceExcel = (params?: any) =>
 		headers: {
 			"Content-Type": 'multipart/form-data'
 		},
+	});
+
+export const systemUnitDropdown = () =>
+	request({
+		url: Api.SystemUnitDropdown,
+		method: 'get'
 	});

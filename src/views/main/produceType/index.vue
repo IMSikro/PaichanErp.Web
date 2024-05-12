@@ -4,22 +4,22 @@
       <el-form :model="queryParams" ref="queryForm" labelWidth="90">
         <el-row>
           <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10">
-            <el-form-item label="设备类型">
-              <el-input v-model="queryParams.typeName" clearable="" placeholder="请输入设备类型" />
+            <el-form-item label="工艺设备">
+              <el-input v-model="queryParams.typeName" clearable="" placeholder="请输入工艺设备" />
 
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6" class="mb10">
             <el-form-item>
-              <el-button-group>
-                <el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'produceType:page'"> 查询
+              <el-button-group style="margin-right:20px;">
+                <el-button icon="ele-Search" @click="handleQuery" v-auth="'produceType:page'"> 查询
                 </el-button>
                 <el-button icon="ele-Refresh" @click="() => queryParams = {}"> 重置 </el-button>
 
               </el-button-group>
 
-              <el-button-group style="margin-left:20px">
-                <el-button type="primary" icon="ele-Plus" @click="openAddProduceType" v-auth="'produceType:add'"> 新增
+              <el-button-group>
+                <el-button icon="ele-Plus" @click="openAddProduceType" v-auth="'produceType:add'"> 新增
                 </el-button>
 
               </el-button-group>
@@ -33,17 +33,18 @@
     <el-card class="full-table" shadow="hover" style="margin-top: 8px">
       <el-table :data="tableData" style="width: 100%" v-loading="loading" tooltip-effect="light" row-key="id" border="">
         <el-table-column type="index" label="序号" width="55" align="center" />
-        <el-table-column prop="typeName" label="设备类型" width="140" show-overflow-tooltip="" />
+        <el-table-column prop="typeName" label="产品类型" width="140" show-overflow-tooltip="" />
+        <el-table-column prop="produceSeries" label="产品系列" width="140" show-overflow-tooltip="" />
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
         <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
         <el-table-column prop="updateUserName" label="修改者姓名" width="140" show-overflow-tooltip="" />
-        <el-table-column label="操作" width="140" align="center" fixed="right" show-overflow-tooltip=""
+        <el-table-column label="操作" width="80" align="center" fixed="left" show-overflow-tooltip=""
           v-if="auth('produceType:edit') || auth('produceType:delete')">
           <template #default="scope">
             <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditProduceType(scope.row)"
-              v-auth="'produceType:edit'"> 编辑 </el-button>
+              v-auth="'produceType:edit'"> </el-button>
             <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProduceType(scope.row)"
-              v-auth="'produceType:delete'"> 删除 </el-button>
+              v-auth="'produceType:delete'"> </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -142,4 +143,3 @@ handleQuery();
   width: 100%;
 }
 </style>
-

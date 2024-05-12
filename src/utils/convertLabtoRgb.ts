@@ -1,5 +1,5 @@
 export function LabToRgb(lab: string) {
-    let labSplit = lab.split(',');
+    let labSplit = lab.split(/[,/*]/);
     let L = Number(labSplit[0].trim());
     let A = Number(labSplit[1].trim());
     let B = Number(labSplit[2].trim());
