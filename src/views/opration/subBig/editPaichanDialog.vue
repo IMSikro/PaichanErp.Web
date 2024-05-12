@@ -188,7 +188,7 @@ const ruleForm3 = ref<any>({});
 const validateDeviceErrorType = (rule, value, callback) => {
 	if (ruleForm2.value.deviceErrorTime && ruleForm2.value.deviceErrorTime > 0) {
 		if (!value || value == 0) {
-			callback(new Error('非生产时间类型不能为空！'));
+			callback(new Error('非生产工时类型不能为空！'));
 		} else {
 			callback();
 		}
@@ -210,12 +210,12 @@ const rules2 = ref<FormRules>({
 			trigger: 'blur',
 		},
 	],
-	qty: [{ required: true, message: '请输入产量！', trigger: 'blur' }],
+	qty: [{ required: true, message: '请输入完工数量！', trigger: 'blur' }],
 });
 const validateDeviceErrorType3 = (rule, value, callback) => {
 	if (ruleForm3.value.deviceErrorTime && ruleForm3.value.deviceErrorTime > 0) {
 		if (!value || value == 0) {
-			callback(new Error('非生产时间类型不能为空！'));
+			callback(new Error('非生产工时类型不能为空！'));
 		} else {
 			callback();
 		}
@@ -238,7 +238,7 @@ const rules3 = ref<FormRules>({
 			trigger: 'blur',
 		},
 	],
-	qty: [{ required: true, message: '请输入产量！', trigger: 'blur' }],
+	qty: [{ required: true, message: '请输入完工数量！', trigger: 'blur' }],
 });
 
 //父级传递来的函数，用于回调
