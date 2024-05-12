@@ -27,8 +27,8 @@ const onCloseFullscreen = () => {
 	right: -30px;
 	top: -30px;
 	.layout-navbars-close-full-icon {
-		width: 60px;
-		height: 60px;
+		width: 90px;
+		height: 90px;
 		border-radius: 100%;
 		cursor: pointer;
 		background: rgba(0, 0, 0, 0.1);
@@ -36,8 +36,9 @@ const onCloseFullscreen = () => {
 		position: relative;
 		:deep(i) {
 			position: absolute;
-			left: 10px;
+			left: 18px;
 			top: 35px;
+			font-size: 36px !important;
 			color: #333333;
 			transition: all 0.3s ease;
 		}
