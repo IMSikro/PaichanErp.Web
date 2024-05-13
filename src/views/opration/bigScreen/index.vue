@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
 		height: 6.0625rem;
 		margin-bottom: 1.25rem;
 		position: relative;
-		background-color: rgba(255, 255, 255, 0.3);
+		/* background-color: rgba(255, 255, 255, 0.3); */
 		.title_bg_left {
 			width: 20%;
 			height: 0.625rem;
