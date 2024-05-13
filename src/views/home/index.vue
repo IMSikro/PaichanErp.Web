@@ -23,12 +23,13 @@
 					<div class="home-card-item-title">快捷导航(大屏分组)</div>
 					<div class="home-monitor">
 						<div class="flex-warp">
-							<div class="flex-warp-item" v-for="(v, k) in state.homeMenu" :key="k" @click="">
+							<div class="flex-warp-item" v-for="(v, k) in state.homeMenu" :key="k"
+								@click="openLink(v.url, v.groupId)">
 								<div class="flex-warp-item-box" :class="`home-animation${k}`">
 									<div class="flex-margin">
 										<i :class="v.icon" :style="{ color: v.iconColor }"></i>
 										<span class="pl5">{{ v.label }}</span>
-										<div class="mt10">{{ v.value }}</div>
+										<div class="mt10">{{ v.groupId }}</div>
 									</div>
 								</div>
 							</div>
@@ -46,6 +47,9 @@ import * as echarts from 'echarts';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // 定义变量内容
 const storesTagsViewRoutes = useTagsViewRoutes();
@@ -57,26 +61,30 @@ const state = reactive({
 		{
 			icon: 'iconfont icon-diannao1',
 			label: '分组1',
-			value: '1',
 			iconColor: '#FBD4A0',
+			url: '/dashboard/bigScreen',
+			groupId: 1,
 		},
 		{
 			icon: 'iconfont icon-diannao1',
 			label: '分组2',
-			value: '2',
 			iconColor: '#FBD4A0',
+			url: '/dashboard/bigScreen',
+			groupId: 2,
 		},
 		{
 			icon: 'iconfont icon-diannao1',
 			label: '分组3',
-			value: '3',
 			iconColor: '#FBD4A0',
+			url: '/dashboard/bigScreen',
+			groupId: 3,
 		},
 		{
 			icon: 'iconfont icon-diannao1',
 			label: '分组4',
-			value: '4',
 			iconColor: '#FBD4A0',
+			url: '/dashboard/bigScreen',
+			groupId: 4,
 		},
 	],
 	homeOne: [
@@ -124,6 +132,14 @@ const state = reactive({
 		color: '#303133',
 	},
 });
+
+// 打开微信支付列表
+const openLink = (url: string, groupId: number) => {
+	router.push({
+		path: url,
+		query: { groupId: groupId },
+	});
+};
 
 // 页面加载时
 onMounted(() => {

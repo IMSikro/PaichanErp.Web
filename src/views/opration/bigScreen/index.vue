@@ -1,6 +1,7 @@
 <template>
 	<div class="bigScreen-container">
 		<div class="bigTitle">
+			<div class="bigTitle-First" v-if="state.group">{{ state.group }}</div>
 			<div class="bigTitle-Content">{{ state.orgData.name }} - 排产控制台</div>
 		</div>
 		<div class="content">
@@ -8,14 +9,17 @@
 				<el-collapse-item v-for="dt in state.deviceTypes" :key="dt.id" :name="dt.id">
 					<template #title>
 						<div class="title_bg"></div>
-						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.6rem;">{{
-				dt.typeName
-			}}</el-text>
+						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.6rem;">
+							{{ dt.typeName }}
+						</el-text>
+						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.3rem;">
+							未生产订单: 50
+						</el-text>
+						<el-text tag="b" style="margin-left: 0.8rem; color: white;font-size: 1.3rem;">
+							数量: 600
+						</el-text>
 					</template>
-					<DeviceList :ref="(e: any) => {
-					if (e) setDeviceListRef(e, dt);
-				}
-				" :dt="dt" />
+					<DeviceList :ref="(e: any) => { if (e) setDeviceListRef(e, dt); }" :dt="dt" />
 				</el-collapse-item>
 			</el-collapse>
 		</div>
@@ -42,6 +46,7 @@ const { isTagsViewCurrenFull } = storeToRefs(stores);
 // 关闭当前全屏
 const onCloseFullscreen = () => {
 	stores.setCurrenFullscreen(false);
+	window.removeEventListener("popstate", onReturnBack, false);
 };
 
 // 定义变量内容
@@ -52,8 +57,14 @@ const route = useRoute();
 const refreshCurrentTagsView = () => {
 	mittBus.emit('onCurrentContextmenuClick', Object.assign({}, { contextMenuClickId: 0, ...route }));
 };
+// 3、关闭其它 tagsView
+const closeOtherTagsView = () => {
+	mittBus.emit('onCurrentContextmenuClick', Object.assign({}, { contextMenuClickId: 2, ...route }));
+};
+// 5、开启当前页面全屏
 const openCurrenFullscreen = () => {
 	mittBus.emit('onCurrentContextmenuClick', Object.assign({}, { contextMenuClickId: 4, ...route }));
+	window.addEventListener("popstate", onReturnBack, false);
 };
 
 const state = reactive({
@@ -61,6 +72,7 @@ const state = reactive({
 	currentTenant: {} as SysTenant,
 	orgData: [] as any,
 	deviceTypes: [] as any,
+	group: '',
 });
 
 const activeNames = ref<string[]>([]);
@@ -69,7 +81,8 @@ const getBaseInfo = async () => {
 	var d = res.data.result ?? [];
 	state.orgData = d[0] ?? []; // 默认第一个树分支
 
-	var dtRes = await pageDeviceType({});
+	let groupId = Number(route.query.groupId ?? 0);
+	var dtRes = await pageDeviceType({ groupId });
 	state.deviceTypes = dtRes.data.result?.items ?? [];
 	activeNames.value = state.deviceTypes.map((x) => x.id);
 };
@@ -86,9 +99,19 @@ const handleKeyDown = (event: any) => {
 	}
 }
 
+const onReturnBack = () => {
+	onCloseFullscreen();
+}
+
 onMounted(async () => {
+	console.log(route.query.groupId);
+	let groupId = Number(route.query.groupId ?? 0);
+	state.group = groupId > 0 ? `分组${groupId}` : '';
+
 	getBaseInfo();
+	window.history.pushState(null, '', document.URL);
 	openCurrenFullscreen();
+	closeOtherTagsView();
 	// 添加键盘事件监听
 	document.addEventListener('keydown', handleKeyDown)
 });
@@ -119,7 +142,14 @@ onBeforeUnmount(() => {
 		position: relative;
 		background: url('../../../assets/bigScreen/bigTitleAll.png') no-repeat center center / 100% 100%;
 
+		.bigTitle-First {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
 		.bigTitle-Content {
+			font-size: 2rem;
 			position: absolute;
 			left: 50%;
 			top: 50%;

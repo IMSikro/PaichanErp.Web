@@ -77,6 +77,7 @@
 
 <script lang="ts" setup="" name="deviceList">
 import { nextTick, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { pageDevice } from '/@/api/main/device';
 import { listOrderDetailByDeviceId, setOrderDetailSort, deleteOrderDetail, tableColumnPage } from '/@/api/main/orderDetail';
@@ -91,6 +92,8 @@ import { VxeColumnProps } from 'vxe-table';
 import router from '/@/router';
 import { onBeforeRouteLeave } from 'vue-router';
 
+// 定义变量内容
+const route = useRoute();
 //父级传递来的参数
 var props = defineProps({
 	dt: {},
@@ -144,7 +147,8 @@ let orderDetailsSplit = ref<any>({});
 let orderDetailCounts = ref<any>({});
 let orderDetailSums = ref<any>({});
 const initDeviceList = async (dtId: any) => {
-	var res = await pageDevice({ deviceTypeId: dtId });
+	let groupId = Number(route.query.groupId ?? 0);
+	var res = await pageDevice({ deviceTypeId: dtId, groupId });
 	deviceList.value = res.data.result?.items ?? [];
 	await initOrderDetailList();
 };

@@ -80,7 +80,18 @@ const state = reactive({
 });
 let deviceListRef = {};
 
-const activeNames = ref<string[]>([])
+const activeNames = ref<string[]>([]);
+const getBaseInfo = async () => {
+    var res = await getAPI(SysOrgApi).apiSysOrgListGet(0);
+    var d = res.data.result ?? [];
+    state.orgData = d[0] ?? []; // 默认第一个树分支
+
+    let groupId = Number(route.query.groupId ?? 0);
+    var dtRes = await pageDeviceType({});
+    state.deviceTypes = dtRes.data.result?.items ?? [];
+    activeNames.value = state.deviceTypes.map((x) => x.id);
+};
+
 const handleChange = (val: string[]) => {
     // console.log(val)
     // console.log(deviceListRef.value);
@@ -114,26 +125,9 @@ onBeforeUnmount(() => {
 })
 
 onMounted(async () => {
-    loading.value = false
-    // var res = await getAPI(SysUserApi).apiSysUserBaseInfoGet();
-    // state.currentUser = res.data.result ?? { account: '' };
-    // if (state.currentUser.tenantId && state.currentUser.tenantId > 0) {
-    //     var tenant = await getAPI(SysTenantApi).apiSysTenantGetTenantByIdPost({ tenantId: state.currentUser.tenantId ?? 0 });
-    //     state.currentTenant = tenant.data.result ?? { id: state.currentTenant.tenantId };
-    // }
-    var res = await getAPI(SysOrgApi).apiSysOrgListGet(0);
-    var d = res.data.result ?? [];
-    state.orgData = d[0] ?? []; // 默认第一个树分支
+    loading.value = false;
+    getBaseInfo();
 
-    var dtRes = await pageDeviceType({});
-    state.deviceTypes = dtRes.data.result?.items ?? [];
-    activeNames.value = state.deviceTypes.map(x => x.id);
-
-    // console.log(deviceListRef);
-
-    // for (const dt of state.deviceTypes) {
-    //     await deviceListRef[dt.id].initDeviceList(dt.id);
-    // }
     loading.value = false;
     openCurrenFullscreen();
     // 添加键盘事件监听

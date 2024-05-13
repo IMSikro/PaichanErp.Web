@@ -4,6 +4,7 @@ enum Api {
 	DeleteDeviceType = '/api/deviceType/delete',
 	UpdateDeviceType = '/api/deviceType/update',
 	PageDeviceType = '/api/deviceType/page',
+	ListDeviceTypeAndChild = '/api/deviceType/listDeviceTypeAndChild',
 }
 
 // 增加工艺设备
@@ -36,6 +37,14 @@ export const pageDeviceType = (params?: any) =>
 		url: Api.PageDeviceType,
 		method: 'post',
 		data: params,
+	});
+
+// 分页查询工艺设备
+export const listDeviceTypeAndChild = (params?: any) =>
+	request({
+		url: Api.ListDeviceTypeAndChild,
+		method: 'get',
+		params,
 	});
 
 

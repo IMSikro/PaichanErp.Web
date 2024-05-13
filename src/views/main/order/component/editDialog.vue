@@ -133,6 +133,7 @@ import { ref, onMounted } from "vue";
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 import { ElMessage } from "element-plus";
 import type { FormRules } from "element-plus";
+import { isMobile } from "/@/utils/other";
 import { addOrder, updateOrder } from "/@/api/main/order";
 import { getProduceProduceIdDropdown } from '/@/api/main/order';
 
