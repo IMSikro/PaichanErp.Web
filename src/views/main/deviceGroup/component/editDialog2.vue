@@ -107,7 +107,7 @@ const openDialog = async (row: any) => {
 	isShowDialog.value = true;
 };
 const setCheckedKeys = async () => {
-	let allTypeIds = Object.keys(deviceTreeRef.value);
+	let allTypeIds = deviceTypeAndChildList.value.map(x => x.id);
 	for (let i = 0; i < allTypeIds.length; i++) {
 		const e = allTypeIds[i];
 
@@ -118,13 +118,17 @@ const setCheckedKeys = async () => {
 
 		let dids = [];
 		dids.push(...jiaojiIds);
+		// console.log(dids);
 		deviceTree2Ref.value[e] = dids;
+
 		// dids.forEach(v => {
 		// 	deviceTreeRef.value[e].setChecked(v, true, false);
 		// })
+		console.log(e);
+
 		// deviceTreeRef.value[e]!.setCheckedKeys(dids, false);
 	}
-	console.log(deviceTreeRef.value);
+	// console.log(deviceTreeRef.value);
 	console.log(deviceTree2Ref.value);
 }
 
@@ -142,12 +146,12 @@ const cancel = () => {
 // 提交
 const submit = async () => {
 	let isLonger = false;
-	let allTypeIds = Object.keys(deviceTreeRef.value);
+	let allTypeIds = Object.keys(deviceTree2Ref.value);
 	let hasTypeIds = [];
 	let alldIds = [];
 	for (let i = 0; i < allTypeIds.length; i++) {
 		const e = allTypeIds[i];
-		let dids = deviceTreeRef.value[e];
+		let dids = deviceTree2Ref.value[e];
 		if (dids.length > 0) hasTypeIds.push(e);
 		alldIds.push(...dids);
 		if (dids.length > 6)
@@ -221,7 +225,7 @@ const getDeviceTypeAndChildList = async () => {
 	deviceTypeAndChildList.value = listData;
 	for (let i = 0; i < listData.length; i++) {
 		const e = listData[i];
-		deviceTreeRef.value[e.id] = [];
+		deviceTreeRef.value[e.id] = {};
 	}
 };
 

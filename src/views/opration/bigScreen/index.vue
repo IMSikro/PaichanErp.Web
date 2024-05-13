@@ -13,10 +13,10 @@
 							{{ dt.typeName }}
 						</el-text>
 						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.3rem;">
-							未生产订单: 50
+							未生产 -
 						</el-text>
 						<el-text tag="b" style="margin-left: 0.8rem; color: white;font-size: 1.3rem;">
-							数量: 600
+							批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber }}
 						</el-text>
 					</template>
 					<DeviceList :ref="(e: any) => { if (e) setDeviceListRef(e, dt); }" :dt="dt" />
