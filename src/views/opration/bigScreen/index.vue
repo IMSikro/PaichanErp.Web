@@ -4,7 +4,7 @@
 			<div class="title_bg_left"></div>
 			<div class="title_bg_left1"></div>
 			<div class="title_bg_left2"></div>
-			<div class="bigTitle-Content">{{ state.orgData.name }} - 排产控制台</div>
+			<div class="bigTitle-Content">立邦立邦 - 排产控制台排产控制台</div>
 			<div class="title_bg_right2"></div>
 			<div class="title_bg_right1"></div>
 			<div class="title_bg_right"></div>
@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
 		position: relative;
 		/* background-color: rgba(255, 255, 255, 0.3); */
 		.title_bg_left {
-			width: 20%;
+			width: 18%;
 			height: 0.625rem;
 			border-top: 0.1563rem solid #00539f;
 			position: absolute;
@@ -136,11 +136,11 @@ onBeforeUnmount(() => {
 			z-index: 2;
 		}
 		.title_bg_left1 {
-			width: 20%;
+			width: 22%;
 			height: 81px;
 			background: url('../../../assets/bigScreen/title_bg_left1.png') no-repeat center center / 100% 100%;
 			position: absolute;
-			left: 20%;
+			left: 18%;
 			top: 0;
 			z-index: 2;
 		}
@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
 			height: 70px;
 			background: url('../../../assets/bigScreen/title_bg_left2.png') no-repeat center center / 100% 100%;
 			position: absolute;
-			left: 34%;
+			left: 32.5%;
 			top: 15%;
 			z-index: 2;
 		}
@@ -167,21 +167,21 @@ onBeforeUnmount(() => {
 			height: 70px;
 			background: url('../../../assets/bigScreen/title_bg_right2.png') no-repeat center center / 100% 100%;
 			position: absolute;
-			right: 34%;
+			right: 32.5%;
 			top: 15%;
 			z-index: 2;
 		}
 		.title_bg_right1 {
-			width: 20%;
+			width: 22%;
 			height: 81px;
 			background: url('../../../assets/bigScreen/title_bg_right1.png') no-repeat center center / 100% 100%;
 			position: absolute;
-			right: 20%;
+			right: 18%;
 			top: 0;
 			z-index: 2;
 		}
 		.title_bg_right {
-			width: 20%;
+			width: 18%;
 			height: 0.625rem;
 			border-top: 0.1563rem solid #00539f;
 			position: absolute;
