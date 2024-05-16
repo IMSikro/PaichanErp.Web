@@ -5,7 +5,7 @@
 			<div class="title_bg_left"></div>
 			<div class="title_bg_left1"></div>
 			<div class="title_bg_left2"></div>
-			<div class="bigTitle-Content">{{ state.orgData.name }} - 排产控制台</div>
+			<div class="bigTitle-Content">{{ state.orgData.name }} <span class="titleSuffix"> - 排产控制台</span></div>
 			<div class="title_bg_right2"></div>
 			<div class="title_bg_right1"></div>
 			<div class="title_bg_right"></div>
@@ -15,15 +15,18 @@
 				<el-collapse-item v-for="dt in state.deviceTypes" :key="dt.id" :name="dt.id">
 					<template #title>
 						<div class="title_bg"></div>
-						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.6rem;">{{ dt.typeName }}</el-text>
-						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.3rem;">
-                            未生产 -
-                        </el-text>
-                        <el-text tag="b" style="margin-left: 0.8rem; color: white;font-size: 1.3rem;">
-                            批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber }}
-                        </el-text>
+						<el-text tag="b" style="margin-left: 3rem; color: white; font-size: 1.6rem">{{ dt.typeName }}</el-text>
+						<el-text tag="b" style="margin-left: 3rem; color: white; font-size: 1.3rem"> 未生产 - </el-text>
+						<el-text tag="b" style="margin-left: 0.8rem; color: white; font-size: 1.3rem"> 批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber }} </el-text>
 					</template>
-					<DeviceList :ref="(e: any) => { if (e) setDeviceListRef(e, dt); }" :dt="dt" />
+					<DeviceList
+						:ref="
+							(e: any) => {
+								if (e) setDeviceListRef(e, dt);
+							}
+						"
+						:dt="dt"
+					/>
 				</el-collapse-item>
 			</el-collapse>
 		</div>
@@ -50,7 +53,7 @@ const { isTagsViewCurrenFull } = storeToRefs(stores);
 // 关闭当前全屏
 const onCloseFullscreen = () => {
 	stores.setCurrenFullscreen(false);
-	window.removeEventListener("popstate", onReturnBack, false);
+	window.removeEventListener('popstate', onReturnBack, false);
 };
 
 // 定义变量内容
@@ -68,7 +71,7 @@ const closeOtherTagsView = () => {
 // 5、开启当前页面全屏
 const openCurrenFullscreen = () => {
 	mittBus.emit('onCurrentContextmenuClick', Object.assign({}, { contextMenuClickId: 4, ...route }));
-	window.addEventListener("popstate", onReturnBack, false);
+	window.addEventListener('popstate', onReturnBack, false);
 };
 
 const state = reactive({
@@ -101,11 +104,11 @@ const handleKeyDown = (event: any) => {
 		// 在这里执行要触发的逻辑
 		onCloseFullscreen();
 	}
-}
+};
 
 const onReturnBack = () => {
 	onCloseFullscreen();
-}
+};
 
 onMounted(async () => {
 	console.log(route.query.groupId);
@@ -220,6 +223,28 @@ onBeforeUnmount(() => {
 			right: 0;
 			bottom: 5%;
 			z-index: 2;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		.bigTitle {
+			font-size: 1.2rem;
+			.title_bg_left1 {
+				width: 25%;
+				display: none;
+			}
+			.title_bg_left2 {
+				display: none;
+			}
+			.title_bg_right2 {
+				display: none;
+			}
+			.title_bg_right1 {
+				display: none;
+			}
+			.titleSuffix {
+				display: none;
+			}
 		}
 	}
 
