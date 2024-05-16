@@ -15,9 +15,13 @@
 				<el-collapse-item v-for="dt in state.deviceTypes" :key="dt.id" :name="dt.id">
 					<template #title>
 						<div class="title_bg"></div>
-						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.6rem;">{{
-				dt.typeName
-			}}</el-text>
+						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.6rem;">{{ dt.typeName }}</el-text>
+						<el-text tag="b" style="margin-left: 3rem; color: white;font-size: 1.3rem;">
+                            未生产 -
+                        </el-text>
+                        <el-text tag="b" style="margin-left: 0.8rem; color: white;font-size: 1.3rem;">
+                            批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber }}
+                        </el-text>
 					</template>
 					<DeviceList :ref="(e: any) => { if (e) setDeviceListRef(e, dt); }" :dt="dt" />
 				</el-collapse-item>

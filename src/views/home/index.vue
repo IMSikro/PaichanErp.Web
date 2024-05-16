@@ -19,17 +19,16 @@
 		</el-row>
 		<el-row :gutter="15" class="home-card-three mb15">
 			<el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8">
-				<div class="home-card-item">
+				<div class="home-card-item" v-auth="'deviceGroup:page'">
 					<div class="home-card-item-title">快捷导航(大屏分组)</div>
 					<div class="home-monitor">
 						<div class="flex-warp">
-							<div class="flex-warp-item" v-for="(v, k) in state.homeMenu" :key="k"
-								@click="openLink(v.url, v.groupId)">
+							<div class="flex-warp-item" v-for="(v, k) in state.homeMenu" :key="k" @click="openLink(v)">
 								<div class="flex-warp-item-box" :class="`home-animation${k}`">
 									<div class="flex-margin">
 										<i :class="v.icon" :style="{ color: v.iconColor }"></i>
 										<span class="pl5">{{ v.label }}</span>
-										<div class="mt10">{{ v.groupId }}</div>
+										<div class="mt10">设备: {{ v.deviceNum }}</div>
 									</div>
 								</div>
 							</div>
@@ -48,6 +47,9 @@ import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
 import { useRouter } from 'vue-router';
+import { ElMessageBox, ElMessage } from "element-plus";
+
+import { pageDeviceGroup } from '/@/api/main/deviceGroup';
 
 const router = useRouter();
 
@@ -64,27 +66,7 @@ const state = reactive({
 			iconColor: '#FBD4A0',
 			url: '/dashboard/bigScreen',
 			groupId: 1,
-		},
-		{
-			icon: 'iconfont icon-diannao1',
-			label: '分组2',
-			iconColor: '#FBD4A0',
-			url: '/dashboard/bigScreen',
-			groupId: 2,
-		},
-		{
-			icon: 'iconfont icon-diannao1',
-			label: '分组3',
-			iconColor: '#FBD4A0',
-			url: '/dashboard/bigScreen',
-			groupId: 3,
-		},
-		{
-			icon: 'iconfont icon-diannao1',
-			label: '分组4',
-			iconColor: '#FBD4A0',
-			url: '/dashboard/bigScreen',
-			groupId: 4,
+			deviceNum: 0,
 		},
 	],
 	homeOne: [
@@ -133,16 +115,34 @@ const state = reactive({
 	},
 });
 
-// 打开微信支付列表
-const openLink = (url: string, groupId: number) => {
-	router.push({
-		path: url,
-		query: { groupId: groupId },
-	});
+// 打开分组操作大屏
+const openLink = (data: { deviceNum: number; url: string; groupId: number; }) => {
+	if (data.deviceNum > 0)
+		router.push({
+			path: data.url,
+			query: { groupId: data.groupId },
+		});
+	else
+		ElMessage.warning('当前分组没有设备,请先添加设备后打开');
 };
+
+const getDeviceGroup = async () => {
+	var res = await pageDeviceGroup({});
+	var groupList = res.data.result ?? [];
+	state.homeMenu = groupList.map((g: { groupName: string; id: number; deviceIds: string }) => ({
+		icon: 'iconfont icon-diannao1',
+		label: g.groupName,
+		iconColor: '#FBD4A0',
+		url: '/dashboard/bigScreen',
+		groupId: g.id,
+		deviceNum: g.deviceIds?.split(',').length ?? 0,
+	})
+	);
+}
 
 // 页面加载时
 onMounted(() => {
+	getDeviceGroup();
 });
 // 由于页面缓存原因，keep-alive
 onActivated(() => { });

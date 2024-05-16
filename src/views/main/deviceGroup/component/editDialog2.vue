@@ -126,7 +126,7 @@ const setCheckedKeys = async () => {
 		// })
 		console.log(e);
 
-		// deviceTreeRef.value[e]!.setCheckedKeys(dids, false);
+		deviceTreeRef.value[e]!.setCheckedKeys(dids, false);
 	}
 	// console.log(deviceTreeRef.value);
 	console.log(deviceTree2Ref.value);
