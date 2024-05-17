@@ -15,8 +15,8 @@
 				<el-collapse-item v-for="dt in state.deviceTypes" :key="dt.id" :name="dt.id">
 					<template #title>
 						<div class="title_bg"></div>
-						<el-text tag="b" style="margin-left: 3rem; color: white; font-size: 1.6rem">{{ dt.typeName }}</el-text>
-						<el-text tag="b" style="margin-left: 3rem; color: white; font-size: 1.3rem"> 未生产 - </el-text>
+						<el-text tag="b" style="margin-left: 2.5rem; color: white; font-size: 1.6rem">{{ dt.typeName }}</el-text>
+						<el-text tag="b" style="margin-left: 2rem; color: white; font-size: 1.3rem"> 未生产 - </el-text>
 						<el-text tag="b" style="margin-left: 0.8rem; color: white; font-size: 1.3rem"> 批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber }} </el-text>
 					</template>
 					<DeviceList
@@ -228,9 +228,11 @@ onBeforeUnmount(() => {
 
 	@media screen and (max-width: 768px) {
 		.bigTitle {
-			font-size: 1.2rem;
+			/* font-size: 2rem; */
+			.title_bg_left {
+				width: 35%;
+			}
 			.title_bg_left1 {
-				width: 25%;
 				display: none;
 			}
 			.title_bg_left2 {
@@ -241,6 +243,9 @@ onBeforeUnmount(() => {
 			}
 			.title_bg_right1 {
 				display: none;
+			}
+			.title_bg_right {
+				width: 35%;
 			}
 			.titleSuffix {
 				display: none;
@@ -265,7 +270,11 @@ onBeforeUnmount(() => {
 		}
 	}
 }
-
+@media screen and (max-width: 768px) {
+	.bigScreen-container {
+		padding: 0;
+	}
+}
 :deep(.content) {
 	.el-collapse {
 		--el-collapse-border-color: transparent;
