@@ -229,6 +229,11 @@ onBeforeUnmount(() => {
 	@media screen and (max-width: 768px) {
 		.bigTitle {
 			/* font-size: 2rem; */
+			.bigTitle-First {
+				margin-top: -8%;
+				margin-left: -50%;
+				font-size: 20px;
+			}
 			.title_bg_left {
 				width: 35%;
 			}
