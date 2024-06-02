@@ -1,6 +1,8 @@
 <template>
-	<el-main class="layout-main" :style="isFixedHeader ? `height: calc(100% - ${setMainHeight})` : `minHeight: calc(100% - ${setMainHeight})`">
-		<el-scrollbar ref="layoutMainScrollbarRef" class="layout-main-scroll layout-backtop-header-fixed" wrap-class="layout-main-scroll" view-class="layout-main-scroll">
+	<el-main class="layout-main"
+		:style="isFixedHeader ? `height: calc(100% - ${setMainHeight})` : `minHeight: calc(100% - ${setMainHeight})`">
+		<el-scrollbar ref="layoutMainScrollbarRef" class="layout-main-scroll layout-backtop-header-fixed"
+			wrap-class="layout-main-scroll" view-class="layout-main-scroll">
 			<LayoutParentView />
 			<LayoutFooter v-if="isFooter" />
 		</el-scrollbar>
@@ -30,6 +32,7 @@ const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 
 // 设置 footer 显示/隐藏
 const isFooter = computed(() => {
+	console.log(route);
 	return themeConfig.value.isFooter && !route.meta.isIframe;
 });
 // 设置 header 固定

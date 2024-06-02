@@ -9,11 +9,14 @@
 			<div>
 				<div>
 					<div>
-						当前排产信息：
-						<div style="width: 100px; color: white; text-align: center; display: inline; padding: 5px"
-							:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})` }">
-							产品编号: {{ orderDetailModel.produceIdProduceName }} 批次号: {{ orderDetailModel.orderDetailCode
-							}}
+						当前排产信息：<el-tag
+							:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
+						</el-tag>
+						<div style="width: 80%; color: white; display: inline; padding: 1rem;">
+							产品编号: {{ orderDetailModel.produceIdProduceName }}
+						</div>
+						<div style=" width: 80%; color: white;display: inline; padding: 1rem;">
+							批次号: {{ orderDetailModel.orderDetailCode }}
 						</div>
 					</div>
 				</div>
@@ -65,7 +68,7 @@
 				</span>
 			</template>
 		</el-dialog>
-		<!-- 完工并下线弹框 -->
+		<!-- 终结完工弹框 -->
 		<el-dialog v-model="isShowDialogDone" :width="650" draggable="">
 			<template #header>
 				<div style="color: #fff">
@@ -106,7 +109,7 @@
 				</span>
 			</template>
 		</el-dialog>
-		<!-- 完工弹框 -->
+		<!-- 小计完工弹框 -->
 		<el-dialog v-model="isShowDialogDone3" :width="650" draggable="">
 			<template #header>
 				<div style="color: #fff">
@@ -155,7 +158,7 @@ import type { FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { listDevice } from '/@/api/main/device';
 import { auth } from '/@/utils/authFunction';
-import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, doneAndNext, deviceErrorTypeDropdown, deleteOrderDetail } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, updateDone, doneAndNext, deviceErrorTypeDropdown, deleteOrderDetail } from '/@/api/main/orderDetail';
 import { getOrderOrderIdDropdown, getDeviceDeviceIdDropdown, getOrderDetail, getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 
 interface ListItem {
@@ -167,7 +170,7 @@ const isShowDialog = ref(false);
 const isShowDialogDone = ref(false);
 const isShowDialogDone3 = ref(false);
 const deviceTypeId = ref<number>();
-const orderDetailId = ref<number>();
+const orderDetailId = ref<any>();
 // const deviceErrorTime = ref<any>();
 const errorTypeDropdown = ref<ListItem[]>([]);
 const loading = ref(false);
@@ -185,7 +188,7 @@ const ruleForm3 = ref<any>({});
 // 	qty: [{ required: true, message: '请输入班次产量！', trigger: 'blur' }],
 // });
 //自行添加其他规则
-const validateDeviceErrorType = (rule, value, callback) => {
+const validateDeviceErrorType = (rule: any, value: number, callback: any) => {
 	if (ruleForm2.value.deviceErrorTime && ruleForm2.value.deviceErrorTime > 0) {
 		if (!value || value == 0) {
 			callback(new Error('非生产工时类型不能为空！'));
@@ -212,7 +215,7 @@ const rules2 = ref<FormRules>({
 	],
 	qty: [{ required: true, message: '请输入完工数量！', trigger: 'blur' }],
 });
-const validateDeviceErrorType3 = (rule, value, callback) => {
+const validateDeviceErrorType3 = (rule: any, value: number, callback: any) => {
 	if (ruleForm3.value.deviceErrorTime && ruleForm3.value.deviceErrorTime > 0) {
 		if (!value || value == 0) {
 			callback(new Error('非生产工时类型不能为空！'));
@@ -305,31 +308,21 @@ const submit = async () => {
 	// 	}
 	// });
 };
-// 完工并下线弹框
+// 终结完工弹框
 const doneAndOffline = () => {
 	isShowDialogDone.value = true;
+	ruleForm2.value = {};
 	ruleForm2.value.qty = orderDetailId.value.qty;
 	// remoteMethod('1');
 };
-// 完工并下线 接口
+// 终结完工 接口
 const submitDone = async () => {
 	ruleForm2Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
 			// 深拷贝ruleForm2赋值给params
 			const params = JSON.parse(JSON.stringify(ruleForm2.value));
-			// 完工日期
-			// 使用 ref 存储当前日期对象
-			const currentDate = ref(new Date());
-			const year = currentDate.value.getFullYear();
-			const month = currentDate.value.getMonth() + 1;
-			const day = currentDate.value.getDate();
-			// 最终赋值
 			params.id = orderDetailId.value.id;
-			params.endDate = `${year}-${month}-${day}`;
-			params.deviceErrorType = ruleForm2.value.timeType;
-			delete params.timeType;
-			console.log('params', params);
-			await updateOrderDetail(params);
+			await updateDone(params);
 			ElMessage.success('操作成功');
 			closeDialog();
 		} else {
@@ -343,28 +336,19 @@ const submitDone = async () => {
 	// isShowDialog.value = false;
 };
 
-// 完工
+// 小计完工
 const done = async () => {
 	isShowDialogDone3.value = true;
+	ruleForm3.value = {};
 	ruleForm3.value.qty = orderDetailId.value.qty;
 };
-// 完工 接口
+// 小计完工 接口
 const submitDone3 = async () => {
 	ruleForm3Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
 			// 深拷贝ruleForm2赋值给params
 			const params = JSON.parse(JSON.stringify(ruleForm3.value));
-			// 完工日期
-			// 使用 ref 存储当前日期对象
-			const currentDate = ref(new Date());
-			const year = currentDate.value.getFullYear();
-			const month = currentDate.value.getMonth() + 1;
-			const day = currentDate.value.getDate();
-			// 最终赋值
 			params.id = orderDetailId.value.id;
-			params.endDate = `${year}-${month}-${day}`;
-			params.deviceErrorType = ruleForm3.value.timeType;
-			delete params.timeType;
 			console.log('params', params);
 			await doneAndNext(params);
 			ElMessage.success('操作成功');

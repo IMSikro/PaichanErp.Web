@@ -3,6 +3,7 @@ enum Api {
 	AddOrderDetail = '/api/orderDetail/add',
 	DeleteOrderDetail = '/api/orderDetail/delete',
 	doneAndNext = '/api/orderDetail/doneAndNext',
+	updateDone = '/api/orderDetail/done',
 	UpdateOrderDetail = '/api/orderDetail/update',
 	PageOrderDetail = '/api/orderDetail/page',
 	GetOrderDetail = '/api/orderDetail/detail',
@@ -50,10 +51,18 @@ export const addOrderDetail = (params?: any) =>
 		data: params,
 	});
 
-// 删除订单排产
+// 小计完工
 export const doneAndNext = (params?: any) =>
 	request({
 		url: Api.doneAndNext,
+		method: 'post',
+		data: params,
+	});
+
+// 终结完工
+export const updateDone = (params?: any) =>
+	request({
+		url: Api.updateDone,
 		method: 'post',
 		data: params,
 	});

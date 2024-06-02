@@ -55,13 +55,10 @@
 </style>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormRules } from "element-plus";
 import { addDeviceGroup, updateDeviceGroup } from "/@/api/main/deviceGroup";
 import { listDeviceTypeAndChild } from '/@/api/main/deviceType';
-import { v } from "vxe-table";
-import { number } from "echarts";
 
 //父级传递来的参数
 var props = defineProps({
@@ -75,7 +72,7 @@ const emit = defineEmits(["reloadTable"]);
 const ruleFormRef = ref();
 const isShowDialog = ref(false);
 const ruleForm = ref<any>({});
-const deviceTreeRef = ref<any>({});
+let deviceTreeRef = {} as any;
 const deviceTree2Ref = ref<any>({});
 
 const state = {
@@ -95,7 +92,7 @@ const handleCheck = (data, checked, nodes) => {
 	if (!checked && deviceIds.some(x => x == data.id))
 		deviceIds = deviceIds.filter(x => x != data.id);
 	deviceTree2Ref.value[data.deviceTypeId] = deviceIds;
-	console.log(deviceTreeRef.value);
+	console.log(deviceTreeRef);
 	console.log(deviceTree2Ref.value);
 }
 
@@ -126,7 +123,7 @@ const setCheckedKeys = async () => {
 		// })
 		console.log(e);
 
-		deviceTreeRef.value[e]!.setCheckedKeys(dids, false);
+		// deviceTreeRef[e].value!.setCheckedKeys(dids, false);
 	}
 	// console.log(deviceTreeRef.value);
 	console.log(deviceTree2Ref.value);
@@ -225,7 +222,7 @@ const getDeviceTypeAndChildList = async () => {
 	deviceTypeAndChildList.value = listData;
 	for (let i = 0; i < listData.length; i++) {
 		const e = listData[i];
-		deviceTreeRef.value[e.id] = {};
+		// deviceTreeRef[e.id] = ref<any>();
 	}
 };
 

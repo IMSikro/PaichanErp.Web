@@ -47,6 +47,14 @@
 			</div>
 		</div>
 	</div>
+	<div class="layout-footer pb15">
+		<div class="layout-footer-warp">
+			<div class="mt5">Copyright © 2024 All rights reserved.
+				<a href="https://beian.miit.gov.cn/" target="_blank"
+					style="color: var(--el-text-color-secondary);">苏ICP备2024104455号-1</a>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts" name="loginIndex">
@@ -82,7 +90,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .login-container {
-	height: 100%;
+	height: 97%;
 	background: var(--el-color-white);
 
 	.login-left {
@@ -269,6 +277,18 @@ onMounted(() => {
 				}
 			}
 		}
+	}
+}
+
+.layout-footer {
+	width: 100%;
+	display: flex;
+
+	&-warp {
+		margin: auto;
+		color: var(--el-text-color-secondary);
+		text-align: center;
+		animation: error-num 0.3s ease;
 	}
 }
 </style>

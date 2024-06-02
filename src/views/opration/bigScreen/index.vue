@@ -5,7 +5,8 @@
 			<div class="title_bg_left"></div>
 			<div class="title_bg_left1"></div>
 			<div class="title_bg_left2"></div>
-			<div class="bigTitle-Content">{{ state.orgData.name }} <span class="titleSuffix"> - 排产控制台</span></div>
+			<div class="bigTitle-Content">{{ state.orgData.name }}<span class="titleSuffix">&nbsp;-&nbsp;排产控制台</span>
+			</div>
 			<div class="title_bg_right2"></div>
 			<div class="title_bg_right1"></div>
 			<div class="title_bg_right"></div>
@@ -15,18 +16,15 @@
 				<el-collapse-item v-for="dt in state.deviceTypes" :key="dt.id" :name="dt.id">
 					<template #title>
 						<div class="title_bg"></div>
-						<el-text tag="b" style="margin-left: 2.5rem; color: white; font-size: 1.6rem">{{ dt.typeName }}</el-text>
-						<el-text tag="b" style="margin-left: 2rem; color: white; font-size: 1.3rem"> 未生产 - </el-text>
-						<el-text tag="b" style="margin-left: 0.8rem; color: white; font-size: 1.3rem"> 批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber }} </el-text>
+						<el-text tag="b" class="title_bg2_left">{{ dt.typeName }}</el-text>
+						<el-text tag="b" class="title_bg2_middle"> 已排产 - </el-text>
+						<el-text tag="b" class="title_bg2_right"> 批数: {{ dt.orderBatchNum }} 数量: {{ dt.orderNumber
+							}} </el-text>
+						<el-text tag="b" class="title_bg2_middle2"> 未排产 - </el-text>
+						<el-text tag="b" class="title_bg2_right2"> 批数: {{ dt.unOrderBatchNum }} 数量: {{ dt.unOrderNumber
+							}} </el-text>
 					</template>
-					<DeviceList
-						:ref="
-							(e: any) => {
-								if (e) setDeviceListRef(e, dt);
-							}
-						"
-						:dt="dt"
-					/>
+					<DeviceList :ref="(e: any) => { if (e) setDeviceListRef(e, dt); }" :dt="dt" />
 				</el-collapse-item>
 			</el-collapse>
 		</div>
@@ -35,7 +33,7 @@
 
 <script lang="ts" setup="" name="bigScreen">
 import { defineAsyncComponent, onMounted, onBeforeUnmount, reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, onBeforeRouteLeave } from 'vue-router';
 import mittBus from '/@/utils/mitt';
 import { getAPI } from '/@/utils/axios-utils';
 import { SysUser, SysTenant } from '/@/api-services/models';
@@ -79,7 +77,7 @@ const state = reactive({
 	currentTenant: {} as SysTenant,
 	orgData: [] as any,
 	deviceTypes: [] as any,
-	group: '',
+	group: '' as string,
 });
 
 const activeNames = ref<string[]>([]);
@@ -91,7 +89,7 @@ const getBaseInfo = async () => {
 	let groupId = Number(route.query.groupId ?? 0);
 	var dtRes = await pageDeviceType({ groupId });
 	state.deviceTypes = dtRes.data.result?.items ?? [];
-	activeNames.value = state.deviceTypes.map((x) => x.id);
+	activeNames.value = state.deviceTypes.map((x: { id: any; }) => x.id);
 };
 
 let deviceListRef = {} as any;
@@ -110,10 +108,12 @@ const onReturnBack = () => {
 	onCloseFullscreen();
 };
 
+let timer: any;
+
 onMounted(async () => {
-	console.log(route.query.groupId);
-	let groupId = Number(route.query.groupId ?? 0);
-	state.group = groupId > 0 ? `分组${groupId}` : '';
+	console.log(route.query.groupName);
+	let groupName = route.query.groupName?.toString() ?? '';
+	state.group = groupName;
 
 	getBaseInfo();
 	window.history.pushState(null, '', document.URL);
@@ -121,6 +121,14 @@ onMounted(async () => {
 	closeOtherTagsView();
 	// 添加键盘事件监听
 	document.addEventListener('keydown', handleKeyDown);
+
+	timer = setInterval(() => { getBaseInfo() }, 30000);
+
+	setTimeout(() => {
+		// 进入当前路由时设置背景颜色为 #000d3a
+		let parent = document.querySelector('.layout-parent') as HTMLElement;
+		parent.style.backgroundColor = '#000d3a';
+	}, 1000);
 });
 
 // 在组件卸载时移除事件监听
@@ -128,6 +136,20 @@ onMounted(async () => {
 // 如果你希望在页面卸载后再移除事件监听，可以使用`onUnmounted`
 onBeforeUnmount(() => {
 	document.removeEventListener('keydown', handleKeyDown);
+	clearInterval(timer);
+
+	// 离开当前路由时取消背景颜色设置
+	let parent = document.querySelector('.layout-parent') as HTMLElement;
+	parent.style.backgroundColor = 'unset';
+});
+
+onBeforeRouteLeave(() => {
+	// document.removeEventListener('keydown', handleKeyDown);
+	clearInterval(timer);
+
+	// 离开当前路由时取消背景颜色设置
+	let parent = document.querySelector('.layout-parent') as HTMLElement;
+	parent.style.backgroundColor = 'unset';
 });
 </script>
 <style scoped>
@@ -181,18 +203,25 @@ onBeforeUnmount(() => {
 
 		.bigTitle-First {
 			position: absolute;
+			left: 0;
 			top: 50%;
 			transform: translateY(-50%);
 		}
 
 		.bigTitle-Content {
-			/* width: 40%; */
+			max-width: 30%;
 			line-height: 7rem;
 			position: absolute;
 			left: 50%;
 			top: 0;
 			transform: translateX(-50%);
 			z-index: 3;
+			/*超出隐藏*/
+			overflow: hidden;
+			/*隐藏后添加省略号*/
+			text-overflow: ellipsis;
+			/*强制不换行*/
+			white-space: nowrap;
 		}
 
 		.title_bg_right2 {
@@ -228,30 +257,42 @@ onBeforeUnmount(() => {
 
 	@media screen and (max-width: 768px) {
 		.bigTitle {
-			/* font-size: 2rem; */
+			font-size: 1.5rem;
+
+			.bigTitle-Content {
+				max-width: 60%;
+			}
+
 			.bigTitle-First {
 				margin-top: -8%;
-				margin-left: -50%;
-				font-size: 20px;
+				/* margin-left: -50%; */
+				font-size: 15px;
 			}
+
 			.title_bg_left {
 				width: 35%;
 			}
+
 			.title_bg_left1 {
 				display: none;
 			}
+
 			.title_bg_left2 {
 				display: none;
 			}
+
 			.title_bg_right2 {
 				display: none;
 			}
+
 			.title_bg_right1 {
 				display: none;
 			}
+
 			.title_bg_right {
 				width: 35%;
 			}
+
 			.titleSuffix {
 				display: none;
 			}
@@ -273,13 +314,74 @@ onBeforeUnmount(() => {
 			top: 0;
 			z-index: 2;
 		}
+
+		.title_bg2_left {
+			margin-left: 2.5rem;
+			color: white;
+			font-size: 1.6rem;
+		}
+
+		.title_bg2_middle {
+			margin-left: 2rem;
+			color: white;
+			font-size: 1.3rem;
+		}
+
+		.title_bg2_right {
+			margin-left: 0.8rem;
+			color: white;
+			font-size: 1.3rem;
+		}
+
+		.title_bg2_middle2 {
+			margin-left: 2rem;
+			color: white;
+			font-size: 1.3rem;
+		}
+
+		.title_bg2_right2 {
+			margin-left: 0.8rem;
+			color: white;
+			font-size: 1.3rem;
+		}
+
+		@media screen and (max-width: 768px) {
+			.title_bg2_left {
+				margin-left: 2.5rem;
+				color: white;
+				font-size: 1.3rem;
+			}
+
+			.title_bg2_middle {
+				margin-left: 2rem;
+				color: white;
+				font-size: 1rem;
+			}
+
+			.title_bg2_right {
+				margin-left: 0.8rem;
+				color: white;
+				font-size: 1rem;
+			}
+
+			.title_bg2_middle2 {
+				display: none;
+			}
+
+			.title_bg2_right2 {
+				display: none;
+			}
+		}
 	}
 }
+
+
 @media screen and (max-width: 768px) {
 	.bigScreen-container {
 		padding: 0;
 	}
 }
+
 :deep(.content) {
 	.el-collapse {
 		--el-collapse-border-color: transparent;

@@ -19,28 +19,32 @@
 						</el-form-item>
 						<el-form-item>
 							<el-button-group>
-								<el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'sysUser:page'"> 查询 </el-button>
+								<el-button type="primary" icon="ele-Search" @click="handleQuery"
+									v-auth="'sysUser:page'"> 查询 </el-button>
 								<el-button icon="ele-Refresh" @click="resetQuery"> 重置 </el-button>
 							</el-button-group>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" icon="ele-Plus" @click="openAddUser" v-auth="'sysUser:add'"> 新增 </el-button>
+							<el-button type="primary" icon="ele-Plus" @click="openAddUser" v-auth="'sysUser:add'"> 新增
+							</el-button>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success" icon="ele-Plus" @click="openImportUser" v-auth="'sysUser:import'"> 导入 </el-button>
+							<el-button type="success" icon="ele-Plus" @click="openImportUser" v-auth="'sysUser:import'">
+								导入 </el-button>
 						</el-form-item>
 					</el-form>
 				</el-card>
 
 				<el-card class="full-table" shadow="hover" style="margin-top: 8px">
 					<el-table :data="state.userData" style="width: 100%" v-loading="state.loading" border>
-						<el-table-column type="index" label="序号" width="55" align="center" fixed />
-						<el-table-column prop="account" label="账号" width="120" align="center" fixed show-overflow-tooltip />
+						<el-table-column type="index" label="序号" width="55" align="center" />
+						<el-table-column prop="account" label="账号" width="120" align="center" show-overflow-tooltip />
 						<!-- <el-table-column prop="nickName" label="昵称" width="120" align="center" show-overflow-tooltip /> -->
 						<el-table-column prop="realName" label="姓名" width="120" align="center" show-overflow-tooltip />
 						<el-table-column label="头像" width="80" align="center" show-overflow-tooltip>
 							<template #default="scope">
-								<el-avatar :src="scope.row.avatar" size="small">{{ scope.row.nickName?.slice(0, 1) ?? scope.row.realName?.slice(0, 1) }} </el-avatar>
+								<el-avatar :src="scope.row.avatar" size="small">{{ scope.row.nickName?.slice(0, 1) ??
+			scope.row.realName?.slice(0, 1) }} </el-avatar>
 							</template>
 						</el-table-column>
 						<el-table-column prop="phone" label="手机号码" width="120" align="center" show-overflow-tooltip />
@@ -55,11 +59,14 @@
 								<el-tag type="danger" v-else> 女 </el-tag>
 							</template>
 						</el-table-column>
-						<el-table-column prop="personalSkill" label="个人技能" width="70" align="center" show-overflow-tooltip />
-						<el-table-column prop="unitPrice" label="工时单价" width="70" align="center" show-overflow-tooltip />
+						<el-table-column prop="personalSkill" label="个人技能" width="70" align="center"
+							show-overflow-tooltip />
+						<el-table-column prop="unitPrice" label="工时单价" width="70" align="center"
+							show-overflow-tooltip />
 						<el-table-column label="状态" width="70" align="center" show-overflow-tooltip>
 							<template #default="scope">
-								<el-switch v-model="scope.row.status" :active-value="1" :inactive-value="2" size="small" @change="changeStatus(scope.row)" v-auth="'sysUser:setStatus'" />
+								<el-switch v-model="scope.row.status" :active-value="1" :inactive-value="2" size="small"
+									@change="changeStatus(scope.row)" v-auth="'sysUser:setStatus'" />
 							</template>
 						</el-table-column>
 						<el-table-column label="账号类型" width="100" align="center" show-overflow-tooltip>
@@ -71,49 +78,50 @@
 							</template>
 						</el-table-column>
 						<el-table-column prop="orderNo" label="排序" width="70" align="center" show-overflow-tooltip />
-						<el-table-column prop="createTime" label="修改时间" width="160" align="center" show-overflow-tooltip />
+						<el-table-column prop="createTime" label="修改时间" width="160" align="center"
+							show-overflow-tooltip />
 						<el-table-column prop="remark" label="备注" header-align="center" show-overflow-tooltip />
 						<el-table-column label="操作" width="110" align="center" fixed="right" show-overflow-tooltip>
 							<template #default="scope">
-								<el-button icon="ele-Edit" size="small" text type="primary" @click="openEditUser(scope.row)" v-auth="'sysUser:update'"> 编辑 </el-button>
+								<el-button icon="ele-Edit" size="small" text type="primary"
+									@click="openEditUser(scope.row)" v-auth="'sysUser:update'"> 编辑 </el-button>
 								<el-dropdown>
-									<el-button icon="ele-MoreFilled" size="small" text type="primary" style="padding-left: 12px" />
+									<el-button icon="ele-MoreFilled" size="small" text type="primary"
+										style="padding-left: 12px" />
 									<template #dropdown>
 										<el-dropdown-menu>
-											<el-dropdown-item icon="ele-RefreshLeft" @click="resetUserPwd(scope.row)" :disabled="!auth('sysUser:resetPwd')"> 重置密码 </el-dropdown-item>
-											<el-dropdown-item icon="ele-Delete" @click="delUser(scope.row)" divided :disabled="!auth('sysUser:delete')"> 删除账号 </el-dropdown-item>
+											<el-dropdown-item icon="ele-RefreshLeft" @click="resetUserPwd(scope.row)"
+												:disabled="!auth('sysUser:resetPwd')"> 重置密码 </el-dropdown-item>
+											<el-dropdown-item icon="ele-Delete" @click="delUser(scope.row)" divided
+												:disabled="!auth('sysUser:delete')"> 删除账号 </el-dropdown-item>
 										</el-dropdown-menu>
 									</template>
 								</el-dropdown>
 							</template>
 						</el-table-column>
 					</el-table>
-					<el-pagination
-						v-model:currentPage="state.tableParams.page"
-						v-model:page-size="state.tableParams.pageSize"
-						:total="state.tableParams.total"
-						:page-sizes="[10, 20, 50, 100]"
-						small
-						background
-						@size-change="handleSizeChange"
-						@current-change="handleCurrentChange"
-						layout="total, sizes, prev, pager, next, jumper"
-					/>
+					<el-pagination v-model:currentPage="state.tableParams.page"
+						v-model:page-size="state.tableParams.pageSize" :total="state.tableParams.total"
+						:page-sizes="[10, 20, 50, 100]" small background @size-change="handleSizeChange"
+						@current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" />
 				</el-card>
 			</el-col>
 		</el-row>
 
-		<EditUser ref="editUserRef" :title="state.editUserTitle" :orgData="state.orgTreeData" @handleQuery="handleQuery" />
-		
+		<EditUser ref="editUserRef" :title="state.editUserTitle" :orgData="state.orgTreeData"
+			@handleQuery="handleQuery" />
+
 		<el-dialog v-model="state.dialogUploadVisible" :lock-scroll="false" draggable width="400px">
 			<template #header>
 				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-UploadFilled /> </el-icon>
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle">
+						<ele-UploadFilled /> </el-icon>
 					<span> 上传文件 </span>
 				</div>
 			</template>
 			<div>
-				<el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action="" :on-change="handleChange" accept=".xls,.xlsx">
+				<el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action=""
+					:on-change="handleChange" accept=".xls,.xlsx">
 					<el-icon class="el-icon--upload">
 						<ele-UploadFilled />
 					</el-icon>
@@ -122,10 +130,10 @@
 						<div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
 					</template>
 				</el-upload>
-        <div>
-          点击此处下载文件模板
+				<div>
+					点击此处下载文件模板
 					<el-button @click="downloadExcel">下载模板</el-button>
-        </div>
+				</div>
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
@@ -145,12 +153,12 @@ import { formatDate } from '/@/utils/formatTime';
 import { auth } from '/@/utils/authFunction';
 import OrgTree from '/@/views/system/org/component/orgTree.vue';
 import EditUser from '/@/views/system/user/component/editUser.vue';
-import { downloadByData,getFileName } from '/@/utils/download';
+import { downloadByData, getFileName } from '/@/utils/download';
 
 import { getAPI } from '/@/utils/axios-utils';
 import { SysUserApi, SysOrgApi } from '/@/api-services/api';
 import { SysUser, SysOrg } from '/@/api-services/models';
-import { getUserTempExcel,importUserExcel } from '/@/api/main/sysUserEx';
+import { getUserTempExcel, importUserExcel } from '/@/api/main/sysUserEx';
 
 const orgTreeRef = ref<InstanceType<typeof OrgTree>>();
 const editUserRef = ref<InstanceType<typeof EditUser>>();
@@ -187,8 +195,8 @@ const handleChange = (file: any, fileList: []) => {
 // 上传
 const uploadFile = async () => {
 	if (state.fileList.length < 1) return;
-  const params = new FormData();
-  params.append('file',state.fileList[0].raw);
+	const params = new FormData();
+	params.append('file', state.fileList[0].raw);
 	await importUserExcel(params);
 	loadOrgData();
 	handleQuery();
@@ -197,11 +205,11 @@ const uploadFile = async () => {
 };
 
 const downloadExcel = async () => {
-  var res = await getUserTempExcel();
-  var fileName = getFileName(res.headers);
-  console.log(res,res.data);
-  
-  downloadByData(res.data,fileName);
+	var res = await getUserTempExcel();
+	var fileName = getFileName(res.headers);
+	console.log(res, res.data);
+
+	downloadByData(res.data, fileName);
 }
 
 
@@ -261,7 +269,7 @@ const delUser = (row: any) => {
 			handleQuery();
 			ElMessage.success('删除成功');
 		})
-		.catch(() => {});
+		.catch(() => { });
 };
 
 // 改变页面容量
@@ -302,7 +310,7 @@ const resetUserPwd = async (row: any) => {
 					ElMessage.success(`密码重置成功为：${res.data.result}`);
 				});
 		})
-		.catch(() => {});
+		.catch(() => { });
 };
 
 // 树组件点击

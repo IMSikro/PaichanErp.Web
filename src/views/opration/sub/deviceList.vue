@@ -22,17 +22,17 @@
 						<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type"
 							:field="config.field" :visible="config.show" :title="config.title" :fixed="config.fixed"
 							:width="config.width">
-							<template v-if="config.title == '颜色'" #default="{ row }">
+							<template v-if="config.field == 'colorRgb'" #default="{ row }">
 								<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }"
 									style="font-size: 10px; color: transparent; user-select: none;border:1px solid #fff;">
 									&nbsp;</div>
 							</template>
-							<template v-if="config.title == '产品编号'" #default="{ row }">
+							<template v-if="config.field == 'produceIdProduceName'" #default="{ row }">
 								<div @click="openEditOrderDetail(row, $event)">
 									{{ row.produceIdProduceName }}
 								</div>
 							</template>
-							<template v-if="config.title == '交期'" #default="{ row }">
+							<template v-if="config.field == 'deliveryDate'" #default="{ row }">
 								<span>{{ formatDate(row.deliveryDate) }}</span>
 							</template>
 						</vxe-column>
@@ -329,10 +329,9 @@ const deleteOne = async (id: any, e: any) => {
 // 格式化日期
 const formatDate = (dateString: string | number | Date) => {
 	const date = new Date(dateString);
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
-	return `${year}-${month}-${day}`;
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	return `${month}-${day}`;
 };
 
 // 设置排序

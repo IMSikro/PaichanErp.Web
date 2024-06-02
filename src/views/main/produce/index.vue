@@ -69,7 +69,8 @@
         </el-table-column>
         <el-table-column prop="deviceTypes" label="工艺列表" width="120" show-overflow-tooltip="">
           <template #default="scope">
-            <el-tag v-for="(v, i) in scope.row.deviceTypeList" :key="i"> {{ deviceTypeListRef[v] }} </el-tag>
+            <el-tag v-for="(v, i) in scope.row.deviceTypeList" :key="i" v-show="deviceTypeListRef[v]"> {{
+      deviceTypeListRef[v] }} </el-tag>
           </template>
 
         </el-table-column>

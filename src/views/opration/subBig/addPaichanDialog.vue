@@ -7,27 +7,23 @@
 				</div>
 			</template>
 			<div>
-				<el-select class="custom-select" clearable filterable v-model="deviceId" placeholder="请选择设备外键" @change="switchDevice()">
-					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
+				<el-select class="custom-select" clearable filterable v-model="deviceId" placeholder="请选择设备外键"
+					@change="switchDevice()">
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label"
+						:value="item.value" />
 				</el-select>
 				<div class="dischargeOrderList">
-					<el-table
-						class="tables"
-						stripe
-						:header-cell-style="{ background: '#031743', color: '#FFF' }"
-						:data="dischargeOrderList"
-						v-loading="loading"
-						style="width: 100%"
-						tooltip-effect="light"
-						size="small"
-					>
+					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
+						:data="dischargeOrderList" v-loading="loading" style="width: 100%" tooltip-effect="light"
+						size="small">
 						<el-table-column prop="orderId" label="颜色" width="100" show-overflow-tooltip="">
 							<template #default="scope">
 								<div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }">&nbsp;</div>
 							</template>
 						</el-table-column>
 						<el-table-column prop="produceName" label="产品名称" width="" show-overflow-tooltip="" />
-						<el-table-column prop="produceIdProduceName" label="产品编号" width="100" show-overflow-tooltip="" />
+						<el-table-column prop="produceIdProduceName" label="产品编号" width="100"
+							show-overflow-tooltip="" />
 						<el-table-column prop="quantity" label="批次总量" width="100" show-overflow-tooltip="">
 							<template #default="scope">
 								<span>{{ scope.row.quantity + (scope.row.pUnit ?? '') }}</span>
@@ -45,17 +41,24 @@
 						</el-table-column>
 						<el-table-column label="班次产量" width="100" show-overflow-tooltip="">
 							<template #default="scope">
-								<el-input class="yieldNum" v-model="scope.row.classOutput" @change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
+								<el-input class="yieldNum" v-model="scope.row.classOutput"
+									@change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
 							</template>
 						</el-table-column>
-						<el-table-column label="操作" width="50" show-overflow-tooltip="">
+						<el-table-column label="操作" width="50" fixed="right" show-overflow-tooltip="">
 							<template #default="scope">
-								<el-button style="color: #4080ff" icon="ele-Promotion" size="small" text="" type="primary" @click="addPaiChan(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button
-							></template>
+								<el-button style="color: #4080ff" icon="ele-Promotion" size="small" text=""
+									type="primary" @click="addPaiChan(scope.row, $event)"
+									v-auth="'orderDetail:edit'"></el-button></template>
 						</el-table-column>
 					</el-table>
 				</div>
 			</div>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button type="customize" @click="cancel">关 闭</el-button>
+				</span>
+			</template>
 		</el-dialog>
 	</div>
 </template>
@@ -239,6 +242,7 @@ defineExpose({ openDialog });
 	padding: 5% 3% 1% 1%;
 	min-height: 530px;
 }
+
 :deep(.el-dialog__header) {
 	width: 280px;
 	height: 40px;
@@ -248,35 +252,44 @@ defineExpose({ openDialog });
 	font-size: 18.68px;
 	background-color: transparent;
 }
+
 :deep(.el-dialog__headerbtn) {
 	right: -89% !important;
 	top: 130%;
 }
+
 /* 下拉框样式 */
 :deep(.el-select__wrapper) {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #00a0e9 inset;
 }
+
 :deep(.el-select__placeholder) {
 	color: white !important;
 }
+
 .el-select-dropdown__item {
 	background-color: #001730;
 	color: white;
 	--el-scrollbar-bg-color: white;
 	--el-scrollbar-hover-bg-color: white;
 }
+
 :deep(.el-scrollbar__view .el-select-dropdown__list) {
 	padding-top: 0 !important;
 }
+
 /* el-table样式 */
 .tables {
 	margin: 2% 0 0 0;
 	--el-table-border-color: transparent;
+	--el-table-row-hover-bg-color: transparent;
 }
+
 :deep(.el-table .cell) {
 	color: white;
 }
+
 /* striped先开启斑马纹属性，这里是修改斑马纹颜色 */
 :deep(.el-table--striped .el-table__body tr.el-table__row--striped td) {
 	background: #03275a;
@@ -297,15 +310,18 @@ defineExpose({ openDialog });
 :deep(.el-table--enable-row-hover .el-table__body tr:hover > td) {
 	background-color: #1e116d;
 }
+
 :deep(.el-table__inner-wrapper::before) {
 	background-color: transparent;
 }
+
 /* 班次产量 */
 :deep(.el-input__wrapper) {
 	background-color: transparent;
 	border: 1px solid #00539f;
 	box-shadow: unset;
 }
+
 :deep(.el-input__inner) {
 	text-align: center;
 	color: white;

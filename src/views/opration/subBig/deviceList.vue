@@ -9,8 +9,8 @@
 				<div class="baseInfo">
 					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceCode }}</div>
 					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{
-		renderingUsers(item.operatorUsers)
-	}}</div>
+						renderingUsers(item.operatorUsers)
+						}}</div>
 					<div class="btnArea">
 						<el-button type="primary" size="small"
 							@click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
@@ -26,24 +26,34 @@
 						<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type"
 							:field="config.field" :visible="config.show" :title="config.title" :fixed="config.fixed"
 							:width="config.width">
-							<template v-if="config.title == '颜色'" #default="{ row }">
+							<template v-if="config.field == 'colorRgb'" #default="{ row }">
 								<div class="rank"
 									:style="{ 'background-color': `rgb(${row.colorRgb})`, border: '1px solid white' }"
 									style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
 							</template>
-							<template v-if="config.title == '产品编号'" #default="{ row }">
-								<div @click="openEditOrderDetail(row, $event)">
+							<template v-if="config.field == 'produceIdProduceName'" #default="{ row }">
+								<div @click="openEditOrderDetail(row, $event)" style="overflow: hidden;direction: rtl;">
 									{{ row.produceIdProduceName }}
 								</div>
 							</template>
-							<template v-if="config.title == '交期'" #default="{ row }">
+							<template v-if="config.field == 'deliveryDate'" #default="{ row }">
 								<span>{{ formatDate(row.deliveryDate) }}</span>
+							</template>
+							<template v-if="config.field == 'orderIdBatchNumber'" #default="{ row }">
+								<div style="overflow: hidden;direction: rtl;">
+									{{ row.orderIdBatchNumber }}
+								</div>
+							</template>
+							<template v-if="config.field == 'deviceIdDeviceCode'" #default="{ row }">
+								<div style="overflow: hidden;direction: rtl;">
+									{{ row.orderIdBatchNumber }}
+								</div>
 							</template>
 						</vxe-column>
 					</vxe-table>
 					<div class="bottomInfo">数量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;批数: {{
-		orderDetailCounts[item.id]
-	}}</div>
+						orderDetailCounts[item.id]
+						}}</div>
 				</div>
 				<div class="moreBTN">
 					<el-button style="color: white" link @click="showMore(item.id)"
@@ -76,7 +86,7 @@
 </template>
 
 <script lang="ts" setup="" name="deviceList">
-import { nextTick, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { pageDevice } from '/@/api/main/device';
@@ -90,7 +100,6 @@ import addPaichanDialog from '/@/views/opration/subBig/addPaichanDialog.vue';
 import Sortable from 'sortablejs';
 import { VxeColumnProps } from 'vxe-table';
 import router from '/@/router';
-import { onBeforeRouteLeave } from 'vue-router';
 
 // 定义变量内容
 const route = useRoute();
@@ -99,7 +108,7 @@ var props = defineProps({
 	dt: {},
 });
 
-const tableColumn = ref<(VxeColumnProps & { key: number })[]>([]);
+const tableColumn = ref<(VxeColumnProps & { key: number; show: boolean })[]>([]);
 
 const loadTableHeader = async () => {
 	const params = {
@@ -108,7 +117,9 @@ const loadTableHeader = async () => {
 		lable: '',
 	};
 	var orderDetailRes = await tableColumnPage(params);
-	const newData = orderDetailRes.data.result.map((item: { prop: any; lable: any; width: string }, index: number) => ({
+	const newData = orderDetailRes.data.result.map((item: {
+		isHidden: any; prop: any; lable: any; width: string
+	}, index: number) => ({
 		key: index + 6,
 		field: item.prop,
 		title: item.lable,
@@ -339,10 +350,9 @@ const deleteOne = async (id: any, e: any) => {
 // 格式化日期
 const formatDate = (dateString: string | number | Date) => {
 	const date = new Date(dateString);
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
-	return `${year}-${month}-${day}`;
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	return `${month}-${day}`;
 };
 
 // 设置排序
@@ -357,23 +367,20 @@ const loadData = async () => {
 	await initDeviceList(dtid);
 	rowDrop();
 };
-
+let timer: any;
 onMounted(async () => {
 	loadTableHeader();
 	loadData();
 	loading.value = false;
-	setTimeout(() => {
-		nextTick(() => {
-			// 进入当前路由时设置背景颜色为 #000d3a
-			document.querySelector('.layout-parent').style.backgroundColor = '#000d3a';
-		});
-	}, 1000);
+	timer = setInterval(() => { loadData() }, 30000);
 });
 
-onBeforeRouteLeave((to, from, next) => {
-	// 离开当前路由时取消背景颜色设置
-	document.querySelector('.layout-parent').style.backgroundColor = 'unset';
-	next();
+
+// 在组件卸载时移除事件监听
+// 考虑到你想要的是在页面卸载前移除事件监听，因此这里使用了`beforeUnmount`
+// 如果你希望在页面卸载后再移除事件监听，可以使用`onUnmounted`
+onBeforeUnmount(() => {
+	clearInterval(timer);
 });
 </script>
 

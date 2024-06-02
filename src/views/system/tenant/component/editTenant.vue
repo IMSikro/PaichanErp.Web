@@ -12,7 +12,8 @@
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="租户类型" :rules="[{ required: true, message: '租户类型不能为空', trigger: 'blur' }]">
-							<el-radio-group v-model="state.ruleForm.tenantType" :disabled="state.ruleForm.id != undefined">
+							<el-radio-group v-model="state.ruleForm.tenantType"
+								:disabled="state.ruleForm.id != undefined">
 								<el-radio :label="0">ID隔离</el-radio>
 								<el-radio :label="1">库隔离</el-radio>
 							</el-radio-group>
@@ -52,8 +53,8 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="实际完成时间" prop="expiration">
-							<el-date-picker v-model="state.ruleForm.expiration" type="datetime" placeholder="实际完成时间" />
+						<el-form-item label="到期时间" prop="expiration">
+							<el-date-picker v-model="state.ruleForm.expiration" type="datetime" placeholder="到期时间" />
 
 						</el-form-item>
 
