@@ -7,38 +7,61 @@
 				</div>
 			</template>
 			<div>
-				<div>
+				<!-- <div>
 					<div>
-						当前排产信息：<el-tag
-							:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
-						</el-tag>
-						<div style="width: 80%; color: white; display: inline; padding: 1rem;">
-							产品编号: {{ orderDetailModel.produceIdProduceName }}
-						</div>
-						<div style=" width: 80%; color: white;display: inline; padding: 1rem;">
-							批次号: {{ orderDetailModel.orderDetailCode }}
-						</div>
+						当前排产信息：<el-tag :style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, width: '3rem' }"> </el-tag>
+						<div style="width: 80%; color: white; display: inline; padding: 1rem">产品编号: {{ orderDetailModel.produceIdProduceName }}</div>
+						<div style="width: 80%; color: white; display: inline; padding: 1rem">批次号: {{ orderDetailModel.orderDetailCode }}</div>
 					</div>
-				</div>
+				</div> -->
 				选择目标设备：
 				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
-					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label"
-						:value="item.value" />
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
 				</el-select>
 				<div>
-					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
-						ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
+					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }" ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
 						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
 							<template #default="scope">
-								<div class="rank"
-									:style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }"
-									style="font-size: 10px; color: transparent; user-select: none">
+								<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }" style="font-size: 10px; color: transparent; user-select: none">
 									<span style="opacity: 0">{{ scope.row.id }}</span>
 								</div>
 							</template>
 						</el-table-column>
-						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""><template
-								#default="scope">
+						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""
+							><template #default="scope">
+								<div>
+									{{ scope.row.produceIdProduceName }}
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip="">
+							<template #default="scope">
+								{{ formatDate(scope.row.deliveryDate) }}
+							</template>
+						</el-table-column>
+						<el-table-column prop="qty" label="班次产量" show-overflow-tooltip="">
+							<template #default="scope">
+								<span>{{ scope.row.qty ?? 0 }}</span>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+				<el-divider>移动到 ↓ </el-divider>
+				选择目标设备：
+				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
+				</el-select>
+				<div>
+					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }" ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
+						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
+							<template #default="scope">
+								<div class="rank" :style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }" style="font-size: 10px; color: transparent; user-select: none">
+									<span style="opacity: 0">{{ scope.row.id }}</span>
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""
+							><template #default="scope">
 								<div>
 									{{ scope.row.produceIdProduceName }}
 								</div>
@@ -91,10 +114,8 @@
 							</el-col>
 							<el-col :xs="24" :sm="14" :md="14" :lg="14" :xl="14" class="mb20">
 								<el-form-item label="非生产时间类型" prop="deviceErrorTypeId">
-									<el-select v-model="ruleForm2.deviceErrorTypeId" filterable clearable
-										:loading="loading">
-										<el-option v-for="(item, index) in deviceErrorTypeDropdownList" :key="index"
-											:label="item.label" :value="item.value" />
+									<el-select v-model="ruleForm2.deviceErrorTypeId" filterable clearable :loading="loading">
+										<el-option v-for="(item, index) in deviceErrorTypeDropdownList" :key="index" :label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -133,8 +154,7 @@
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="非生产时间类型" prop="deviceErrorTypeId">
 									<el-select v-model="ruleForm3.deviceErrorTypeId" filterable clearable>
-										<el-option v-for="(item, index) in deviceErrorTypeDropdownList" :key="index"
-											:label="item.label" :value="item.value" />
+										<el-option v-for="(item, index) in deviceErrorTypeDropdownList" :key="index" :label="item.label" :value="item.value" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -378,7 +398,7 @@ const deleteOne = async () => {
 			closeDialog();
 			ElMessage.success('删除成功');
 		})
-		.catch(() => { });
+		.catch(() => {});
 };
 // 修改排产时 - 切换设备
 const switchDevice = async () => {
@@ -419,7 +439,7 @@ const getlistOrderDetailByDeviceId = async () => {
 // };
 
 // 页面加载时
-onMounted(async () => { });
+onMounted(async () => {});
 
 // 查看排产详情信息
 const orderDetailModel = ref<any>({});
@@ -488,6 +508,36 @@ defineExpose({ openDialog });
 	padding: 4% 3% 1% 1%;
 	min-height: 530px;
 	color: white;
+}
+@media screen and (max-width: 768px) {
+	:deep(.el-dialog) {
+		height: 100%;
+		overflow: auto;
+		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
+	}
+	:deep(.el-dialog__header) {
+		padding-top: 25%;
+	}
+	:deep(.el-dialog__body) {
+		padding-top: 35%;
+		padding-bottom: 10%;
+	}
+	:deep(.el-dialog__footer) {
+		position: absolute;
+		bottom: 4%;
+		.el-button:nth-child(6) {
+			display: none;
+		}
+		span {
+			display: flex;
+		}
+	}
+}
+
+:deep(.el-divider__text) {
+	color: white;
+	top: 10px;
+	background-color: transparent;
 }
 
 :deep(.el-dialog__body) {

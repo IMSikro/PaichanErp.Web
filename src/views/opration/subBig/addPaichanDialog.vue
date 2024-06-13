@@ -7,23 +7,18 @@
 				</div>
 			</template>
 			<div>
-				<el-select class="custom-select" clearable filterable v-model="deviceId" placeholder="请选择设备外键"
-					@change="switchDevice()">
-					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label"
-						:value="item.value" />
+				<el-select class="custom-select" clearable filterable v-model="deviceId" placeholder="请选择设备外键" @change="switchDevice()">
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label" :value="item.value" />
 				</el-select>
 				<div class="dischargeOrderList">
-					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
-						:data="dischargeOrderList" v-loading="loading" style="width: 100%" tooltip-effect="light"
-						size="small">
+					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }" :data="dischargeOrderList" v-loading="loading" style="width: 100%" tooltip-effect="light" size="small">
 						<el-table-column prop="orderId" label="颜色" width="100" show-overflow-tooltip="">
 							<template #default="scope">
 								<div :style="{ 'background-color': `rgb(${scope.row.colorRgb})` }">&nbsp;</div>
 							</template>
 						</el-table-column>
 						<el-table-column prop="produceName" label="产品名称" width="" show-overflow-tooltip="" />
-						<el-table-column prop="produceIdProduceName" label="产品编号" width="100"
-							show-overflow-tooltip="" />
+						<el-table-column prop="produceIdProduceName" label="产品编号" width="100" show-overflow-tooltip="" />
 						<el-table-column prop="quantity" label="批次总量" width="100" show-overflow-tooltip="">
 							<template #default="scope">
 								<span>{{ scope.row.quantity + (scope.row.pUnit ?? '') }}</span>
@@ -41,15 +36,13 @@
 						</el-table-column>
 						<el-table-column label="班次产量" width="100" show-overflow-tooltip="">
 							<template #default="scope">
-								<el-input class="yieldNum" v-model="scope.row.classOutput"
-									@change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
+								<el-input class="yieldNum" v-model="scope.row.classOutput" @change="changeClassOutput(scope.row, $event)" size="small" style="width: 100%" />
 							</template>
 						</el-table-column>
 						<el-table-column label="操作" width="50" fixed="right" show-overflow-tooltip="">
 							<template #default="scope">
-								<el-button style="color: #4080ff" icon="ele-Promotion" size="small" text=""
-									type="primary" @click="addPaiChan(scope.row, $event)"
-									v-auth="'orderDetail:edit'"></el-button></template>
+								<el-button style="color: #4080ff" icon="ele-Promotion" size="small" text="" type="primary" @click="addPaiChan(scope.row, $event)" v-auth="'orderDetail:edit'"></el-button
+							></template>
 						</el-table-column>
 					</el-table>
 				</div>
@@ -241,6 +234,15 @@ defineExpose({ openDialog });
 	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
 	padding: 5% 3% 1% 1%;
 	min-height: 530px;
+}
+@media screen and (max-width: 768px) {
+	:deep(.el-dialog) {
+		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
+	}
+	
+	:deep(.el-dialog__body) {
+		min-height: 420px;
+	}
 }
 
 :deep(.el-dialog__header) {
