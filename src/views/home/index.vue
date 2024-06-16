@@ -17,6 +17,23 @@
 				</div>
 			</el-col>
 		</el-row>
+		<el-row :gutter="15" class="home-card-two mb15">
+			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8">
+				<div class="home-card-item">
+					<div style="height: 100%" ref="homeBarRef"></div>
+				</div>
+			</el-col>
+			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8">
+				<div class="home-card-item">
+					<div style="height: 100%" ref="homeBar2Ref"></div>
+				</div>
+			</el-col>
+			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8" class="home-media">
+				<div class="home-card-item">
+					<div style="height: 100%" ref="homeBar3Ref"></div>
+				</div>
+			</el-col>
+		</el-row>
 		<el-row :gutter="15" class="home-card-three mb15">
 			<el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8">
 				<div class="home-card-item" v-auth="'deviceGroup:page'">
@@ -35,23 +52,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
-			</el-col>
-		</el-row>
-		<el-row :gutter="15" class="home-card-two mb15">
-			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8">
-				<div class="home-card-item">
-					<div style="height: 100%" ref="homeBarRef"></div>
-				</div>
-			</el-col>
-			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8">
-				<div class="home-card-item">
-					<div style="height: 100%" ref="homeBar2Ref"></div>
-				</div>
-			</el-col>
-			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8" class="home-media">
-				<div class="home-card-item">
-					<div style="height: 100%" ref="homeBar3Ref"></div>
 				</div>
 			</el-col>
 		</el-row>
@@ -584,7 +584,7 @@ $homeNavLengh: 8;
 	.home-card-three {
 		.home-card-item {
 			width: 100%;
-			height: 130px;
+			// height: 130px;
 			border-radius: 4px;
 			transition: all ease 0.3s;
 			padding: 20px;
@@ -633,7 +633,7 @@ $homeNavLengh: 8;
 	.home-card-three {
 		.home-card-item {
 			height: 400px;
-			width: 100%;
+			// width: 100%;
 			overflow: hidden;
 
 			.home-monitor {

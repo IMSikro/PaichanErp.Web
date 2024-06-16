@@ -32,7 +32,7 @@ const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 
 // 设置 footer 显示/隐藏
 const isFooter = computed(() => {
-	console.log(route);
+	// console.log(route);
 	return themeConfig.value.isFooter && !route.meta.isIframe;
 });
 // 设置 header 固定

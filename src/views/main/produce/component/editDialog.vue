@@ -171,9 +171,20 @@ const openDialog = (row: any) => {
 	ruleForm.value = JSON.parse(JSON.stringify(row));
 	ruleFormdeviceType.value = {};
 
-	var dtList = ruleForm.value?.deviceTypes?.split(',') ?? []
-	for (const dt of dtList) {
-		ruleFormdeviceType.value[dt] = true;
+	if (ruleForm.value?.id) {
+		var dtList = ruleForm.value?.deviceTypes?.split(',') ?? []
+		for (const dt of dtList) {
+			ruleFormdeviceType.value[dt] = true;
+		}
+	}
+	else {
+		var dtDropdownList = deviceTypeDeviceTypeIdDropdownList.value.filter((v) => v.normalType);
+		for (const dtd of dtDropdownList) {
+			console.log(dtd);
+			ruleFormdeviceType.value[dtd.value] = true;
+		}
+		console.log(ruleFormdeviceType.value);
+
 	}
 
 	if (ruleForm.value.produceType) handleSelect();
@@ -234,11 +245,10 @@ const getSystemUnitDropdownList = async () => {
 getSystemUnitDropdownList();
 
 const deviceTypeDeviceTypeIdDropdownList = ref<any>([]);
-const deviceTypeListRef = ref<any>({});
 const getDeviceTypeDeviceTypeIdDropdownList = async () => {
 	let list = await getDeviceTypeDeviceTypeIdDropdown();
 	deviceTypeDeviceTypeIdDropdownList.value = list.data.result ?? [];
-	console.log(deviceTypeDeviceTypeIdDropdownList.value);
+	// console.log(deviceTypeDeviceTypeIdDropdownList.value);
 
 };
 getDeviceTypeDeviceTypeIdDropdownList();

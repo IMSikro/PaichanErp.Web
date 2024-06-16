@@ -172,6 +172,12 @@
           点击此处下载文件模板
           <el-button @click="downloadExcel">下载模板</el-button>
         </div>
+        <div v-if="state.extras">
+          查看错误
+          <el-badge :value="state.extras.count" type="danger" show-zero="false">
+            <el-button @click="downloadErrorExcel">下载</el-button>
+          </el-badge>
+        </div>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -190,7 +196,7 @@ import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 import { formatDate } from '/@/utils/formatTime';
-import { downloadByData, getFileName } from '/@/utils/download';
+import { downloadByData, downloadByUrl, getFileName } from '/@/utils/download';
 
 import editDialog from '/@/views/main/order/component/editDialog.vue'
 import setOrderDetail from '/@/views/main/order/component/setOrderDetail.vue'
@@ -198,6 +204,7 @@ import editDetailDialog from '/@/views/main/order/component/editDetailDialog.vue
 import { pageOrder, deleteOrder, getOrderTempExcel, importOrderExcel } from '/@/api/main/order';
 import { getProduceProduceIdDropdown } from '/@/api/main/order';
 import { deleteOrderDetail } from '/@/api/main/orderDetail';
+import { url } from "inspector";
 
 const showAdvanceQueryUI = ref(false);
 const editDialogRef = ref();
@@ -232,12 +239,19 @@ const openImportOrder = () => {
 const handleChange = (file: any, fileList: []) => {
   state.fileList = fileList;
 };
+
 // 上传
 const uploadFile = async () => {
   if (state.fileList.length < 1) return;
   const params = new FormData();
   params.append('file', state.fileList[0].raw);
-  await importOrderExcel(params);
+  var res = await importOrderExcel(params);
+  state.extras = res.data.extras;
+  if (state.extras) {
+    console.log(state.extras.url);
+    return;
+  }
+  console.log(res);
   handleQuery();
   ElMessage.success('上传成功');
   state.dialogUploadVisible = false;
@@ -248,6 +262,11 @@ const downloadExcel = async () => {
   var fileName = getFileName(res.headers);
 
   downloadByData(res.data, fileName);
+}
+
+const downloadErrorExcel = async () => {
+  if (state.extras)
+    downloadByUrl({ url: state.extras.url, fileName: state.extras.fileName });
 }
 
 
