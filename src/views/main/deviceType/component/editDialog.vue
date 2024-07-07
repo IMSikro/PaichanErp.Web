@@ -13,10 +13,16 @@
 						<el-input v-model="ruleForm.id" v-show="false" />
 					</el-form-item>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="工艺设备" prop="typeName">
-							<el-input v-model="ruleForm.typeName" placeholder="请输入工艺设备" maxlength="50" show-word-limit
+						<el-form-item label="工艺名称" prop="typeName">
+							<el-input v-model="ruleForm.typeName" placeholder="请输入工艺名称" maxlength="50" show-word-limit
 								clearable />
 
+						</el-form-item>
+
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="默认工艺" prop="normalType">
+							<el-switch v-model="ruleForm.normalType" active-text="是" inactive-text="否" />
 						</el-form-item>
 
 					</el-col>
@@ -71,7 +77,7 @@ const isShowDialog = ref(false);
 const ruleForm = ref<any>({});
 //自行添加其他规则
 const rules = ref<FormRules>({
-	typeName: [{ required: true, message: '请输入工艺设备！', trigger: 'blur', },],
+	typeName: [{ required: true, message: '请输入工艺名称！', trigger: 'blur', },],
 });
 
 // 打开弹窗

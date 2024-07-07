@@ -17,6 +17,7 @@
 				</div>
 			</el-col>
 		</el-row>
+		<div class="home-card-item-title" style="font-size: 15px;font-weight: bold;height: 30px;">数据仪表</div>
 		<el-row :gutter="15" class="home-card-two mb15">
 			<el-col :xs="24" :sm="7" :md="7" :lg="8" :xl="8">
 				<div class="home-card-item">
@@ -37,7 +38,7 @@
 		<el-row :gutter="15" class="home-card-three mb15">
 			<el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8">
 				<div class="home-card-item" v-auth="'deviceGroup:page'">
-					<div class="home-card-item-title">快捷导航(大屏分组)</div>
+					<div class="home-card-item-title">大屏分组导航</div>
 					<div class="home-monitor">
 						<div class="flex-warp">
 							<div class="flex-warp-item" v-for="(v, k) in state.homeMenu" :key="k" @click="openLink(v)">
@@ -124,8 +125,8 @@ const state = reactive({
 			show: false,
 		},
 		{
-			num1: '125.5',
-			num2: '17',
+			num1: '',
+			num2: '',
 			num3: '今日完工',
 			num4: 'iconfont icon-zaosheng',
 			color1: '#6690F9',
@@ -629,10 +630,16 @@ $homeNavLengh: 8;
 		}
 	}
 
+	.home-card-two {
+		.home-card-item {
+			height: 400px;
+		}
+	}
+
 	.home-card-two,
 	.home-card-three {
 		.home-card-item {
-			height: 400px;
+			// height: 400px;
 			// width: 100%;
 			overflow: hidden;
 

@@ -13,7 +13,7 @@
 							:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
 						</el-tag>
 						<div style="width: 80%; color: white; display: inline; padding: 1rem;">
-							产品编号: {{ orderDetailModel.produceIdProduceName }}
+							产品编号: {{ orderDetailModel.produceCode }}
 						</div>
 						<div style=" width: 80%; color: white;display: inline; padding: 1rem;">
 							批次号: {{ orderDetailModel.orderDetailCode }}
@@ -37,10 +37,10 @@
 								</div>
 							</template>
 						</el-table-column>
-						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""><template
+						<el-table-column prop="produceCode" label="产品编号" show-overflow-tooltip=""><template
 								#default="scope">
 								<div>
-									{{ scope.row.produceIdProduceName }}
+									{{ scope.row.produceCode }}
 								</div>
 							</template>
 						</el-table-column>

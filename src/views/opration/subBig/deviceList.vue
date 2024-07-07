@@ -9,8 +9,8 @@
 				<div class="baseInfo">
 					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceCode }}</div>
 					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{
-						renderingUsers(item.operatorUsers)
-						}}</div>
+		renderingUsers(item.operatorUsers)
+	}}</div>
 					<div class="btnArea">
 						<el-button type="primary" size="small"
 							@click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
@@ -31,9 +31,14 @@
 									:style="{ 'background-color': `rgb(${row.colorRgb})`, border: '1px solid white' }"
 									style="font-size: 10px; color: transparent; user-select: none">&nbsp;</div>
 							</template>
-							<template v-if="config.field == 'produceIdProduceName'" #default="{ row }">
+							<!-- <template v-if="config.field == 'produceIdProduceName'" #default="{ row }">
 								<div @click="openEditOrderDetail(row, $event)" style="overflow: hidden;direction: rtl;">
 									{{ row.produceIdProduceName }}
+								</div>
+							</template> -->
+							<template v-if="config.field == 'produceCode'" #default="{ row }">
+								<div @click="openEditOrderDetail(row, $event)" style="overflow: hidden;direction: rtl;">
+									{{ row.produceCode }}
 								</div>
 							</template>
 							<template v-if="config.field == 'deliveryDate'" #default="{ row }">
@@ -52,8 +57,8 @@
 						</vxe-column>
 					</vxe-table>
 					<div class="bottomInfo">数量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;批数: {{
-						orderDetailCounts[item.id]
-						}}</div>
+		orderDetailCounts[item.id]
+	}}</div>
 				</div>
 				<div class="moreBTN">
 					<el-button style="color: white" link @click="showMore(item.id)"

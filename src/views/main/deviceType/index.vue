@@ -5,8 +5,8 @@
         <el-row>
 
           <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10">
-            <el-form-item label="工艺设备">
-              <el-input v-model="queryParams.typeName" clearable="" placeholder="请输入工艺设备" />
+            <el-form-item label="工艺名称">
+              <el-input v-model="queryParams.typeName" clearable="" placeholder="请输入工艺名称" />
 
             </el-form-item>
           </el-col>
@@ -34,7 +34,13 @@
     <el-card class="full-table" shadow="hover" style="margin-top: 8px">
       <el-table :data="tableData" style="width: 100%" v-loading="loading" tooltip-effect="light" row-key="id" border="">
         <el-table-column type="index" label="序号" width="55" align="center" />
-        <el-table-column prop="typeName" label="工艺设备" width="140" show-overflow-tooltip="" />
+        <el-table-column prop="typeName" label="工艺名称" width="140" show-overflow-tooltip="" />
+        <el-table-column prop="normalType" label="是否默认工艺" width="140" show-overflow-tooltip="">
+          <template #default="scope">
+            <el-tag type="success" v-if="scope.row.normalType === true">是</el-tag>
+            <el-tag type="info" v-else>否</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
         <el-table-column prop="sort" label="排序" width="70" show-overflow-tooltip="" />
         <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
@@ -98,13 +104,13 @@ const handleQuery = async () => {
 
 // 打开新增页面
 const openAddDeviceType = () => {
-  editDeviceTypeTitle.value = '添加工艺设备';
+  editDeviceTypeTitle.value = '添加工艺名称';
   editDialogRef.value.openDialog({});
 };
 
 // 打开编辑页面
 const openEditDeviceType = (row: any) => {
-  editDeviceTypeTitle.value = '编辑工艺设备';
+  editDeviceTypeTitle.value = '编辑工艺名称';
   editDialogRef.value.openDialog(row);
 };
 

@@ -22,8 +22,7 @@
 							</template>
 						</el-table-column>
 						<el-table-column prop="produceName" label="产品名称" width="" show-overflow-tooltip="" />
-						<el-table-column prop="produceIdProduceName" label="产品编号" width="100"
-							show-overflow-tooltip="" />
+						<el-table-column prop="produceCode" label="产品编号" width="100" show-overflow-tooltip="" />
 						<el-table-column prop="quantity" label="批次总量" width="100" show-overflow-tooltip="">
 							<template #default="scope">
 								<span>{{ scope.row.quantity + (scope.row.pUnit ?? '') }}</span>

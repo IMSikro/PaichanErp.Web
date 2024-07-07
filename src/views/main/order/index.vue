@@ -118,10 +118,10 @@
         <el-table-column prop="pUnit" label="计量单位" width="140" show-overflow-tooltip="" />
         <el-table-column prop="customer" label="客户" width="140" show-overflow-tooltip="" />
         <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
-        <el-table-column label="操作" width="110" align="center" fixed="left" show-overflow-tooltip=""
+        <el-table-column label="操作" width="80" align="center" fixed="left" show-overflow-tooltip=""
           v-if="auth('order:edit') || auth('order:delete') || auth('orderDetail:add')">
           <template #default="scope">
-            <el-button icon="ele-Promotion" size="small" text="" type="primary" @click="openAddOrderDetail(scope.row)"
+            <!-- <el-button icon="ele-Promotion" size="small" text="" type="primary" @click="openAddOrderDetail(scope.row)"
               v-auth="'orderDetail:add'"> 排产 </el-button>
             <el-dropdown>
               <el-button icon="ele-MoreFilled" size="small" text type="primary" style="padding-left: 12px" />
@@ -133,11 +133,11 @@
                     divided :disabled="!auth('order:delete')"> 删除 </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
-            </el-dropdown>
-            <!-- <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrder(scope.row)"
-              v-auth="'order:edit'"> 修改 </el-button>
+            </el-dropdown> -->
+            <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrder(scope.row)"
+              v-auth="'order:edit'">  </el-button>
             <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delOrder(scope.row)"
-              v-auth="'order:delete'"> 删除 </el-button> -->
+              v-auth="'order:delete'">  </el-button>
           </template>
         </el-table-column>
       </el-table>
