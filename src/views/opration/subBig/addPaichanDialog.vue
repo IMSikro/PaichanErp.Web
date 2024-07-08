@@ -46,9 +46,12 @@
 						</el-table-column>
 						<el-table-column label="操作" width="50" fixed="right" show-overflow-tooltip="">
 							<template #default="scope">
-								<el-button style="color: #4080ff" icon="ele-Promotion" size="small" text=""
-									type="primary" @click="addPaiChan(scope.row, $event)"
-									v-auth="'orderDetail:edit'"></el-button></template>
+								<div style="background-color: #001730;width: 100%;">
+									<el-button style="color: #4080ff;" icon="ele-Promotion" size="small" text=""
+										type="primary" @click="addPaiChan(scope.row, $event)"
+										v-auth="'orderDetail:edit'"></el-button>
+								</div>
+							</template>
 						</el-table-column>
 					</el-table>
 				</div>
@@ -240,6 +243,16 @@ defineExpose({ openDialog });
 	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
 	padding: 5% 3% 1% 1%;
 	min-height: 530px;
+}
+
+@media screen and (max-width: 768px) {
+	:deep(.el-dialog) {
+		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
+	}
+
+	:deep(.el-dialog__body) {
+		min-height: 420px;
+	}
 }
 
 :deep(.el-dialog__header) {

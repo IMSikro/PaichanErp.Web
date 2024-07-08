@@ -9,15 +9,31 @@
 			<div>
 				<div>
 					<div>
-						当前排产信息：<el-tag
-							:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
-						</el-tag>
-						<div style="width: 80%; color: white; display: inline; padding: 1rem;">
-							产品编号: {{ orderDetailModel.produceCode }}
-						</div>
-						<div style=" width: 80%; color: white;display: inline; padding: 1rem;">
-							批次号: {{ orderDetailModel.orderDetailCode }}
-						</div>
+						当前排产信息：
+						<el-row :gutter="20">
+							<el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+								颜色: <el-tag
+									:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
+								</el-tag>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+								产品编号: {{ orderDetailModel.produceIdProduceName }}
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+								批次号: {{ orderDetailModel.orderDetailCode }}
+							</el-col>
+						</el-row>
+						<!-- <div>
+							<el-tag
+								:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
+							</el-tag>
+							<div style="width: 80%; color: white; display: inline; padding: 1rem;">
+								产品编号: {{ orderDetailModel.produceIdProduceName }}
+							</div>
+							<div style=" width: 80%; color: white;display: inline; padding: 1rem;">
+								批次号: {{ orderDetailModel.orderDetailCode }}
+							</div>
+						</div> -->
 					</div>
 				</div>
 				选择目标设备：
@@ -37,8 +53,8 @@
 								</div>
 							</template>
 						</el-table-column>
-						<el-table-column prop="produceCode" label="产品编号" show-overflow-tooltip=""><template
-								#default="scope">
+						<el-table-column prop="produceCode" label="产品编号" show-overflow-tooltip="">
+							<template #default="scope">
 								<div>
 									{{ scope.row.produceCode }}
 								</div>
@@ -56,13 +72,50 @@
 						</el-table-column>
 					</el-table>
 				</div>
+				<!-- <el-divider>移动到 ↓ </el-divider>
+				选择目标设备：
+				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
+					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label"
+						:value="item.value" />
+				</el-select>
+				<div>
+					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
+						ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
+						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
+							<template #default="scope">
+								<div class="rank"
+									:style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }"
+									style="font-size: 10px; color: transparent; user-select: none">
+									<span style="opacity: 0">{{ scope.row.id }}</span>
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="produceIdProduceName" label="产品编号" show-overflow-tooltip=""><template
+								#default="scope">
+								<div>
+									{{ scope.row.produceCode }}
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip="">
+							<template #default="scope">
+								{{ formatDate(scope.row.deliveryDate) }}
+							</template>
+						</el-table-column>
+						<el-table-column prop="qty" label="班次产量" show-overflow-tooltip="">
+							<template #default="scope">
+								<span>{{ scope.row.qty ?? 0 }}</span>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div> -->
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="doneAndOffline" type="customize" plain>终结完工</el-button>
 					<el-button @click="done" type="customize" plain>小计完工</el-button>
 					<el-button @click="deleteOne" type="down" plain>下 线</el-button>
-					<el-divider direction="vertical" />
+					<el-divider />
 					<el-button type="customize" @click="submit">确 定</el-button>
 					<el-button type="customize" @click="cancel">取 消</el-button>
 				</span>
@@ -490,8 +543,39 @@ defineExpose({ openDialog });
 	color: white;
 }
 
+@media screen and (max-width: 768px) {
+	:deep(.el-dialog) {
+		height: 100%;
+		overflow: auto;
+		padding: 0;
+		min-height: 330px;
+		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
+	}
+
+	:deep(.el-dialog__header) {
+		padding-top: 25%;
+	}
+
+	:deep(.el-dialog__body) {
+		padding: 40% 5% 10% !important;
+	}
+
+	:deep(.el-dialog__footer) {
+		position: absolute;
+		width: 100%;
+		bottom: 4%;
+	}
+}
+
+:deep(.el-divider__text) {
+	color: white;
+	top: 10px;
+	background-color: transparent;
+}
+
 :deep(.el-dialog__body) {
 	color: white;
+	padding: 5%;
 }
 
 :deep(.el-dialog__header) {
@@ -506,7 +590,7 @@ defineExpose({ openDialog });
 
 :deep(.el-dialog__headerbtn) {
 	right: -89% !important;
-	top: 155%;
+	top: 138%;
 }
 
 /* 下拉框样式 */

@@ -9,8 +9,7 @@
 				<div class="baseInfo">
 					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceCode }}</div>
 					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{
-		renderingUsers(item.operatorUsers)
-	}}</div>
+		renderingUsers(item.operatorUsers) }}</div>
 					<div class="btnArea">
 						<el-button type="primary" size="small"
 							@click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
@@ -45,20 +44,20 @@
 								<span>{{ formatDate(row.deliveryDate) }}</span>
 							</template>
 							<template v-if="config.field == 'orderIdBatchNumber'" #default="{ row }">
-								<div style="overflow: hidden;direction: rtl;">
+								<div style="overflow: hidden; direction: rtl">
 									{{ row.orderIdBatchNumber }}
 								</div>
 							</template>
 							<template v-if="config.field == 'deviceIdDeviceCode'" #default="{ row }">
-								<div style="overflow: hidden;direction: rtl;">
+								<div style="overflow: hidden; direction: rtl">
 									{{ row.orderIdBatchNumber }}
 								</div>
 							</template>
 						</vxe-column>
 					</vxe-table>
 					<div class="bottomInfo">数量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;批数: {{
-		orderDetailCounts[item.id]
-	}}</div>
+		orderDetailCounts[item.id] }}
+					</div>
 				</div>
 				<div class="moreBTN">
 					<el-button style="color: white" link @click="showMore(item.id)"
@@ -122,15 +121,23 @@ const loadTableHeader = async () => {
 		lable: '',
 	};
 	var orderDetailRes = await tableColumnPage(params);
-	const newData = orderDetailRes.data.result.map((item: {
-		isHidden: any; prop: any; lable: any; width: string
-	}, index: number) => ({
-		key: index + 6,
-		field: item.prop,
-		title: item.lable,
-		show: item.isHidden,
-		width: parseInt(item.width),
-	}));
+	const newData = orderDetailRes.data.result.map(
+		(
+			item: {
+				isHidden: any;
+				prop: any;
+				lable: any;
+				width: string;
+			},
+			index: number
+		) => ({
+			key: index + 6,
+			field: item.prop,
+			title: item.lable,
+			show: item.isHidden,
+			width: parseInt(item.width),
+		})
+	);
 	tableColumn.value = newData;
 };
 
@@ -283,23 +290,23 @@ const rowDrop = () => {
 		return;
 	}
 	deviceIds.forEach((item: string | number, i: any) => {
-		const el = document.querySelector(`.tables${item} .vxe-table--render-wrapper .vxe-table--body-wrapper  table tbody`);
+		const el = document.querySelector(`.tables${item} .vxe-table--render-wrapper .vxe-table--body-wrapper table tbody`);
 		Sortable.create(el, {
 			animation: 150,
 			ghostClass: 'blue-background-class',
 			handle: '.rank', // 如果需要点击某个图标拖拽的话需要吧那个图标的class写在这里
 			// 写完以上部分就已经可以实现基本的拖拽功能了，以下是拓展
 			//始拖拽事件
-			onEnd: function (/**Event*/ evt: { newIndex: any; oldIndex: any; item: any; to: any; from: any; clone: any; pullMode: any }) {
-				let newIndex = evt.newIndex; // 排序后的索引位置
-				let oldIndex = evt.oldIndex; // 排序前的索引位置
-				var itemEl = evt.item; // 拖拽 HTMLElement
-				evt.to; // 目标表
-				evt.from; // 上一个列表
-				evt.oldIndex; // 元素在旧父级中的旧索引
-				evt.newIndex; // 元素在新父级中的新索引
-				evt.clone; // 克隆元件
-				evt.pullMode; // 当项目在另一个可排序表中时：`“clone”`如果克隆，`true`如果移动
+			onEnd: function (/**Event*/ evt: { newIndex: any; oldIndex: any/*; item: any; to: any; from: any; clone: any; pullMode: any */ }) {
+				// let newIndex = evt.newIndex; // 排序后的索引位置
+				// let oldIndex = evt.oldIndex; // 排序前的索引位置
+				// var itemEl = evt.item; // 拖拽 HTMLElement
+				// evt.to; // 目标表
+				// evt.from; // 上一个列表
+				// evt.oldIndex; // 元素在旧父级中的旧索引
+				// evt.newIndex; // 元素在新父级中的新索引
+				// evt.clone; // 克隆元件
+				// evt.pullMode; // 当项目在另一个可排序表中时：`“clone”`如果克隆，`true`如果移动
 				// 下面将拖拽后的顺序进行修改
 				// console.log(orderDetails.value[item]);
 
@@ -370,16 +377,17 @@ const loadData = async () => {
 	deviceType.value = props.dt;
 	const dtid = deviceType.value.id;
 	await initDeviceList(dtid);
-	rowDrop();
 };
 let timer: any;
 onMounted(async () => {
 	loadTableHeader();
-	loadData();
+	await loadData();
+	rowDrop();
 	loading.value = false;
-	timer = setInterval(() => { loadData() }, 30000);
+	timer = setInterval(async () => {
+		await loadData();
+	}, 30000);
 });
-
 
 // 在组件卸载时移除事件监听
 // 考虑到你想要的是在页面卸载前移除事件监听，因此这里使用了`beforeUnmount`
@@ -552,6 +560,11 @@ onBeforeUnmount(() => {
 	background-color: transparent;
 }
 
+.vxe-table--render-default .vxe-cell {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
 .layout-parent>div:first-child {
 	height: unset !important;
 }
@@ -589,6 +602,29 @@ onBeforeUnmount(() => {
 	/* 下拉框样式 */
 	.el-select__wrapper {
 		background-color: transparent;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.custDialog {
+		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
+	}
+
+	.el-dialog__header {
+		padding-top: 15%;
+		margin-left: -10%;
+		/* opacity: 0; */
+	}
+
+	.el-dialog__body {
+		padding-top: 25%;
+		padding-left: 5%;
+		width: 94%;
+		min-height: 400px;
+	}
+
+	.el-dialog__footer {
+		padding-right: 6%;
 	}
 }
 

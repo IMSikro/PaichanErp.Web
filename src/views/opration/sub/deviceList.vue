@@ -1,31 +1,45 @@
 <template>
 	<el-scrollbar style="padding-bottom: 1rem" ref="scrollbarRef" @wheel.prevent="handleScroll">
 		<el-space alignment="flex-start">
-			<el-card :style="{ 'min-height': minHeight + 55 + 'px' }" style="max-width: 500px; position: relative"
-				v-for="item in deviceList" :key="item.id"
-				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }">
+			<el-card
+				:style="{ 'min-height': minHeight + 55 + 'px' }"
+				style="max-width: 500px; position: relative"
+				v-for="item in deviceList"
+				:key="item.id"
+				:body-style="{ padding: '0px', marginBottom: '1px', minHeight: '10rem', maxHeight: '24rem' }"
+			>
 				<div style="display: flex; flex-direction: column; position: relative; padding-left: 2%">
 					<div style="flex: 1" @click="goToDeviceManageDevice()">设备编号: {{ item.deviceCode }}</div>
-					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{
-		renderingUsers(item.operatorUsers) }}</div>
+					<div style="flex: 1" @click="changeOperator(item.id, item.operatorUsers)">人员: {{ renderingUsers(item.operatorUsers) }}</div>
 					<div style="position: absolute; top: 0; right: 0">
-						<el-button type="primary" size="small"
-							@click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
+						<el-button type="primary" size="small" @click="handleSetPaichanInfo(item.id, $event)">添加</el-button>
 					</div>
 				</div>
-				<div class="tableArea" style="position: relative; display: flex; flex-direction: column"
-					@wheel.prevent="handleScroll">
+				<div class="tableArea" style="position: relative; display: flex; flex-direction: column" @wheel.prevent="handleScroll">
 					<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
-					<vxe-table border show-overflow :row-config="{ useKey: true, height: 28 }" :id="item.id.toString()"
-						:class="`tables${item.id}`" :height="minHeight - 20" :data="orderDetails[item.id]"
-						:custom-config="{ storage: true }" :toolbar-onfig="{ custom: true }">
-						<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type"
-							:field="config.field" :visible="config.show" :title="config.title" :fixed="config.fixed"
-							:width="config.width">
+					<vxe-table
+						border
+						show-overflow
+						:row-config="{ useKey: true, height: 28 }"
+						:id="item.id.toString()"
+						:class="`tables${item.id}`"
+						:height="minHeight - 20"
+						:data="orderDetails[item.id]"
+						:custom-config="{ storage: true }"
+						:toolbar-onfig="{ custom: true }"
+					>
+						<vxe-column
+							v-for="config in tableColumn"
+							:key="config.key"
+							:type="config.type"
+							:field="config.field"
+							:visible="config.show"
+							:title="config.title"
+							:fixed="config.fixed"
+							:width="config.width"
+						>
 							<template v-if="config.field == 'colorRgb'" #default="{ row }">
-								<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }"
-									style="font-size: 10px; color: transparent; user-select: none;border:1px solid #fff;">
-									&nbsp;</div>
+								<div class="rank" :style="{ 'background-color': `rgb(${row.colorRgb})` }" style="font-size: 10px; color: transparent; user-select: none; border: 1px solid #fff">&nbsp;</div>
 							</template>
 							<template v-if="config.field == 'produceIdProduceName'" #default="{ row }">
 								<div @click="openEditOrderDetail(row, $event)">
@@ -38,12 +52,10 @@
 						</vxe-column>
 					</vxe-table>
 					<div style="text-align: center">
-						<el-text> 数量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;批数: {{
-		orderDetailCounts[item.id] }}</el-text>
+						<el-text> 数量: {{ orderDetailSums[item.id] }} &nbsp;&nbsp;&nbsp;&nbsp;批数: {{ orderDetailCounts[item.id] }}</el-text>
 					</div>
 				</div>
-				<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99"><el-button link
-						@click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button></div>
+				<div style="position: absolute; right: 2%; bottom: 1%; z-index: 99"><el-button link @click="showMore(item.id)" v-if="orderDetailCounts[item.id] > 10">更多</el-button></div>
 			</el-card>
 		</el-space>
 	</el-scrollbar>
@@ -56,8 +68,7 @@
 		</template>
 		<div>
 			<el-select multiple collapse-tags collapse-tags-tooltip v-model="operatorUsers" placeholder="请选择操作人员">
-				<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value"
-					:label="item.label" />
+				<el-option v-for="(item, index) in sysUserOperatorUsersDropdownList" :key="index" :value="item.value" :label="item.label" />
 			</el-select>
 		</div>
 		<template #footer>
@@ -303,7 +314,7 @@ const rowDrop = () => {
 				evt.oldIndex;
 			},
 			//取消选中事件
-			onUnchoose: function (/**Event*/ evt: any) { },
+			onUnchoose: function (/**Event*/ evt: any) {},
 		});
 	});
 };
@@ -323,7 +334,7 @@ const deleteOne = async (id: any, e: any) => {
 			loadData();
 			ElMessage.success('删除成功');
 		})
-		.catch(() => { });
+		.catch(() => {});
 };
 
 // 格式化日期
