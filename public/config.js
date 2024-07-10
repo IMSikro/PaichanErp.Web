@@ -3,5 +3,5 @@ window.__env__ = {
   "VITE_OPEN": "false",
   "VITE_OPEN_CDN": "false",
   "VITE_PUBLIC_PATH": "",
-  "VITE_API_URL": "http://120.26.200.109:5005"
+  "VITE_API_URL": "http://192.168.3.122:5005"
 } 

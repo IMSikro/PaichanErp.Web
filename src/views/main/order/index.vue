@@ -18,6 +18,15 @@
 
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10">
+            <el-form-item label="完工状态">
+              <el-select v-model="queryParams.orderEndStatus" placeholder="请选择完工状态" clearable class="w100">
+                <el-option label="全部" value=""></el-option>
+                <el-option label="未完工" value="false"></el-option>
+                <el-option label="已完工" value="true"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="4" class="mb10" v-if="showAdvanceQueryUI">
             <el-form-item label="下单日期">
               <el-date-picker placeholder="请选择下单日期" value-format="YYYY/MM/DD" type="daterange"
@@ -133,11 +142,12 @@
                     divided :disabled="!auth('order:delete')"> 删除 </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
-            </el-dropdown> -->
+  </el-dropdown> -->
             <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditOrder(scope.row)"
-              v-auth="'order:edit'">  </el-button>
+              v-auth="'order:edit'"> </el-button>
             <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delOrder(scope.row)"
-              v-auth="'order:delete'">  </el-button>
+              v-auth="'order:delete'">
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -409,11 +409,11 @@ onBeforeUnmount(() => {
 	display: block;
 }
 
-.scrollbar-flex-content {
+:deep(.scrollbar-flex-content) {
 	display: flex;
 }
 
-.scrollbar-demo-item {
+:deep(.scrollbar-demo-item) {
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -575,8 +575,7 @@ onBeforeUnmount(() => {
 	background-color: transparent !important;
 	background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100% !important;
 }
-</style>
-<style>
+
 /* 弹出框样式 */
 .custDialog {
 	--el-dialog-bg-color: transparent;
@@ -608,33 +607,33 @@ onBeforeUnmount(() => {
 @media screen and (max-width: 768px) {
 	.custDialog {
 		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
-	}
 
-	.el-dialog__header {
-		padding-top: 15%;
-		margin-left: -10%;
-		/* opacity: 0; */
-	}
+		.el-dialog__header {
+			padding-top: 15%;
+			margin-left: -10%;
+			/* opacity: 0; */
+		}
 
-	.el-dialog__body {
-		padding-top: 25%;
-		padding-left: 5%;
-		width: 94%;
-		min-height: 400px;
-	}
+		.el-dialog__body {
+			padding-top: 25%;
+			padding-left: 5%;
+			width: 94%;
+			min-height: 400px;
+		}
 
-	.el-dialog__footer {
-		padding-right: 6%;
+		.el-dialog__footer {
+			padding-right: 6%;
+		}
 	}
 }
 
-.el-button--customize {
+:deep(.el-button--customize) {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/addbtn.png') no-repeat center center / 100% 100%;
 }
 
-.el-button--customize:hover {
+:deep(.el-button--customize:hover) {
 	border: 0;
 	color: white;
 	background: url('../../../assets/bigScreen/customize_bg.png') no-repeat center center / 100% 100% !important;
