@@ -1,28 +1,77 @@
 <template>
 	<div class="edit-paichan-container">
-		<el-dialog v-model="isShowDialog" :width="850" draggable="">
+		<el-dialog v-model="isShowDialog" :width="850" draggable>
 			<template #header>
 				<div style="color: #fff">
-					<span> 修改排产信息 </span>
+					<span>修改排产信息</span>
 				</div>
 			</template>
 			<div>
 				<div>
 					<div>
 						当前排产信息：
-						<el-row :gutter="20">
+						<div>
+							<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
+								ax-height="300" :data="dischargeList2" v-loading="loading" row-key="id" border
+								size="small" ref="tableRef" @selection-change="handleSelectionChange">
+								<el-table-column type="selection" width="45" />
+								<el-table-column prop="colorRgb" label="颜色" width="55" show-overflow-tooltip>
+									<template #default="scope">
+										<div class="rank"
+											:style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }"
+											style="font-size: 10px; color: transparent; user-select: none">
+											<span style="opacity: 0">{{ scope.row.id }}</span>
+										</div>
+									</template>
+								</el-table-column>
+								<el-table-column prop="produceCode" label="产品编号" show-overflow-tooltip>
+									<template #default="scope">
+										<div>{{ scope.row.produceCode }}</div>
+									</template>
+								</el-table-column>
+								<!-- <el-table-column prop="produceName" label="产品名称" show-overflow-tooltip>
+								<template #default="scope">
+									<div>{{ scope.row.produceName }}</div>
+								</template>
+							</el-table-column> -->
+								<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip>
+									<template #default="scope">{{ formatDate(scope.row.deliveryDate) }}</template>
+								</el-table-column>
+								<el-table-column prop="qty" label="班次产量" width="45" show-overflow-tooltip>
+									<template #default="scope">
+										<div>{{ scope.row.qty }}</div>
+									</template>
+								</el-table-column>
+
+								<!-- <el-table-column prop="orderIdBatchNumber" label="订单批号" show-overflow-tooltip>
+								<template #default="scope">
+									<span>{{ scope.row.orderIdBatchNumber }}</span>
+								</template>
+							</el-table-column> -->
+							</el-table>
+						</div>
+						<!-- <el-row :gutter="20">
 							<el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-								颜色: <el-tag
-									:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
-								</el-tag>
+								颜色:
+								<el-tag
+									:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }"
+								></el-tag>
 							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-								产品编号: {{ orderDetailModel.produceIdProduceName }}
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-								批次号: {{ orderDetailModel.orderDetailCode }}
-							</el-col>
-						</el-row>
+							<el-col
+								:xs="24"
+								:sm="12"
+								:md="12"
+								:lg="8"
+								:xl="8"
+							>产品编号: {{ orderDetailModel.produceIdProduceName }}</el-col>
+							<el-col
+								:xs="24"
+								:sm="12"
+								:md="12"
+								:lg="8"
+								:xl="8"
+							>批次号: {{ orderDetailModel.orderDetailCode }}</el-col>
+						</el-row> -->
 						<!-- <div>
 							<el-tag
 								:style="{ 'background-color': `rgb(${orderDetailModel.colorRgb})`, 'width': '3rem' }">
@@ -33,18 +82,17 @@
 							<div style=" width: 80%; color: white;display: inline; padding: 1rem;">
 								批次号: {{ orderDetailModel.orderDetailCode }}
 							</div>
-						</div> -->
+						</div>-->
 					</div>
-				</div>
-				选择目标设备：
-				<el-select clearable filterable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
+				</div>选择目标设备：
+				<el-select clearable v-model="deviceId" placeholder="请选择设备" @change="switchDevice()">
 					<el-option v-for="(item, index) in deviceDeviceIdDropdownList" :key="index" :label="item.label"
 						:value="item.value" />
 				</el-select>
 				<div>
 					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
-						ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border="" size="small">
-						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip="">
+						ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border size="small">
+						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip>
 							<template #default="scope">
 								<div class="rank"
 									:style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }"
@@ -53,19 +101,15 @@
 								</div>
 							</template>
 						</el-table-column>
-						<el-table-column prop="produceCode" label="产品编号" show-overflow-tooltip="">
+						<el-table-column prop="produceCode" label="产品编号" show-overflow-tooltip>
 							<template #default="scope">
-								<div>
-									{{ scope.row.produceCode }}
-								</div>
+								<div>{{ scope.row.produceCode }}</div>
 							</template>
 						</el-table-column>
-						<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip="">
-							<template #default="scope">
-								{{ formatDate(scope.row.deliveryDate) }}
-							</template>
+						<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip>
+							<template #default="scope">{{ formatDate(scope.row.deliveryDate) }}</template>
 						</el-table-column>
-						<el-table-column prop="qty" label="班次产量" show-overflow-tooltip="">
+						<el-table-column prop="qty" label="班次产量" show-overflow-tooltip>
 							<template #default="scope">
 								<span>{{ scope.row.qty ?? 0 }}</span>
 							</template>
@@ -108,7 +152,7 @@
 							</template>
 						</el-table-column>
 					</el-table>
-				</div> -->
+				</div>-->
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
@@ -116,7 +160,7 @@
 					<el-button @click="done" type="customize" plain>小计完工</el-button>
 					<el-button @click="deleteOne" type="down" plain>下 线</el-button>
 					<el-divider />
-					<el-button type="customize" @click="submit">确 定</el-button>
+					<el-button type="customize" @click="submit">移 机</el-button>
 					<el-button type="customize" @click="cancel">取 消</el-button>
 				</span>
 			</template>
@@ -211,7 +255,7 @@ import type { FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { listDevice } from '/@/api/main/device';
 import { auth } from '/@/utils/authFunction';
-import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, updateDone, doneAndNext, deviceErrorTypeDropdown, deleteOrderDetail } from '/@/api/main/orderDetail';
+import { listOrderDetailByDeviceId, addOrderDetail, updateOrderDetail, batchUpdateDevices, batchDelete, updateDone, doneAndNext, deviceErrorTypeDropdown, deleteOrderDetail } from '/@/api/main/orderDetail';
 import { getOrderOrderIdDropdown, getDeviceDeviceIdDropdown, getOrderDetail, getSysUserOperatorUsersDropdown } from '/@/api/main/orderDetail';
 
 interface ListItem {
@@ -234,6 +278,7 @@ const ruleForm2Ref = ref();
 const ruleForm2 = ref<any>({});
 const ruleForm3Ref = ref();
 const ruleForm3 = ref<any>({});
+const tableRef = ref()
 //自行添加其他规则
 // const rules = ref<FormRules>({
 // 	deviceId: [{ required: true, message: '请选择设备！', trigger: 'change' }],
@@ -316,6 +361,7 @@ const openDialog = async (data: any) => {
 	deviceId.value = rowModel.deviceId;
 	await getDeviceDeviceIdDropdownList();
 	await getOrderDetailModel();
+	await getlistOrderDetailByDeviceId2();
 	await getlistOrderDetailByDeviceId();
 	await getSysUserOperatorUsersDropdownList();
 
@@ -337,12 +383,20 @@ const cancel = () => {
 
 // 提交
 const submit = async () => {
+
+	//通过Element-Plus表格的getSelectionRows的方法，获取已选中的数据
+	let tableData = tableRef.value.getSelectionRows();
+
+	console.log("选中数据", tableData)
+	// const filteredItems = tableData.map(item => ({ id: item.id}));
+	let arr = tableData.map((item) => { return item.id })
+	// console.log(arr,deviceId.value)
 	const params = {
-		id: orderDetailId.value.id,
+		ids: arr,
 		deviceId: deviceId.value,
 	};
-
-	await updateOrderDetail(params);
+	console.log(params)
+	await batchUpdateDevices(params);
 	ElMessage.success('操作成功');
 	closeDialog();
 	// 原代码
@@ -363,9 +417,17 @@ const submit = async () => {
 };
 // 终结完工弹框
 const doneAndOffline = () => {
-	isShowDialogDone.value = true;
-	ruleForm2.value = {};
-	ruleForm2.value.qty = orderDetailId.value.qty;
+	let tableData = tableRef.value.getSelectionRows();
+
+	console.log("选中数据", tableData.length)
+	if (tableData.length == 1) {
+		isShowDialogDone.value = true;
+		ruleForm2.value = {};
+		ruleForm2.value.qty = orderDetailId.value.qty;
+	} else {
+		ElMessage.error('只能选择一个');
+	}
+
 	// remoteMethod('1');
 };
 // 终结完工 接口
@@ -391,9 +453,18 @@ const submitDone = async () => {
 
 // 小计完工
 const done = async () => {
-	isShowDialogDone3.value = true;
-	ruleForm3.value = {};
-	ruleForm3.value.qty = orderDetailId.value.qty;
+
+	let tableData = tableRef.value.getSelectionRows();
+
+	console.log("选中数据", tableData.length)
+	if (tableData.length == 1) {
+		isShowDialogDone3.value = true;
+		ruleForm3.value = {};
+		ruleForm3.value.qty = orderDetailId.value.qty;
+	} else {
+		ElMessage.error('只能选择一个');
+	}
+
 };
 // 小计完工 接口
 const submitDone3 = async () => {
@@ -417,6 +488,9 @@ const submitDone3 = async () => {
 
 // 删除排产
 const deleteOne = async () => {
+	//通过Element-Plus表格的getSelectionRows的方法，获取已选中的数据
+	let tableData = tableRef.value.getSelectionRows();
+	let arr = tableData.map((item) => { return item.id })
 	ElMessageBox.confirm(`确定要删除该排产吗?`, `删除排产`, {
 		//  - ${orderDetailId.value.id}
 		confirmButtonText: '确定',
@@ -425,9 +499,10 @@ const deleteOne = async () => {
 	})
 		.then(async () => {
 			const params = {
-				id: orderDetailId.value.id,
+				ids: arr,
 			};
-			await deleteOrderDetail(params);
+			console.log(params)
+			await batchDelete(params);
 			closeDialog();
 			ElMessage.success('删除成功');
 		})
@@ -443,6 +518,18 @@ const getlistOrderDetailByDeviceId = async () => {
 	let list = await listOrderDetailByDeviceId({ deviceId: deviceId.value });
 	dischargeList.value = list.data.result ?? [];
 	// console.log('list', list.data.result);
+};
+const dischargeList2 = ref<any>([]);
+const getlistOrderDetailByDeviceId2 = async () => {
+	let list = await listOrderDetailByDeviceId({ deviceId: deviceId.value });
+	dischargeList2.value = list.data.result ?? [];
+	// console.log('list', list.data.result);
+};
+//排产信息表格多选
+const multipleSelection = ref<any>([])
+const handleSelectionChange = (val: any) => {
+	multipleSelection.value = val
+	console.log(multipleSelection.value)
 };
 
 // 远程搜索
@@ -477,11 +564,12 @@ onMounted(async () => { });
 // 查看排产详情信息
 const orderDetailModel = ref<any>({});
 const getOrderDetailModel = async () => {
-	console.log('orderDetailId', orderDetailId.value.id);
 
 	let list = await getOrderDetail({ id: orderDetailId.value.id });
 	orderDetailModel.value = list.data.result ?? {};
+	console.log('orderDetailId', orderDetailModel);
 };
+
 
 const orderOrderIdDropdownList = ref<any>([]);
 const getOrderOrderIdDropdownList = async () => {
@@ -561,9 +649,10 @@ defineExpose({ openDialog });
 	}
 
 	:deep(.el-dialog__footer) {
-		position: absolute;
+		/* position: absolute; */
 		width: 100%;
-		bottom: 4%;
+		/* margin-bottom: 80px; */
+		/* bottom: 4%; */
 	}
 }
 
@@ -576,6 +665,7 @@ defineExpose({ openDialog });
 :deep(.el-dialog__body) {
 	color: white;
 	padding: 5%;
+	max-height: calc(100vh - 177px) !important;
 }
 
 :deep(.el-dialog__header) {
@@ -590,7 +680,7 @@ defineExpose({ openDialog });
 
 :deep(.el-dialog__headerbtn) {
 	right: -89% !important;
-	top: 138%;
+	top: 258%;
 }
 
 /* 下拉框样式 */
@@ -687,5 +777,39 @@ defineExpose({ openDialog });
 
 :deep(.el-form-item__label) {
 	color: white;
+}
+
+/* 隐藏 Element Plus 表格多选框的CSS */
+::v-deep .el-table .el-table__header-wrapper .el-checkbox {
+	display: none;
+}
+
+/* 隐藏浏览器自带的滚动条 */
+
+:deep(.el-dialog)::-webkit-scrollbar {
+	display: none;
+}
+
+:deep(.el-dialog__body)::-webkit-scrollbar {
+	display: none;
+}
+
+
+:deep(.el-dialog)::-webkit-scrollbar-track {
+	background-color: transparent;
+	/* 设置滚动条轨道背景色为透明 */
+}
+
+:deep(.el-dialog)::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, 0.2);
+	/* 设置滚动条滑块颜色 */
+	border-radius: 0.25em;
+	/* 设置滚动条滑块圆角 */
+}
+
+/* 显示页面内的滚动条 */
+.scrollable-content {
+	overflow-y: auto;
+	/* 启用垂直滚动条 */
 }
 </style>

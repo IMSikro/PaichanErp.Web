@@ -17,15 +17,21 @@
 							<span>{{ item.typeName }}</span>
 						</div>
 					</template>
-					<el-tree ref="deviceTreeRef[item.id]" :data="item.devices" :props="TreeProps" :height="208"
+					<el-checkbox-group v-model="checkedValues" direction="vertical">
+						<el-checkbox v-for="items in item.devices" :label="items.id" :key="items.id">
+							{{ items.deviceName }}
+						</el-checkbox>
+					</el-checkbox-group>
+					<!-- <el-tree ref="deviceTreeRef[item.id]" :data="item.devices" :props="TreeProps" :height="208"
 						:check-on-click-node="state.clickNode" :show-checkbox="state.showCheckbox"
-						@check-change="handleCheck" node-key="value" highlight-current>
+						@check-change="handleCheck" node-key="deviceTypeId"
+						:default-checked-keys="array" highlight-current>
 						<template #default="{ node, data }">
 							<span class="custom-tree-node">
 								<span> {{ node.label }} </span>
 							</span>
 						</template>
-					</el-tree>
+					</el-tree> -->
 				</el-card>
 			</el-row>
 
@@ -52,6 +58,11 @@
 	font-size: 1.2rem;
 	padding-right: 1rem;
 }
+
+.el-checkbox {
+	display: block;
+	margin-bottom: 10px;
+}
 </style>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
@@ -59,7 +70,8 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormRules } from "element-plus";
 import { addDeviceGroup, updateDeviceGroup } from "/@/api/main/deviceGroup";
 import { listDeviceTypeAndChild } from '/@/api/main/deviceType';
-
+var array = ref([])
+const checkedValues = ref([]);
 //父级传递来的参数
 var props = defineProps({
 	title: {
@@ -92,7 +104,7 @@ const handleCheck = (data, checked, nodes) => {
 	if (!checked && deviceIds.some(x => x == data.id))
 		deviceIds = deviceIds.filter(x => x != data.id);
 	deviceTree2Ref.value[data.deviceTypeId] = deviceIds;
-	console.log(deviceTreeRef);
+	// console.log(deviceTreeRef);
 	console.log(deviceTree2Ref.value);
 }
 
@@ -103,7 +115,9 @@ const openDialog = async (row: any) => {
 	await setCheckedKeys();
 	isShowDialog.value = true;
 };
+
 const setCheckedKeys = async () => {
+
 	let allTypeIds = deviceTypeAndChildList.value.map(x => x.id);
 	for (let i = 0; i < allTypeIds.length; i++) {
 		const e = allTypeIds[i];
@@ -117,12 +131,15 @@ const setCheckedKeys = async () => {
 		dids.push(...jiaojiIds);
 		// console.log(dids);
 		deviceTree2Ref.value[e] = dids;
-
+		checkedValues.value = xianyou
+		console.log(dids, jiaojiIds, jiaoji, xianyou, alldIds)
 		// dids.forEach(v => {
 		// 	deviceTreeRef.value[e].setChecked(v, true, false);
 		// })
-		console.log(e);
-
+		// console.log(e);
+		// array.value=ruleForm.value.deviceIds?.split(',').map(x => Number(x)) ?? [];
+		// array.value.push(e)
+		// console.log(array.value)
 		// deviceTreeRef[e].value!.setCheckedKeys(dids, false);
 	}
 	// console.log(deviceTreeRef.value);
@@ -155,7 +172,8 @@ const submit = async () => {
 			isLonger = true;
 	}
 	ruleForm.value.deviceTypeIds = hasTypeIds.join(',');
-	ruleForm.value.deviceIds = alldIds.join(',');
+	// ruleForm.value.deviceIds = alldIds.join(',');
+	ruleForm.value.deviceIds = checkedValues.value.join(',')
 	console.log(ruleForm.value);
 
 	if (isLonger) {
@@ -193,6 +211,7 @@ const submit = async () => {
 		ruleFormRef.value.validate(async (isValid: boolean, fields?: any) => {
 			if (isValid) {
 				let values = ruleForm.value;
+				console.log(checkedValues.value)
 				if (ruleForm.value.id == undefined || ruleForm.value.id == null || ruleForm.value.id == "" || ruleForm.value.id == 0) {
 					await addDeviceGroup(values);
 				} else {

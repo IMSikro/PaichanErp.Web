@@ -19,7 +19,7 @@
 					@wheel.prevent="handleScroll">
 					<!-- <vxe-toolbar class="bar" ref="xToolbar1" custom style="height: 28px; position: relative; z-index: 999"> </vxe-toolbar> -->
 					<vxe-table border="none" show-overflow :row-config="{ useKey: true, height: 28 }"
-						:id="item.id.toString()" :class="`tables${item.id}`" :height="minHeight - 20"
+						:id="item.id.toString()" :class="`tables${item.id}`" :height="minHeight - 5"
 						:data="orderDetails[item.id]" :custom-config="{ storage: true }"
 						:toolbar-onfig="{ custom: true }" class="vxe-my-style-table">
 						<vxe-column v-for="config in tableColumn" :key="config.key" :type="config.type"
@@ -138,6 +138,7 @@ const loadTableHeader = async () => {
 			width: parseInt(item.width),
 		})
 	);
+	console.log(newData)
 	tableColumn.value = newData;
 };
 
@@ -151,7 +152,7 @@ const handleScroll = (e: any) => {
 	const wheelDelta = e.wheelDelta || -e.deltaY * 40;
 	scrollbarRef.value.setScrollLeft(scrollbarRef.value.wrapRef.scrollLeft - wheelDelta);
 };
-// 添加未排产订单弹窗事件
+// 弹窗事件
 const handleSetPaichanInfo = async (deviceId: any, e: any) => {
 	await addPaichanDialogRef.value.openDialog({ deviceId, deviceType: deviceType.value.id });
 };
@@ -508,7 +509,7 @@ onBeforeUnmount(() => {
 		color: white;
 		position: absolute;
 		left: 2%;
-		bottom: -3%;
+		bottom: 2%;
 		z-index: 99;
 	}
 }

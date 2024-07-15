@@ -216,6 +216,7 @@ const getDeviceDeviceIdDropdownList = async () => {
 					value: v.id,
 				};
 			}) ?? [];
+	console.log(deviceDeviceIdDropdownList.value)
 };
 
 const sysUserOperatorUsersDropdownList = ref<any>([]);
