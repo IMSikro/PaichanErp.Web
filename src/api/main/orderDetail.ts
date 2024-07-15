@@ -5,6 +5,8 @@ enum Api {
 	doneAndNext = '/api/orderDetail/doneAndNext',
 	updateDone = '/api/orderDetail/done',
 	UpdateOrderDetail = '/api/orderDetail/update',
+	BatchUpdateDevices = '/api/orderDetail/batchUpdateDevices',
+	BatchDelete = '/api/orderDetail/batchDelete',
 	PageOrderDetail = '/api/orderDetail/page',
 	GetOrderDetail = '/api/orderDetail/detail',
 	listOrderDetailByDeviceId = '/api/orderDetail/listOrderDetailByDeviceId',
@@ -79,6 +81,22 @@ export const deleteOrderDetail = (params?: any) =>
 export const updateOrderDetail = (params?: any) =>
 	request({
 		url: Api.UpdateOrderDetail,
+		method: 'post',
+		data: params,
+	});
+
+
+// 批量修改排产到设备
+export const batchUpdateDevices = (params?: any) =>
+	request({
+		url: Api.BatchUpdateDevices,
+		method: 'post',
+		data: params,
+	});
+// 批量删除订单排产
+export const batchDelete = (params?: any) =>
+	request({
+		url: Api.BatchDelete,
 		method: 'post',
 		data: params,
 	});
