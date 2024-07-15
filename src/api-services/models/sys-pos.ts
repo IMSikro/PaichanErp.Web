@@ -98,6 +98,12 @@ export interface SysPos {
      */
     code?: string | null;
     /**
+     * 是否车间作业员
+     * @type {boolean}
+     * @memberof SysPos
+     */
+    isWorker?: boolean | null;
+    /**
      * 排序
      * @type {number}
      * @memberof SysPos

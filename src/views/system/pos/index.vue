@@ -10,7 +10,8 @@
 				</el-form-item>
 				<el-form-item>
 					<el-button-group>
-						<el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'sysPos:list'"> 查询 </el-button>
+						<el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'sysPos:list'"> 查询
+						</el-button>
 						<el-button icon="ele-Refresh" @click="resetQuery"> 重置 </el-button>
 					</el-button-group>
 				</el-form-item>
@@ -25,6 +26,12 @@
 				<el-table-column type="index" label="序号" width="55" align="center" />
 				<el-table-column prop="name" label="职位名称" align="center" show-overflow-tooltip />
 				<el-table-column prop="code" label="职位编码" align="center" show-overflow-tooltip />
+				<el-table-column prop="isWorker" label="是否操作员" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-tag type="success" v-if="scope.row.isWorker === true">是</el-tag>
+						<el-tag type="danger" v-else>否</el-tag>
+					</template>
+				</el-table-column>
 				<el-table-column prop="orderNo" label="排序" width="70" align="center" show-overflow-tooltip />
 				<el-table-column label="状态" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
@@ -36,8 +43,10 @@
 				<el-table-column prop="remark" label="备注" header-align="center" show-overflow-tooltip />
 				<el-table-column label="操作" width="140" fixed="right" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-button icon="ele-Edit" size="small" text type="primary" @click="openEditPos(scope.row)" v-auth="'sysPos:update'"> 编辑 </el-button>
-						<el-button icon="ele-Delete" size="small" text type="danger" @click="delPos(scope.row)" v-auth="'sysPos:delete'"> 删除 </el-button>
+						<el-button icon="ele-Edit" size="small" text type="primary" @click="openEditPos(scope.row)"
+							v-auth="'sysPos:update'"> 编辑 </el-button>
+						<el-button icon="ele-Delete" size="small" text type="danger" @click="delPos(scope.row)"
+							v-auth="'sysPos:delete'"> 删除 </el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -110,6 +119,6 @@ const delPos = (row: any) => {
 			handleQuery();
 			ElMessage.success('删除成功');
 		})
-		.catch(() => {});
+		.catch(() => { });
 };
 </script>

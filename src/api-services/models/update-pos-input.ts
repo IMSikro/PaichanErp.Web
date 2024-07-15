@@ -98,6 +98,12 @@ export interface UpdatePosInput {
      */
     orderNo?: number;
     /**
+     * 是否车间作业员
+     * @type {boolean}
+     * @memberof UpdatePosInput
+     */
+    isWorker?: boolean | null;
+    /**
      * 备注
      * @type {string}
      * @memberof UpdatePosInput
