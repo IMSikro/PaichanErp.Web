@@ -11,9 +11,10 @@
 					<div>
 						当前排产信息：
 						<div>
-							<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
-								ax-height="300" :data="dischargeList2" v-loading="loading" row-key="id" border
-								size="small" ref="tableRef" @selection-change="handleSelectionChange">
+							<el-table ref="tableRef" class="tables"
+								:header-cell-style="{ background: '#031743', color: '#FFF' }" ax-height="300"
+								:data="dischargeList2" v-loading="loading" row-key="id" border size="small"
+								@row-click="handleRowClick" @selection-change="handleSelectionChange">
 								<el-table-column type="selection" width="45" />
 								<el-table-column prop="colorRgb" label="颜色" width="55" show-overflow-tooltip>
 									<template #default="scope">
@@ -166,10 +167,10 @@
 			</template>
 		</el-dialog>
 		<!-- 终结完工弹框 -->
-		<el-dialog v-model="isShowDialogDone" :width="650" draggable="">
+		<el-dialog v-model="isShowDialogDone" :width="650" draggable>
 			<template #header>
 				<div style="color: #fff">
-					<span> 终结完工 </span>
+					<span>终结完工</span>
 				</div>
 			</template>
 			<div>
@@ -207,10 +208,10 @@
 			</template>
 		</el-dialog>
 		<!-- 小计完工弹框 -->
-		<el-dialog v-model="isShowDialogDone3" :width="650" draggable="">
+		<el-dialog v-model="isShowDialogDone3" :width="650" draggable>
 			<template #header>
 				<div style="color: #fff">
-					<span> 小计完工 </span>
+					<span>小计完工</span>
 				</div>
 			</template>
 			<div>
@@ -278,7 +279,9 @@ const ruleForm2Ref = ref();
 const ruleForm2 = ref<any>({});
 const ruleForm3Ref = ref();
 const ruleForm3 = ref<any>({});
-const tableRef = ref()
+const dischargeList2 = ref<any>([]);
+const tableRef = ref(null);
+const orderModel = ref<any>({});
 //自行添加其他规则
 // const rules = ref<FormRules>({
 // 	deviceId: [{ required: true, message: '请选择设备！', trigger: 'change' }],
@@ -368,6 +371,7 @@ const openDialog = async (data: any) => {
 	isShowDialog.value = true;
 };
 
+
 // 关闭弹窗
 const closeDialog = () => {
 	emit('reloadDeviceList', { deviceTypeId: deviceTypeId.value });
@@ -423,7 +427,7 @@ const doneAndOffline = () => {
 	if (tableData.length == 1) {
 		isShowDialogDone.value = true;
 		ruleForm2.value = {};
-		ruleForm2.value.qty = orderDetailId.value.qty;
+		ruleForm2.value.qty = tableData[0].qty;
 	} else {
 		ElMessage.error('只能选择一个');
 	}
@@ -432,11 +436,15 @@ const doneAndOffline = () => {
 };
 // 终结完工 接口
 const submitDone = async () => {
+	let tableData = tableRef.value.getSelectionRows();
+
+	console.log("选中数据", tableData[0].id)
 	ruleForm2Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
 			// 深拷贝ruleForm2赋值给params
 			const params = JSON.parse(JSON.stringify(ruleForm2.value));
-			params.id = orderDetailId.value.id;
+			// params.id = orderDetailId.value.id;
+			params.id = tableData[0].id
 			await updateDone(params);
 			ElMessage.success('操作成功');
 			closeDialog();
@@ -456,11 +464,11 @@ const done = async () => {
 
 	let tableData = tableRef.value.getSelectionRows();
 
-	console.log("选中数据", tableData.length)
+	console.log("选中数据", tableData)
 	if (tableData.length == 1) {
 		isShowDialogDone3.value = true;
 		ruleForm3.value = {};
-		ruleForm3.value.qty = orderDetailId.value.qty;
+		ruleForm3.value.qty = tableData[0].qty;
 	} else {
 		ElMessage.error('只能选择一个');
 	}
@@ -468,11 +476,14 @@ const done = async () => {
 };
 // 小计完工 接口
 const submitDone3 = async () => {
+	let tableData = tableRef.value.getSelectionRows();
+	console.log("选中数据", tableData[0].id)
 	ruleForm3Ref.value.validate(async (isValid: boolean, fields?: any) => {
 		if (isValid) {
 			// 深拷贝ruleForm2赋值给params
 			const params = JSON.parse(JSON.stringify(ruleForm3.value));
-			params.id = orderDetailId.value.id;
+			// params.id = orderDetailId.value.id;
+			params.id = tableData[0].id
 			console.log('params', params);
 			await doneAndNext(params);
 			ElMessage.success('操作成功');
@@ -519,7 +530,8 @@ const getlistOrderDetailByDeviceId = async () => {
 	dischargeList.value = list.data.result ?? [];
 	// console.log('list', list.data.result);
 };
-const dischargeList2 = ref<any>([]);
+
+
 const getlistOrderDetailByDeviceId2 = async () => {
 	let list = await listOrderDetailByDeviceId({ deviceId: deviceId.value });
 	dischargeList2.value = list.data.result ?? [];
@@ -530,6 +542,13 @@ const multipleSelection = ref<any>([])
 const handleSelectionChange = (val: any) => {
 	multipleSelection.value = val
 	console.log(multipleSelection.value)
+};
+const handleRowClick = (row, column, event) => {
+	console.log('行点击', row)
+	// if (event.target.tagName.toUpperCase() !== 'INPUT') {
+	// 	table.value.toggleRowSelection(row);
+	// }
+
 };
 
 // 远程搜索
@@ -564,12 +583,25 @@ onMounted(async () => { });
 // 查看排产详情信息
 const orderDetailModel = ref<any>({});
 const getOrderDetailModel = async () => {
-
 	let list = await getOrderDetail({ id: orderDetailId.value.id });
 	orderDetailModel.value = list.data.result ?? {};
-	console.log('orderDetailId', orderDetailModel);
-};
+	// orderModel.value = orderDetailModel.value
+	orderModel.value = orderDetailModel.value ?? {};
+	console.log('orderModel', orderModel.value);
+	console.log('tableRef', tableRef.value)
+	console.log('第一条数据', dischargeList2.value[0])
+	setTimeout(() => {
+		dischargeList2.value.forEach(row => {
+			console.log(row)
+			if (row.id == orderModel.value.id) {
+				tableRef.value.toggleRowSelection(row, true)
+			} else {
+				tableRef.value.toggleRowSelection(row, false)
+			}
+		})
+	}, 1000);
 
+};
 
 const orderOrderIdDropdownList = ref<any>([]);
 const getOrderOrderIdDropdownList = async () => {
@@ -651,6 +683,9 @@ defineExpose({ openDialog });
 	:deep(.el-dialog__footer) {
 		/* position: absolute; */
 		width: 100%;
+		position: fixed;
+		bottom: 4%;
+		right: 5%;
 		/* margin-bottom: 80px; */
 		/* bottom: 4%; */
 	}
@@ -795,7 +830,7 @@ defineExpose({ openDialog });
 }
 
 
-:deep(.el-dialog)::-webkit-scrollbar-track {
+.:deep(.el-dialog)::-webkit-scrollbar-track {
 	background-color: transparent;
 	/* 设置滚动条轨道背景色为透明 */
 }
