@@ -70,7 +70,6 @@
         :total="tableParams.total" :page-sizes="[10, 20, 50, 100, 200, 500]" small="" background=""
         @size-change="handleSizeChange" @current-change="handleCurrentChange"
         layout="total, sizes, prev, pager, next, jumper" />
-      <editDialog ref="editDialogRef" :title="editStoreTitle" @reloadTable="handleQuery" />
     </el-card>
     <el-card class="full-table" shadow="hover" style="margin-top: 8px" :style="{ 'overflow-y': 'auto' }">
       <el-tabs v-model="activeName">
@@ -79,31 +78,66 @@
             border="">
             <el-table-column type="index" label="序号" width="55" align="center" />
             <el-table-column prop="storeCode" label="仓库编号" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="storeName" label="仓库名称" width="140" show-overflow-tooltip="" />
             <el-table-column prop="storeLocationCode" label="库位" width="140" show-overflow-tooltip="" />
             <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
+            <el-table-column label="操作" width="140" align="center" fixed="right" show-overflow-tooltip=""
+              v-if="auth('store:edit')">
+              <template #default="scope">
+                <el-button icon="ele-Edit" size="small" text="" type="primary" @click="openEditStoreLocation(scope.row)"
+                  v-auth="'store:edit'"> 编辑 </el-button>
+              </template>
+            </el-table-column>
           </el-table>
+          <el-pagination v-model:currentPage="tableParams2.page" v-model:page-size="tableParams2.pageSize"
+            :total="tableParams2.total" :page-sizes="[10, 20, 50, 100, 200, 500]" small="" background=""
+            @size-change="handleSizeChange2" @current-change="handleCurrentChange2"
+            layout="total, sizes, prev, pager, next, jumper" />
+        </el-tab-pane>
+        <el-tab-pane label="导入" name="/store/storeLocationImport">
+          <el-card>
+            <div>
+              <el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :file-list="state.fileList" action=""
+                :on-change="handleChange" accept=".xls,.xlsx">
+                <el-icon class="el-icon--upload">
+                  <ele-UploadFilled />
+                </el-icon>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <template #tip>
+                  <div class="el-upload__tip">请上传大小不超过 10MB 的文件</div>
+                </template>
+              </el-upload>
+              <div>
+                点击此处下载文件模板
+                <el-button @click="downloadExcel">下载模板</el-button>
+              </div>
+            </div>
+            <template #footer>
+              <span class="dialog-footer">
+                <!-- <el-button @click="state.dialogUploadVisible = false">取消</el-button> -->
+                <el-button type="primary" @click="uploadFile">确定</el-button>
+              </span>
+            </template>
+          </el-card>
+
         </el-tab-pane>
       </el-tabs>
-      <el-pagination v-model:currentPage="tableParams2.page" v-model:page-size="tableParams2.pageSize"
-        :total="tableParams2.total" :page-sizes="[10, 20, 50, 100, 200, 500]" small="" background=""
-        @size-change="handleSizeChange2" @current-change="handleCurrentChange2"
-        layout="total, sizes, prev, pager, next, jumper" />
     </el-card>
     <editDialog ref="editDialogRef" :title="editStoreTitle" @reloadTable="handleQuery" />
   </div>
 </template>
 
 <script lang="ts" setup="" name="store">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { auth } from '/@/utils/authFunction';
 import { getDictDataItem as di, getDictDataList as dl } from '/@/utils/dict-utils';
 //import { formatDate } from '/@/utils/formatTime';
+import { downloadByData, getFileName } from '/@/utils/download';
 
 import editDialog from '/@/views/main/store/component/editDialog.vue'
 import { pageStore, deleteStore } from '/@/api/main/store';
-import { pageStoreLocation } from "/@/api/main/storeLocation";
-
+import { pageStoreLocation, getStoreLocationTempExcel, importStoreLocationExcel } from "/@/api/main/storeLocation";
 
 const showAdvanceQueryUI = ref(false);
 const editDialogRef = ref();
@@ -125,6 +159,12 @@ const tableParams2 = ref({
   total: 0,
 });
 const editStoreTitle = ref("");
+
+const state = reactive({
+  dialogUploadVisible: true,
+  fileList: [] as any,
+});
+
 
 const activeName = ref(`/store/storeLocation`);
 
@@ -175,6 +215,42 @@ const openEditStore = (row: any) => {
   editStoreTitle.value = '编辑仓库';
   editDialogRef.value.openDialog(row);
 };
+
+// 打开编辑页面
+const openEditStoreLocation = (row: any) => {
+  editStoreTitle.value = '编辑仓库';
+
+  let store = tableData.value.find((e: any) => e.id == row.storeId);
+  // console.log(store);
+
+  editDialogRef.value.openDialog(store);
+};
+
+// 通过onChanne方法获得文件列表
+const handleChange = (file: any, fileList: []) => {
+  state.fileList = fileList;
+};
+// 上传
+const uploadFile = async () => {
+  if (state.fileList.length < 1) return;
+  let storeId = queryParams2.value?.storeId ?? 0;
+  if (storeId == 0) {
+    ElMessage.error('请先选择仓库!');
+    return;
+  }
+  const params = new FormData();
+  params.append('file', state.fileList[0].raw);
+  await importStoreLocationExcel(params, storeId);
+  handleQuery();
+  activeName.value = `/store/storeLocation`;
+  ElMessage.success('上传成功');
+};
+
+const downloadExcel = async () => {
+  var res = await getStoreLocationTempExcel();
+  var fileName = getFileName(res.headers);
+  downloadByData(res.data, fileName);
+}
 
 // 删除
 const delStore = (row: any) => {
