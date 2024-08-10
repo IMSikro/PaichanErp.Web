@@ -15,8 +15,8 @@
 								:header-cell-style="{ background: '#031743', color: '#FFF' }" ax-height="300"
 								:data="dischargeList2" v-loading="loading" row-key="id" border size="small"
 								@row-click="handleRowClick" @selection-change="handleSelectionChange">
-								<el-table-column type="selection" width="45" />
-								<el-table-column prop="colorRgb" label="颜色" width="55" show-overflow-tooltip>
+								<el-table-column type="selection" width="30" />
+								<el-table-column prop="colorRgb" label="颜色" show-overflow-tooltip>
 									<template #default="scope">
 										<div class="rank"
 											:style="{ 'background-color': `rgb(${scope.row.colorRgb})`, border: '1px solid white' }"
@@ -38,7 +38,7 @@
 								<el-table-column prop="deliveryDate" label="交期" show-overflow-tooltip>
 									<template #default="scope">{{ formatDate(scope.row.deliveryDate) }}</template>
 								</el-table-column>
-								<el-table-column prop="qty" label="班次产量" width="45" show-overflow-tooltip>
+								<el-table-column prop="qty" label="班次产量" show-overflow-tooltip>
 									<template #default="scope">
 										<div>{{ scope.row.qty }}</div>
 									</template>
@@ -93,6 +93,7 @@
 				<div>
 					<el-table class="tables" :header-cell-style="{ background: '#031743', color: '#FFF' }"
 						ax-height="300" :data="dischargeList" v-loading="loading" row-key="id" border size="small">
+						<el-table-column width="30" />
 						<el-table-column prop="orderId" label="颜色" show-overflow-tooltip>
 							<template #default="scope">
 								<div class="rank"
@@ -644,11 +645,11 @@ const console_Log = () => {
 // 格式化日期
 const formatDate = (dateString: string | number | Date) => {
 	const date = new Date(dateString);
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
-	return `${year}-${month}-${day}`;
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	return `${month}-${day}`;
 };
+
 //将属性或者函数暴露给父组件
 defineExpose({ openDialog });
 </script>
@@ -659,36 +660,14 @@ defineExpose({ openDialog });
 	--el-dialog-bg-color: transparent;
 	background: url('../../../assets/bigScreen/add_bg.png') no-repeat center center / 100% 100%;
 	padding: 4% 3% 1% 1%;
-	min-height: 530px;
+	width: 60%;
+	height: 80%;
 	color: white;
 }
 
-@media screen and (max-width: 768px) {
-	:deep(.el-dialog) {
-		height: 100%;
-		overflow: auto;
-		padding: 0;
-		min-height: 330px;
-		background: url('../../../assets/bigScreen/add_bg_phone.png') no-repeat center center / 100% 100% !important;
-	}
-
-	:deep(.el-dialog__header) {
-		padding-top: 25%;
-	}
-
-	:deep(.el-dialog__body) {
-		padding: 40% 5% 10% !important;
-	}
-
-	:deep(.el-dialog__footer) {
-		/* position: absolute; */
-		width: 100%;
-		position: fixed;
-		bottom: 4%;
-		right: 5%;
-		/* margin-bottom: 80px; */
-		/* bottom: 4%; */
-	}
+:deep(.el-dialog__headerbtn) {
+	right: 31rem !important;
+	top: 5rem;
 }
 
 :deep(.el-divider__text) {
@@ -704,18 +683,17 @@ defineExpose({ openDialog });
 }
 
 :deep(.el-dialog__header) {
-	width: 280px;
-	height: 40px;
+	width: 100%;
+	/* height: 40px; */
 	position: absolute;
 	top: 1.5%;
 	left: 38%;
-	font-size: 18.68px;
+	font-size: 1.5rem;
 	background-color: transparent;
 }
 
-:deep(.el-dialog__headerbtn) {
-	right: -89% !important;
-	top: 258%;
+:deep(.el-dialog__footer) {
+	padding: 0 20px 20px 20px !important;
 }
 
 /* 下拉框样式 */
@@ -742,6 +720,7 @@ defineExpose({ openDialog });
 /* el-table样式 */
 .tables {
 	margin: 2% 0 0 0;
+	height: 17vh !important;
 	--el-table-border-color: transparent;
 }
 
@@ -846,5 +825,57 @@ defineExpose({ openDialog });
 .scrollable-content {
 	overflow-y: auto;
 	/* 启用垂直滚动条 */
+}
+
+:deep(.el-divider--horizontal) {
+	margin: 1% 0;
+}
+
+@media screen and (max-width: 768px) {
+	:deep(.el-dialog) {
+		height: 100%;
+		width: 100% !important;
+		overflow: auto;
+		padding: 0;
+		min-height: 330px;
+		background: #011446 !important;
+		/* background-color: #011446; */
+	}
+
+	/* el-table样式 */
+	.tables {
+		height: 22rem;
+	}
+
+	:deep(.el-dialog__header) {
+		top: 0.3rem;
+		left: 0;
+
+		span {
+			display: block;
+			text-align: center
+		}
+	}
+
+	:deep(.el-dialog__body) {
+		margin-top: 12% !important;
+	}
+
+	:deep(.el-dialog__footer) {
+		width: 100%;
+		position: fixed;
+		bottom: 3%;
+		right: 7%;
+	}
+
+	:deep(.el-dialog__headerbtn) {
+		display: none;
+	}
+
+	:deep(.el-divider--horizontal) {
+		width: 85%;
+		left: 15%;
+		margin: 2.2% 0;
+	}
 }
 </style>
