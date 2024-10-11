@@ -127,21 +127,21 @@
           <el-table key="processStandard" :data="tableDataProcess" style="width: 100%" v-loading="loading"
             tooltip-effect="light" row-key="id" border="">
             <el-table-column type="index" label="序号" width="55" align="center" />
-            <el-table-column prop="produceFormulaCode" label="配方编号" width="140" show-overflow-tooltip="" />
-            <el-table-column prop="produceId" label="产品外键" width="120" show-overflow-tooltip="">
+            <el-table-column prop="produceFormulaId" label="配方" width="120" show-overflow-tooltip="">
               <template #default="scope">
-                <span>{{ scope.row.produceIdProduceCode }}</span>
+                <span>{{ scope.row.produceFormulaIdProduceFormulaCode }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="produceFormulaName" label="配方名称" width="140" show-overflow-tooltip="" />
-            <el-table-column prop="formulaVersion" label="配方版本" width="140" show-overflow-tooltip="" />
-            <el-table-column prop="isEnable" label="是否启用" width="120" show-overflow-tooltip="">
-              <template #default="scope">
-                <el-tag v-if="scope.row.isEnable"> 是 </el-tag>
-                <el-tag type="danger" v-else> 否 </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="formulaCosts" label="配方成本" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="processStandardCode" label="工艺标准编号" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="processStandardName" label="工艺标准名称" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="produceCode" label="产品编号" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="produceName" label="产品名称" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="deviceTypeCode" label="工艺设备编号" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="deviceTypeName" label="工艺设备名称" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="processProjectName" label="工艺项目名称" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="standardValue" label="标准值" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="tolerance1" label="正公差" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="tolerance2" label="负公差" width="140" show-overflow-tooltip="" />
             <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
             <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
             <el-table-column prop="updateUserName" label="修改者姓名" width="140" show-overflow-tooltip="" />
@@ -149,9 +149,9 @@
               v-if="auth('store:edit')">
               <template #default="scope">
                 <el-button icon="ele-Edit" size="small" text="" type="primary"
-                  @click="openEditProduceFormula(scope.row)" v-auth="'produceFormula:edit'"> 编辑 </el-button>
-                <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProduceFormula(scope.row)"
-                  v-auth="'produceFormula:delete'"> 删除 </el-button>
+                  @click="openEditProcessStandard(scope.row)" v-auth="'processStandard:edit'"> 编辑 </el-button>
+                <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProcessStandard(scope.row)"
+                  v-auth="'processStandard:delete'"> 删除 </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -164,21 +164,21 @@
           <el-table key="examineStandard" :data="tableDataExamine" style="width: 100%" v-loading="loading"
             tooltip-effect="light" row-key="id" border="">
             <el-table-column type="index" label="序号" width="55" align="center" />
-            <el-table-column prop="produceFormulaCode" label="配方编号" width="140" show-overflow-tooltip="" />
-            <el-table-column prop="produceId" label="产品外键" width="120" show-overflow-tooltip="">
+            <el-table-column prop="produceFormulaId" label="配方" width="120" show-overflow-tooltip="">
               <template #default="scope">
-                <span>{{ scope.row.produceIdProduceCode }}</span>
+                <span>{{ scope.row.produceFormulaIdProduceFormulaCode }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="produceFormulaName" label="配方名称" width="140" show-overflow-tooltip="" />
-            <el-table-column prop="formulaVersion" label="配方版本" width="140" show-overflow-tooltip="" />
-            <el-table-column prop="isEnable" label="是否启用" width="120" show-overflow-tooltip="">
-              <template #default="scope">
-                <el-tag v-if="scope.row.isEnable"> 是 </el-tag>
-                <el-tag type="danger" v-else> 否 </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="formulaCosts" label="配方成本" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="examineStandardCode" label="检验标准编号" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="examineStandardName" label="检验标准名称" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="produceCode" label="产品编号" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="produceName" label="产品名称" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="deviceTypeName" label="工艺设备名称" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="examineProjectCode" label="检验项目编号" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="examineProjectName" label="检验项目名称" width="90" show-overflow-tooltip="" />
+            <el-table-column prop="standardValue" label="标准值" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="tolerance1" label="正公差" width="140" show-overflow-tooltip="" />
+            <el-table-column prop="tolerance2" label="负公差" width="140" show-overflow-tooltip="" />
             <el-table-column prop="remark" label="备注" width="140" show-overflow-tooltip="" />
             <el-table-column prop="createUserName" label="创建者姓名" width="140" show-overflow-tooltip="" />
             <el-table-column prop="updateUserName" label="修改者姓名" width="140" show-overflow-tooltip="" />
@@ -186,9 +186,9 @@
               v-if="auth('store:edit')">
               <template #default="scope">
                 <el-button icon="ele-Edit" size="small" text="" type="primary"
-                  @click="openEditProduceFormula(scope.row)" v-auth="'produceFormula:edit'"> 编辑 </el-button>
-                <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delProduceFormula(scope.row)"
-                  v-auth="'produceFormula:delete'"> 删除 </el-button>
+                  @click="openEditExamineStandard(scope.row)" v-auth="'examineStandard:edit'"> 编辑 </el-button>
+                <el-button icon="ele-Delete" size="small" text="" type="primary" @click="delExamineStandard(scope.row)"
+                  v-auth="'examineStandard:delete'"> 删除 </el-button>
               </template>
             </el-table-column>
           </el-table>

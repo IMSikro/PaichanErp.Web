@@ -666,8 +666,9 @@ defineExpose({ openDialog });
 }
 
 :deep(.el-dialog__headerbtn) {
-	right: 31rem !important;
-	top: 5rem;
+	right: 23vw !important;
+    top: 8vh;
+    position: absolute;
 }
 
 :deep(.el-divider__text) {
@@ -722,6 +723,7 @@ defineExpose({ openDialog });
 	margin: 2% 0 0 0;
 	height: 17vh !important;
 	--el-table-border-color: transparent;
+	background: transparent;
 }
 
 :deep(.el-table .cell) {
@@ -785,7 +787,7 @@ defineExpose({ openDialog });
 
 .el-button--down:hover {
 	border: 0;
-	color: white;
+	color: rgb(255, 255, 255);
 	background-color: rgba(255, 49, 0, 0.5);
 }
 
@@ -809,7 +811,7 @@ defineExpose({ openDialog });
 }
 
 
-.:deep(.el-dialog)::-webkit-scrollbar-track {
+:deep(.el-dialog)::-webkit-scrollbar-track {
 	background-color: transparent;
 	/* 设置滚动条轨道背景色为透明 */
 }
@@ -844,7 +846,8 @@ defineExpose({ openDialog });
 
 	/* el-table样式 */
 	.tables {
-		height: 22rem;
+		height: 30vh !important;
+		background: transparent;
 	}
 
 	:deep(.el-dialog__header) {
