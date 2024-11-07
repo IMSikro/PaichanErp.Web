@@ -1,8 +1,10 @@
 ﻿import request from '/@/utils/request';
 enum Api {
   AddMaterial = '/api/material/add',
+  AddProduceFormulaMaterial='/api/produceFormulaMaterial/add',
   DeleteMaterial = '/api/material/delete',
   UpdateMaterial = '/api/material/update',
+  UpdateproduceFormulaMaterial='/api/produceFormulaMaterial/update',
   PageMaterial = '/api/material/page',
   GetMaterialTypeMaterialTypeIdDropdown = '/api/material/MaterialTypeMaterialTypeIdDropdown',
   GetSupplierSupplierIdDropdown = '/api/material/SupplierSupplierIdDropdown',
@@ -15,6 +17,14 @@ export const addMaterial = (params?: any) =>
 		method: 'post',
 		data: params,
 	});
+	// 增加配方物料
+	export const addProduceFormulaMaterial = (params?: any) =>
+		request({
+			url: Api.AddProduceFormulaMaterial,
+			method: 'post',
+			data: params,
+		});
+	
 
 // 删除物料
 export const deleteMaterial = (params?: any) => 
@@ -31,6 +41,14 @@ export const updateMaterial = (params?: any) =>
 			method: 'post',
 			data: params,
 		});
+		// 编辑配方物料
+		export const updateproduceFormulaMaterial = (params?: any) => 
+			request({
+					url: Api.UpdateproduceFormulaMaterial,
+					method: 'post',
+					data: params,
+				});
+		
 
 // 分页查询物料
 export const pageMaterial = (params?: any) => 
