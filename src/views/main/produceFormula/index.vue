@@ -52,7 +52,7 @@
 				</el-row>
 			</el-form>
 		</el-card>
-		<el-card class="full-table" shadow="hover" style="margin-top: 8px">
+		<el-card class="full-table" shadow="hover" style="margin-top: 8px;margin-bottom: 8px;">
 			<el-table key="formula" :data="tableData" style="width: 100%" v-loading="loading" tooltip-effect="light"
 				row-key="id" border="" @current-change="handleCurrentRowChange">
 				<el-table-column type="index" label="序号" width="55" align="center" />
@@ -97,15 +97,15 @@
 				@size-change="handleSizeChange" @current-change="handleCurrentChange"
 				layout="total, sizes, prev, pager, next, jumper" />
 		</el-card>
-		<el-card class="full-table" shadow="hover" style="margin-top: 8px;height: auto;"
+		<el-card class="full-table" shadow="hover" body-style="margin-top: -25px;"
 			:style="{ 'overflow-y': 'auto' }">
 			<el-tabs v-model="activeName">
 				<el-tab-pane label="物料列表" name="produceFormula">
 					<el-button-group style="margin-bottom:5px">
-						<el-button icon="ele-Plus" @click="openAddMaterial" v-auth="'produceFormula:add'">
+						<el-button icon="ele-Plus" size="small" @click="openAddMaterial" v-auth="'produceFormula:add'">
 							新增 </el-button>
 					</el-button-group>
-					<el-table key="formulaMaterial" height="150" :data="tableDataMaterial" style="width: 100%"
+					<el-table key="formulaMaterial" height="140" :data="tableDataMaterial" style="width: 100%"
 						v-loading="loading" tooltip-effect="light" row-key="id" border="">
 						<el-table-column type="index" label="序号" width="55" align="center" />
 						<el-table-column prop="produceFormulaId" label="配方" width="120" show-overflow-tooltip="">
@@ -149,18 +149,18 @@
 							</template> -->
 						</el-table-column>
 					</el-table>
-					<el-pagination v-model:currentPage="tableParamsMaterial.page"
+					<el-pagination v-model:currentPage="tableParamsMaterial.page" 
 						v-model:page-size="tableParamsMaterial.pageSize" :total="tableParamsMaterial.total"
-						:page-sizes="[10, 20, 50, 100, 200, 500]" small="" background=""
+						:page-sizes="[10, 20, 50, 100, 200, 500]" small="true" background=""
 						@size-change="handleMaterialSizeChange" @current-change="handleMaterialCurrentChange"
 						layout="total, sizes, prev, pager, next, jumper" />
 				</el-tab-pane>
 				<el-tab-pane label="工艺标准" name="processStandard">
 					<el-button-group style="margin-bottom:5px">
-						<el-button icon="ele-Plus" @click="openAddProcess" v-auth="'produceFormula:add'">
+						<el-button icon="ele-Plus" size="small" @click="openAddProcess" v-auth="'produceFormula:add'">
 							新增 </el-button>
 					</el-button-group>
-					<el-table key="processStandard" height="150" :data="tableDataProcess" style="width: 100%"
+					<el-table key="processStandard" height="140" :data="tableDataProcess" style="width: 100%"
 						v-loading="loading" tooltip-effect="light" row-key="id" border="">
 						<el-table-column type="index" label="序号" width="55" align="center" />
 						<el-table-column prop="produceFormulaId" label="配方" width="120" show-overflow-tooltip="">
@@ -203,10 +203,10 @@
 				</el-tab-pane>
 				<el-tab-pane label="检验标准" name="examineStandard">
 					<el-button-group style="margin-bottom:5px;">
-						<el-button icon="ele-Plus" @click="openAddExamine" v-auth="'produceFormula:add'">
+						<el-button icon="ele-Plus" size="small" @click="openAddExamine" v-auth="'produceFormula:add'">
 							新增 </el-button>
 					</el-button-group>
-					<el-table key="examineStandard" height="150" :data="tableDataExamine" style="width: 100%"
+					<el-table key="examineStandard" height="140" :data="tableDataExamine" style="width: 100%"
 						v-loading="loading" tooltip-effect="light" row-key="id" border="">
 						<el-table-column type="index" label="序号" width="55" align="center" />
 						<el-table-column prop="produceFormulaId" label="配方" width="120" show-overflow-tooltip="">
@@ -616,8 +616,8 @@
 		width: 100%;
 	}
 
-	.el-tabs__content {
+	/* .el-tabs__content {
 		overflow: initial !important;
 		height: 150px
-	}
+	} */
 </style>
