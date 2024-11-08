@@ -13,6 +13,7 @@
 				<el-table-column type="selection" width="55" />
 				<!-- <el-table-column prop="produceTypeTypeName" label="产品类型" width="180" /> -->
 				<!-- <el-table-column prop="produceCode" label="产品编号" width="180" /> -->
+				<el-table-column prop="produceCode" label="产品编号" width="180" />
 				<el-table-column prop="produceName" label="产品名称" width="180" />
 				<el-table-column prop="colorRgb" label="产品颜色" width="80">
 					<template #default="scope">

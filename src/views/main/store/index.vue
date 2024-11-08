@@ -159,7 +159,6 @@ const tableParams2 = ref({
   total: 0,
 });
 const editStoreTitle = ref("");
-const currentRowId = ref<any>({});
 
 const state = reactive({
   dialogUploadVisible: true,
@@ -200,10 +199,7 @@ const handleQuery2 = async () => {
 
 // 改变选中行
 const handleCurrentRowChange = async (currentRow: any, oldCurrentRow: any) => {
-  if(oldCurrentRow.value == currentRow.id){
-    return;
-  }
-  currentRowId.value = currentRow.id;
+  // console.log(currentRow);
   queryParams2.value = { storeId: currentRow.id };
   handleQuery2();
 };

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="produceFormula-container">
 		<el-dialog v-model="isShowDialog" :width="800" draggable="">
 			<template #header>
@@ -21,7 +21,7 @@
 
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="产品外键" prop="produceName">
+						<el-form-item label="产品编号" prop="produceName">
 							<!-- <el-select clearable filterable v-model="ruleForm.produceId" placeholder="请选择产品外键">
 								<el-option v-for="(item,index) in produceProduceIdDropdownList" :key="index" :value="item.value" :label="item.label" />
 								
@@ -106,7 +106,7 @@
 	//自行添加其他规则
 	const rules = ref<FormRules>({
 		// produceFormulaCode: [{ required: true, message: '请输入配方编号！', trigger: 'blur', },],
-		produceFormulaName: [{ required: true, message: '请输入配方名称！', trigger: 'blur', },],
+		// produceFormulaName: [{ required: true, message: '请输入配方名称！', trigger: 'blur', },],
 		formulaVersion: [{ required: true, message: '请输入配方版本！', trigger: 'blur', },],
 	});
 	const produceIdTitle = ref("");

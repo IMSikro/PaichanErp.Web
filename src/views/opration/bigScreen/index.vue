@@ -431,4 +431,5 @@ onBeforeRouteLeave(() => {
 	border-bottom: 3.4375rem solid #000d3a;
 	transform: rotate(180deg);
 }
+
 </style>

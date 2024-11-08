@@ -57,9 +57,14 @@
 				row-key="id" border="" @current-change="handleCurrentRowChange">
 				<el-table-column type="index" label="序号" width="55" align="center" />
 				<el-table-column prop="produceFormulaCode" label="配方编号" width="140" show-overflow-tooltip="" />
-				<el-table-column prop="produceId" label="产品外键" width="120" show-overflow-tooltip="">
+				<el-table-column prop="produceId" label="产品编号" width="120" show-overflow-tooltip="">
 					<template #default="scope">
 						<span>{{ scope.row.produceIdProduceCode }}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="produceName" label="产品名称" width="120" show-overflow-tooltip="">
+					<template #default="scope">
+						<span>{{ scope.row.produceName }}</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop="produceFormulaName" label="配方名称" width="140" show-overflow-tooltip="" />
@@ -100,7 +105,7 @@
 		<el-card class="full-table" shadow="hover" body-style="margin-top: -25px;"
 			:style="{ 'overflow-y': 'auto' }">
 			<el-tabs v-model="activeName">
-				<el-tab-pane label="物料列表" name="produceFormula">
+				<el-tab-pane label="BOM表" name="produceFormula">
 					<el-button-group style="margin-bottom:5px">
 						<el-button icon="ele-Plus" size="small" @click="openAddMaterial" v-auth="'produceFormula:add'">
 							新增 </el-button>
