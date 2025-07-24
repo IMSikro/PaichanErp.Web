@@ -155,7 +155,7 @@ const submit = async () => {
 
 
 
-// 增加租户列
+// 增加库位行
 function addStoreLocation() {
 	ruleForm.value.storeLocations.push({
 		id: 0,
@@ -176,7 +176,7 @@ function handleColDelete(index: number) {
 	}
 }
 
-// 删除
+// 恢复
 function handleColRecover(index: number) {
 	ruleForm.value.storeLocations[index].isDelete = false;
 }

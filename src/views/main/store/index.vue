@@ -200,9 +200,6 @@ const handleQuery2 = async () => {
 
 // 改变选中行
 const handleCurrentRowChange = async (currentRow: any, oldCurrentRow: any) => {
-  if(oldCurrentRow.value == currentRow.id){
-    return;
-  }
   currentRowId.value = currentRow.id;
   queryParams2.value = { storeId: currentRow.id };
   handleQuery2();
